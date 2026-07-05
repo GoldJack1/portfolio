@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
@@ -32,8 +32,12 @@ const GLASS: React.CSSProperties = {
   backdropFilter:       "blur(25px)",
   WebkitBackdropFilter: "blur(25px)",
   boxShadow:            "var(--glass-ring)",
-  // Promote to its own layer so iOS Safari delivers touches to the header, not through it.
-  transform:            "translateZ(0)",
+};
+
+// iOS Safari touch fix — only on mobile; transform on desktop breaks layoutId pill animation.
+const MOBILE_GLASS: React.CSSProperties = {
+  ...GLASS,
+  transform:                "translateZ(0)",
   WebkitBackfaceVisibility: "hidden",
 };
 
@@ -130,19 +134,29 @@ function ThemeToggleButton({ className }: { className: string }) {
   );
 }
 
-/** Single white pill — shared layoutId springs it between all slots in the group. */
-function Pill() {
+/** Sliding white pill — positioned from measured nav slot bounds. */
+function SlidingPill({
+  left,
+  width,
+  visible,
+}: {
+  left: number;
+  width: number;
+  visible: boolean;
+}) {
   return (
     <motion.div
-      layoutId="pill"
-      className="absolute inset-0 bg-white rounded-full"
+      className="absolute top-2 bottom-2 left-0 bg-white rounded-full pointer-events-none"
+      initial={false}
+      animate={{ x: left, width, opacity: visible ? 1 : 0 }}
       transition={SPRING}
       style={{ zIndex: 0 }}
-      transformTemplate={({ x, scaleX }) =>
-        `translateX(${x ?? 0}px) scaleX(${scaleX ?? 1})`
-      }
     />
   );
+}
+
+function pathOnly(href: string): string {
+  return href.split("?")[0].split("#")[0];
 }
 
 // ─── Search Results ───────────────────────────────────────────────────────────
@@ -222,19 +236,60 @@ function DesktopHeader() {
 
   const active = NAV_ITEMS.find(i => i.href === pathname)?.id ?? NAV_ITEMS[0]?.id ?? "";
 
-  // hovered tracks which slot shows the fade highlight (not the pill)
   const [hovered,     setHovered]     = useState<string | null>(null);
   const [searchOpen,  setSearchOpen]  = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [pillTarget,  setPillTarget]  = useState<string | null>(null);
 
-  // Pill is static on the active page. When search is open it sits on the searchbar.
+  const barRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [pill, setPill] = useState({ left: 0, width: 0, visible: false });
+
+  useEffect(() => setPillTarget(null), [pathname]);
+
   const pillAt = useMemo(() => {
     if (searchOpen) return "__searchbar__";
-    return active;
-  }, [searchOpen, active]);
+    return pillTarget ?? active;
+  }, [searchOpen, active, pillTarget]);
 
-  const handleSelect = (item: NavItem) => navigate(item.href);
+  useLayoutEffect(() => {
+    const update = () => {
+      const bar = barRef.current;
+      const slot = slotRefs.current[pillAt];
+      if (!bar || !slot) {
+        setPill((p) => ({ ...p, visible: false }));
+        return;
+      }
+
+      const barRect = bar.getBoundingClientRect();
+      const slotRect = slot.getBoundingClientRect();
+      setPill({
+        left: slotRect.left - barRect.left,
+        width: slotRect.width,
+        visible: true,
+      });
+    };
+
+    update();
+    const bar = barRef.current;
+    if (!bar) return;
+
+    const ro = new ResizeObserver(update);
+    ro.observe(bar);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [pillAt, searchOpen, pathname]);
+
+  const handleSelect = (item: NavItem) => {
+    if (pathOnly(item.href) !== pathOnly(pathname)) {
+      setPillTarget(item.id);
+    }
+    navigate(item.href);
+  };
 
   const openSearch = () => {
     setSearchOpen(true);
@@ -256,9 +311,12 @@ function DesktopHeader() {
             all of them with no overflow boundary to cross.
         ──────────────────────────────────────────────────────────────────── */}
         <div
+          ref={barRef}
           className="relative flex items-center gap-1 p-2 rounded-full"
           style={GLASS}
         >
+          <SlidingPill left={pill.left} width={pill.width} visible={pill.visible} />
+
           {/* ── Left nav slots (Home, Projects, About) — collapse when search opens ── */}
           <motion.div
             className="flex items-center gap-1 shrink-0"
@@ -269,11 +327,11 @@ function DesktopHeader() {
             {NAV_ITEMS.slice(0, -1).map(item => (
               <div
                 key={item.id}
+                ref={(el) => { slotRefs.current[item.id] = el; }}
                 className="relative shrink-0"
                 onMouseEnter={() => setHovered(item.id)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {pillAt === item.id && <Pill />}
                 {/* Fade highlight — only on non-active items */}
                 <AnimatePresence>
                   {hovered === item.id && pillAt !== item.id && (
@@ -306,6 +364,7 @@ function DesktopHeader() {
           {NAV_ITEMS.slice(-1).map(item => (
             <motion.div
               key={item.id}
+              ref={(el) => { slotRefs.current[item.id] = el; }}
               className="relative shrink-0"
               style={{ pointerEvents: searchOpen ? "none" : undefined }}
               animate={{ maxWidth: searchOpen ? 0 : 200, opacity: searchOpen ? 0 : 1 }}
@@ -313,7 +372,6 @@ function DesktopHeader() {
               onMouseEnter={() => setHovered(item.id)}
               onMouseLeave={() => setHovered(null)}
             >
-              {pillAt === item.id && <Pill />}
               <AnimatePresence>
                 {hovered === item.id && pillAt !== item.id && (
                   <motion.div
@@ -340,13 +398,13 @@ function DesktopHeader() {
             {searchOpen && (
               <motion.div
                 key="search-overlay"
+                ref={(el) => { slotRefs.current.__searchbar__ = el; }}
                 className="absolute inset-2 right-2 z-10"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
               >
-                {pillAt === "__searchbar__" && <Pill />}
                 <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[43px]">
                   <span className="shrink-0 text-black/50"><SearchSvg /></span>
                   <input
@@ -490,7 +548,7 @@ function MobileHeader() {
   return (
     <LayoutGroup id="mobile-header">
       <div className="flex flex-col gap-2">
-        <div className="w-full rounded-[28px] overflow-hidden" style={GLASS}>
+        <div className="w-full rounded-[28px] overflow-hidden" style={MOBILE_GLASS}>
 
           {/* Top bar */}
           <div className="relative flex items-center gap-2 p-2 min-h-[56px]">
@@ -620,7 +678,7 @@ function MobileHeader() {
           {searchOpen && (
             <motion.div key="mobile-results"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={SPRING} className="rounded-[28px] overflow-hidden" style={GLASS}>
+              transition={SPRING} className="rounded-[28px] overflow-hidden" style={MOBILE_GLASS}>
               <SearchResults
                 minTouch
                 query={searchQuery}
