@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import TransitionLink from "@/components/transition-link";
 import VideoThumbnail from "@/components/video-thumbnail";
 import { PROJECTS, getProject, isVideoThumbnail } from "@/lib/projects";
+import { createPageMetadata } from "@/lib/site-metadata";
 import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -14,11 +15,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const project = getProject(slug);
-  if (!project) return { title: "Project | Portfolio" };
-  return {
-    title: `${project.title} | Portfolio`,
-    description: project.desc,
-  };
+  if (!project) return createPageMetadata("Project");
+  return createPageMetadata(project.title, project.desc);
 }
 
 export default async function ProjectDetailPage({ params }: Props) {

@@ -6,6 +6,15 @@ export interface SocialLink {
 
 export const SITE_NAME = "Jack Wingate";
 
+export const SITE_DESCRIPTION =
+  "Graphic & UI/UX designer — brands, interfaces, and digital products. Transport, wayfinding, and realism-led design from West Yorkshire.";
+
+/** Canonical site URL for Open Graph / metadata. Set NEXT_PUBLIC_SITE_URL in production. */
+export function getSiteUrl(): string {
+  const url = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  return url && url.length > 0 ? url.replace(/\/$/, "") : "https://jackwingate.netlify.app";
+}
+
 /** Your contact email — used in the Elsewhere section and as the form recipient. */
 export const CONTACT_EMAIL = "wingatejack2021@gmail.com";
 

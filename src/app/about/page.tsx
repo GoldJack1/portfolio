@@ -6,9 +6,10 @@ import {
   INTERESTS,
   SKILLS,
 } from "@/lib/about-content";
+import { createPageMetadata } from "@/lib/site-metadata";
 import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
-export const metadata = { title: "About | Portfolio" };
+export const metadata = createPageMetadata("About", ABOUT_INTRO[0].slice(0, 160));
 
 export default function About() {
   return (

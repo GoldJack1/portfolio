@@ -1,0 +1,9 @@
+# Next.js on Netlify — do not set `publish`; the Next plugin manages output.
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

@@ -8,6 +8,7 @@ import HeaderContrastObserver from "@/components/header-contrast-observer";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import PageTransition from "@/components/page-transition";
+import { rootMetadata } from "@/lib/site-metadata";
 
 const strawford = localFont({
   src: [
@@ -29,10 +30,7 @@ const knile = localFont({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "My portfolio site",
-};
+export const metadata: Metadata = rootMetadata;
 
 export default function RootLayout({
   children,

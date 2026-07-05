@@ -1,8 +1,12 @@
 import ProjectCard from "@/components/project-card";
 import { PROJECTS } from "@/lib/projects";
+import { createPageMetadata } from "@/lib/site-metadata";
 import { decoMedium, sansLight } from "@/lib/typography";
 
-export const metadata = { title: "Projects | Portfolio" };
+export const metadata = createPageMetadata(
+  "Projects",
+  "Selected graphic design, UI/UX, and product work by Jack Wingate.",
+);
 
 export default function Projects() {
   return (
