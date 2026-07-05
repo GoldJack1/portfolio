@@ -1,9 +1,9 @@
-# Next.js on Netlify — do not set `publish`; the Next plugin manages output.
+# Override stale Netlify UI "dist" publish dir — Next.js outputs to .next
 [build]
   command = "npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+# Plugin is auto-installed by Netlify for Next.js — no need to pin here.
