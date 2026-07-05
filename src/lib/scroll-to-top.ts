@@ -49,7 +49,10 @@ export function scrollToTopThen(callback: () => void): void {
 
   if (prefersReduced || mobile) {
     window.scrollTo(0, 0);
-    finish();
+    // iOS Safari may not update scrollY synchronously after scrollTo.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => callback());
+    });
     return;
   }
 

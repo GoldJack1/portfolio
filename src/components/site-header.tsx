@@ -32,6 +32,9 @@ const GLASS: React.CSSProperties = {
   backdropFilter:       "blur(25px)",
   WebkitBackdropFilter: "blur(25px)",
   boxShadow:            "var(--glass-ring)",
+  // Promote to its own layer so iOS Safari delivers touches to the header, not through it.
+  transform:            "translateZ(0)",
+  WebkitBackfaceVisibility: "hidden",
 };
 
 const ICON_PROPS = {
@@ -144,7 +147,7 @@ function Pill() {
 
 // ─── Search Results ───────────────────────────────────────────────────────────
 
-function SearchResults({ query, onSelect }: { query: string; onSelect?: (navId: string) => void }) {
+function SearchResults({ query, onSelect, minTouch }: { query: string; onSelect?: (navId: string) => void; minTouch?: boolean }) {
   const q = query.trim().toLowerCase();
   const results = q
     ? SITE_PAGES.filter(r =>
@@ -165,7 +168,7 @@ function SearchResults({ query, onSelect }: { query: string; onSelect?: (navId: 
             <motion.button key={result.id} layout
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={{ ...SPRING, delay: i * 0.03 }}
-              className="flex items-center gap-3 px-3 py-3 rounded-2xl text-left hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] active:bg-white/60 dark:active:bg-white/20 transition-colors"
+              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-left hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] active:bg-white/60 dark:active:bg-white/20 transition-colors${minTouch ? " min-h-[40px]" : ""}`}
               onClick={() => onSelect?.(result.navId)}>
               <span className="shrink-0 w-2 h-2 rounded-full" style={{ backgroundColor: result.color }} />
               <span className="flex-1 min-w-0">
@@ -482,6 +485,7 @@ function MobileHeader() {
   const handleSelect = (item: NavItem) => { navigate(item.href); setMenuOpen(false); };
 
   const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10";
+  const TOUCH = "min-h-[40px] min-w-[40px]";
 
   return (
     <LayoutGroup id="mobile-header">
@@ -489,17 +493,17 @@ function MobileHeader() {
         <div className="w-full rounded-[28px] overflow-hidden" style={GLASS}>
 
           {/* Top bar */}
-          <div className="relative flex items-center gap-2 p-2 h-[51px]">
+          <div className="relative flex items-center gap-2 p-2 min-h-[56px]">
 
             {/* Hamburger — collapses when search opens */}
             <motion.div
               className="shrink-0"
               style={{ pointerEvents: searchOpen ? "none" : undefined }}
-              animate={{ maxWidth: searchOpen ? 0 : 43, opacity: searchOpen ? 0 : 1 }}
+              animate={{ maxWidth: searchOpen ? 0 : 48, opacity: searchOpen ? 0 : 1 }}
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               <button onClick={toggleMenu}
-                className="flex items-center justify-center w-[35px] h-[35px] rounded-full text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors"
+                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors`}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}>
                 <AnimatePresence initial={false} mode="wait">
                   {menuOpen ? (
@@ -526,7 +530,7 @@ function MobileHeader() {
                   transition={{ duration: 0.15 }}
                 >
                   <div className="absolute inset-0 bg-white rounded-full" />
-                  <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[43px]">
+                  <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[48px]">
                     <span className="shrink-0 text-black/50"><SearchSvg /></span>
                     <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search"
@@ -534,11 +538,16 @@ function MobileHeader() {
                       style={NAV_FONT}
                       onKeyDown={e => {
                         if (e.key === "Escape") closeSearch();
-                        if (e.key === "Enter" && searchQuery.trim()) {
-                          navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-                          closeSearch();
+                        if (e.key === "Enter") {
+                          e.currentTarget.blur();
+                          if (searchQuery.trim()) {
+                            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                            closeSearch();
+                          }
                         }
-                      }} />
+                      }}
+                      enterKeyHint="search"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -549,7 +558,7 @@ function MobileHeader() {
               {!searchOpen && (
                 <motion.div
                   key="mobile-theme"
-                  className="relative shrink-0 w-[35px] h-[35px] rounded-full hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors"
+                  className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} rounded-full hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors`}
                   initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.15 }}
                 >
@@ -559,7 +568,7 @@ function MobileHeader() {
             </AnimatePresence>
 
             {/* Search / close — z-20 floats above search overlay */}
-            <div className={`relative shrink-0 w-[35px] h-[35px] z-20 rounded-full transition-colors shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] ${searchOpen ? "bg-black/8 hover:bg-black/15" : "hover:bg-black/8 dark:hover:bg-white/10 shadow-transparent hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}>
+            <div className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} z-20 rounded-full transition-colors shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] ${searchOpen ? "bg-black/8 hover:bg-black/15" : "hover:bg-black/8 dark:hover:bg-white/10 shadow-transparent hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}>
               <AnimatePresence initial={false} mode="wait">
                 {searchOpen ? (
                   <motion.button key="x" className={`${ICON_BTN} text-black`}
@@ -594,7 +603,7 @@ function MobileHeader() {
                         <motion.div layoutId="mobile-pill" className="absolute inset-0 bg-white rounded-full" transition={SPRING} />
                       )}
                       <button onClick={() => handleSelect(item)}
-                        className={`relative z-10 w-full h-[35px] px-4 flex items-center text-[16px] text-left rounded-full transition-colors ${active === item.id ? "text-black" : "text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}
+                        className={`relative z-10 w-full h-[40px] ${TOUCH} px-4 flex items-center text-[16px] text-left rounded-full transition-colors ${active === item.id ? "text-black" : "text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}
                         style={NAV_FONT}>
                         {item.label}
                       </button>
@@ -613,6 +622,7 @@ function MobileHeader() {
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={SPRING} className="rounded-[28px] overflow-hidden" style={GLASS}>
               <SearchResults
+                minTouch
                 query={searchQuery}
                 onSelect={navId => {
                   const item = NAV_ITEMS.find(i => i.id === navId);

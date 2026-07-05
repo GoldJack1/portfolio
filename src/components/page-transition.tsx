@@ -32,12 +32,11 @@ export default function PageTransition({ children }: { children: React.ReactNode
     <AnimatePresence initial={false} mode="popLayout">
       <motion.div
         key={pathname}
-        layout
         initial={{ x: "100%", opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: "-100%", opacity: 0 }}
+        animate={{ x: 0, opacity: 1, pointerEvents: "auto" }}
+        exit={{ x: "-100%", opacity: 0, pointerEvents: "none" }}
         transition={{ duration, ease: EASE }}
-        className="flex flex-col w-full"
+        className="relative z-0 flex flex-col w-full"
       >
         <FrozenRouter>{children}</FrozenRouter>
       </motion.div>
