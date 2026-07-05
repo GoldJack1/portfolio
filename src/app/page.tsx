@@ -1,65 +1,118 @@
-import Image from "next/image";
+import TransitionLink from "@/components/transition-link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col">
+
+      {/* ── Hero ── */}
+      <section className="flex-1 flex flex-col items-start justify-center px-6 sm:px-12 pt-10 sm:pt-14 pb-24 w-full min-h-[60vh]">
+        <p
+          className="text-sm uppercase tracking-widest text-muted mb-6"
+          style={{ fontFamily: "var(--font-strawford)" }}
+        >
+          Designer & Developer
+        </p>
+        <h1
+          className="text-7xl sm:text-9xl font-normal leading-none text-foreground mb-8"
+          style={{ fontFamily: "var(--font-knile)" }}
+        >
+          Jack<br />Wingate
+        </h1>
+        <p
+          className="text-xl sm:text-2xl text-muted max-w-xl leading-relaxed mb-10"
+          style={{ fontFamily: "var(--font-strawford)" }}
+        >
+          I craft thoughtful digital experiences — blending clean design with solid engineering to build things people actually enjoy using.
+        </p>
+        <div className="flex flex-wrap gap-4" style={{ fontFamily: "var(--font-strawford)" }}>
+          <TransitionLink
+            href="/projects"
+            className="px-6 py-3 rounded-full bg-foreground text-background text-[15px] hover:opacity-80 transition-opacity"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            View work
+          </TransitionLink>
+          <TransitionLink
+            href="/contact"
+            className="px-6 py-3 rounded-full border border-border text-foreground text-[15px] hover:bg-surface transition-colors"
           >
-            Documentation
-          </a>
+            Get in touch
+          </TransitionLink>
         </div>
-      </main>
+      </section>
+
+      {/* ── Selected work ── */}
+      <section className="px-6 sm:px-12 pb-24 w-full">
+        <div className="flex items-end justify-between mb-8">
+          <h2
+            className="text-3xl sm:text-4xl font-normal text-foreground"
+            style={{ fontFamily: "var(--font-knile)" }}
+          >
+            Selected work
+          </h2>
+          <TransitionLink
+            href="/projects"
+            className="text-sm text-muted hover:text-foreground transition-colors"
+            style={{ fontFamily: "var(--font-strawford)" }}
+          >
+            All projects →
+          </TransitionLink>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {[
+            { name: "Project Alpha", year: "2025", tag: "Web App", color: "from-violet-500/20 to-indigo-500/20" },
+            { name: "Project Beta",  year: "2025", tag: "Design",  color: "from-emerald-500/20 to-teal-500/20" },
+            { name: "Project Gamma", year: "2024", tag: "Mobile",  color: "from-amber-500/20 to-orange-500/20" },
+            { name: "Project Delta", year: "2024", tag: "Branding", color: "from-rose-500/20 to-pink-500/20" },
+          ].map((p) => (
+            <div
+              key={p.name}
+              className={`group relative aspect-video rounded-2xl bg-gradient-to-br ${p.color} border border-border flex flex-col justify-between p-6 cursor-pointer hover:border-muted transition-colors`}
+            >
+              <span
+                className="text-xs uppercase tracking-widest text-muted"
+                style={{ fontFamily: "var(--font-strawford)" }}
+              >
+                {p.tag} · {p.year}
+              </span>
+              <span
+                className="text-2xl text-foreground"
+                style={{ fontFamily: "var(--font-knile)" }}
+              >
+                {p.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── About teaser ── */}
+      <section className="px-6 sm:px-12 pb-24 w-full">
+        <div className="rounded-2xl bg-surface border border-border p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center gap-8">
+          <div className="flex-1">
+            <h2
+              className="text-3xl font-normal text-foreground mb-4"
+              style={{ fontFamily: "var(--font-knile)" }}
+            >
+              About me
+            </h2>
+            <p
+              className="text-lg text-muted leading-relaxed max-w-md"
+              style={{ fontFamily: "var(--font-strawford)" }}
+            >
+              Based in London. I&apos;ve spent the last few years working across product design and frontend development, with a focus on interfaces that feel effortless.
+            </p>
+          </div>
+          <TransitionLink
+            href="/about"
+            className="shrink-0 px-6 py-3 rounded-full border border-border text-foreground text-[15px] hover:bg-background transition-colors self-start sm:self-auto"
+            style={{ fontFamily: "var(--font-strawford)" }}
+          >
+            Learn more →
+          </TransitionLink>
+        </div>
+      </section>
+
     </div>
   );
 }
