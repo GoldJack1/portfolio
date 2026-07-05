@@ -4,8 +4,7 @@ import type { ReactNode } from "react";
 import TransitionLink from "@/components/transition-link";
 import { NAV_ITEMS } from "@/lib/nav-order";
 import { SITE_NAME, SOCIAL_LINKS, getCopyrightYear } from "@/lib/site-config";
-
-const FONT = { fontFamily: "var(--font-strawford), system-ui, sans-serif" };
+import { sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 const ICON = {
   width: 18,
@@ -79,16 +78,16 @@ export default function SiteFooter() {
     <footer className="mt-auto border-t border-border px-6 sm:px-12 py-10 sm:py-12">
       <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-foreground" style={FONT}>
+          <p className={`text-sm text-foreground ${sansMedium}`}>
             © {year} {SITE_NAME}
           </p>
-          <p className="text-xs text-muted" style={FONT}>
+          <p className={`text-xs text-muted ${sansLight}`}>
             All rights reserved.
           </p>
         </div>
 
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2" style={FONT}>
+          <ul className={`flex flex-wrap gap-x-6 gap-y-2 ${sansLight}`}>
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <TransitionLink

@@ -11,6 +11,9 @@
   --border:      #e5e5e5;
   --surface:     #f5f5f5;
   --glass-ring:  0 0 0 1px rgba(0,0,0,0.08) inset;
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.22);
+  --header-glass-ring: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  --header-glass-blur: 25px;
 }
 
 .dark {
@@ -20,6 +23,72 @@
   --border:      #262626;
   --surface:     #171717;
   --glass-ring:  0 0 0 1px hsla(0,0%,100%,0.12) inset;
+}
+
+html[data-header-on="light"] {
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.22);
+  --header-glass-ring: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  --header-glass-blur: 25px;
+}
+
+/* Dark site theme + white content behind — uniform white frost, dark icons */
+html.dark[data-header-on="light"] {
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.74);
+  --header-glass-ring:
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+    0 1px 0 rgba(255, 255, 255, 0.35) inset;
+  --header-glass-blur: 32px;
+}
+
+html[data-header-on="dark"] {
+  /* Neutral frosted tint — same as original header, blur stays visible */
+  --header-glass-bg:   hsla(0, 0%, 50%, 0.22);
+  --header-glass-ring: 0 0 0 1px hsla(0, 0%, 100%, 0.14) inset;
+  --header-glass-blur: 25px;
+}
+
+/* Dark site theme over dark page — light frost, slightly whiter for legibility */
+html.dark[data-header-on="dark"] {
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.38);
+  --header-glass-ring:
+    0 0 0 1px hsla(0, 0%, 100%, 0.32) inset,
+    0 1px 0 hsla(0, 0%, 100%, 0.14) inset;
+  --header-glass-blur: 28px;
+}
+
+/* Light site theme over light page — subtle dark frost (mirror of dark mode default) */
+html:not(.dark)[data-header-on="light"] {
+  --header-glass-bg:   hsla(0, 0%, 0%, 0.18);
+  --header-glass-ring:
+    0 0 0 1px rgba(0, 0, 0, 0.22) inset,
+    0 1px 0 rgba(0, 0, 0, 0.08) inset;
+  --header-glass-blur: 28px;
+}
+
+/* Light site theme over dark content — stronger dark frost (mirror of dark mode on white) */
+html:not(.dark)[data-header-on="dark"] {
+  --header-glass-bg:   hsla(0, 0%, 0%, 0.55);
+  --header-glass-ring:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 1px 0 rgba(0, 0, 0, 0.15) inset;
+  --header-glass-blur: 32px;
+}
+
+/* Split background — neutral frosted glass (same tint everywhere, still see-through) */
+html:not(.dark)[data-header-mixed="true"][data-header-on="light"],
+html:not(.dark)[data-header-mixed="true"][data-header-on="dark"] {
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.52);
+  --header-glass-ring: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
+  --header-glass-blur: 26px;
+}
+
+html.dark[data-header-mixed="true"][data-header-on="light"],
+html.dark[data-header-mixed="true"][data-header-on="dark"] {
+  --header-glass-bg:   hsla(0, 0%, 100%, 0.58);
+  --header-glass-ring:
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  --header-glass-blur: 28px;
 }
 
 @theme inline {
@@ -44,5 +113,18 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-strawford), system-ui, sans-serif;
+  font-weight: 500;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header-glass {
+  background: var(--header-glass-bg);
+  backdrop-filter: blur(var(--header-glass-blur, 25px)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--header-glass-blur, 25px)) saturate(160%);
+  box-shadow: var(--header-glass-ring);
+}
+
+.header-glass-mobile {
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
 }

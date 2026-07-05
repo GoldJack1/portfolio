@@ -6,49 +6,18 @@ import { useTheme } from "@/components/theme-provider";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { NAV_ITEMS, getActiveNavId, type NavItem } from "@/lib/nav-order";
 import { useNavigateWithScroll } from "@/hooks/use-navigate-with-scroll";
-
-// ─── Site config ─────────────────────────────────────────────────────────────
-
-interface SitePage {
-  id: string; title: string; desc: string;
-  navId: string; category: string; color: string;
-}
-
-const SITE_PAGES: SitePage[] = [
-  { id: "home",     navId: "home",     title: "Home",     desc: "Welcome",        category: "Page", color: "#a5b4fc" },
-  { id: "projects", navId: "projects", title: "Projects", desc: "Browse my work", category: "Page", color: "#86efac" },
-  { id: "about",    navId: "about",    title: "About",    desc: "A bit about me", category: "Page", color: "#fde68a" },
-  { id: "contact",  navId: "contact",  title: "Contact",  desc: "Get in touch",   category: "Page", color: "#f9a8d4" },
-];
-
-const SUGGESTION_COUNT = 3;
+import { useHeaderContrastClasses } from "@/hooks/use-header-contrast-classes";
+import { headerSearchResults, type SearchResult } from "@/lib/site-search";
+import { sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.8 };
 
-const GLASS: React.CSSProperties = {
-  background:           "hsla(0, 0%, 50%, 0.22)",
-  backdropFilter:       "blur(25px)",
-  WebkitBackdropFilter: "blur(25px)",
-  boxShadow:            "var(--glass-ring)",
-};
-
-// iOS Safari touch fix — only on mobile; transform on desktop breaks layoutId pill animation.
-const MOBILE_GLASS: React.CSSProperties = {
-  ...GLASS,
-  transform:                "translateZ(0)",
-  WebkitBackfaceVisibility: "hidden",
-};
-
 const ICON_PROPS = {
   width: 16, height: 16, viewBox: "0 0 16 16", fill: "none",
   stroke: "currentColor", strokeWidth: "1.75",
   strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
-};
-
-const NAV_FONT: React.CSSProperties = {
-  fontFamily: "var(--font-strawford), system-ui, sans-serif",
 };
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -161,20 +130,28 @@ function pathOnly(href: string): string {
 
 // ─── Search Results ───────────────────────────────────────────────────────────
 
-function SearchResults({ query, onSelect, minTouch }: { query: string; onSelect?: (navId: string) => void; minTouch?: boolean }) {
-  const q = query.trim().toLowerCase();
-  const results = q
-    ? SITE_PAGES.filter(r =>
-        r.title.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
-    : SITE_PAGES.slice(0, SUGGESTION_COUNT);
+function SearchResults({
+  query,
+  onSelect,
+  onViewMore,
+  minTouch,
+}: {
+  query: string;
+  onSelect?: (result: SearchResult) => void;
+  onViewMore?: () => void;
+  minTouch?: boolean;
+}) {
+  const hc = useHeaderContrastClasses();
+  const q = query.trim();
+  const { results, total } = headerSearchResults(query);
+  const hasMore = q.length > 0 && total > results.length;
 
   return (
     <div className="p-3">
       <p
-        className="px-1 pb-3 text-[11px] uppercase tracking-widest text-black/40 dark:text-white/40"
-        style={NAV_FONT}
+        className={`px-1 pb-3 text-[11px] uppercase tracking-widest ${hc.searchMuted} ${sansLight}`}
       >
-        {q ? `${results.length} result${results.length !== 1 ? "s" : ""}` : "Suggestions"}
+        {q ? `${total} result${total !== 1 ? "s" : ""}` : "Suggestions"}
       </p>
       <motion.div layout transition={SPRING} className="flex flex-col gap-1">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -182,38 +159,37 @@ function SearchResults({ query, onSelect, minTouch }: { query: string; onSelect?
             <motion.button key={result.id} layout
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={{ ...SPRING, delay: i * 0.03 }}
-              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-left hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] active:bg-white/60 dark:active:bg-white/20 transition-colors${minTouch ? " min-h-[40px]" : ""}`}
-              onClick={() => onSelect?.(result.navId)}>
-              <span className="shrink-0 w-2 h-2 rounded-full" style={{ backgroundColor: result.color }} />
+              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-left ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""}`}
+              onClick={() => onSelect?.(result)}>
               <span className="flex-1 min-w-0">
                 <span
-                  className="block text-[15px] text-black dark:text-white leading-snug truncate"
-                  style={NAV_FONT}
+                  className={`block text-[15px] ${hc.searchResultTitle} leading-snug truncate ${sansMedium}`}
                 >
                   {result.title}
                 </span>
                 <span
-                  className="block text-[12px] text-black/50 dark:text-white/50 truncate mt-0.5"
-                  style={NAV_FONT}
+                  className={`block text-[12px] ${hc.searchResultDesc} truncate mt-0.5 ${sansLight}`}
                 >
                   {result.desc}
                 </span>
               </span>
-              <span
-                className="shrink-0 text-[11px] px-2.5 py-1 rounded-full bg-white/80 dark:bg-white/15 text-black/60 dark:text-white/70 font-medium whitespace-nowrap"
-                style={NAV_FONT}
-              >
-                {result.category}
-              </span>
             </motion.button>
           ))}
         </AnimatePresence>
+        {hasMore && (
+          <button
+            type="button"
+            onClick={onViewMore}
+            className={`mt-1 w-full px-3 py-3 rounded-2xl text-left text-[14px] ${hc.searchMutedMid} ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""} ${sansMedium}`}
+          >
+            View more results ({total})
+          </button>
+        )}
         <AnimatePresence initial={false}>
           {results.length === 0 && (
             <motion.p key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="py-5 text-center text-[15px] text-black/40 dark:text-white/40"
-              style={NAV_FONT}>
+              className={`py-5 text-center text-[15px] ${hc.searchMuted} ${sansMedium}`}>
               No results for &ldquo;{query}&rdquo;
             </motion.p>
           )}
@@ -233,6 +209,7 @@ function SearchResults({ query, onSelect, minTouch }: { query: string; onSelect?
 function DesktopHeader() {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
+  const hc = useHeaderContrastClasses();
 
   const active = getActiveNavId(pathname);
 
@@ -298,8 +275,7 @@ function DesktopHeader() {
   };
   const closeSearch = () => { setSearchOpen(false); setSearchQuery(""); setShowResults(false); };
 
-  const navText = (id: string) =>
-    pillAt === id ? "text-black" : "text-black dark:text-white";
+  const navText = (id: string) => hc.navText(pillAt === id);
   const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10";
 
   return (
@@ -312,8 +288,9 @@ function DesktopHeader() {
         ──────────────────────────────────────────────────────────────────── */}
         <div
           ref={barRef}
-          className="relative flex items-center gap-1 p-2 rounded-full"
-          style={GLASS}
+          data-header-top-bar
+          className={`relative flex items-center gap-1 p-2 rounded-full ${hc.glass}`}
+          style={hc.glassStyle}
         >
           <SlidingPill left={pill.left} width={pill.width} visible={pill.visible} />
 
@@ -336,7 +313,7 @@ function DesktopHeader() {
                 <AnimatePresence>
                   {hovered === item.id && pillAt !== item.id && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-black/8 dark:bg-white/10 shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"
+                      className={`absolute inset-0 rounded-full ${hc.hoverBg}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -346,8 +323,7 @@ function DesktopHeader() {
                   )}
                 </AnimatePresence>
                 <button
-                  className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)}`}
-                  style={NAV_FONT}
+                  className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)} ${sansBold}`}
                   onClick={() => handleSelect(item)}
                   tabIndex={searchOpen ? -1 : 0}
                 >
@@ -375,15 +351,14 @@ function DesktopHeader() {
               <AnimatePresence>
                 {hovered === item.id && pillAt !== item.id && (
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-black/8 dark:bg-white/10 shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"
+                    className={`absolute inset-0 rounded-full ${hc.hoverBg}`}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }} style={{ zIndex: 0 }}
                   />
                 )}
               </AnimatePresence>
               <button
-                className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)}`}
-                style={NAV_FONT}
+                className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)} ${sansBold}`}
                 onClick={() => handleSelect(item)}
                 tabIndex={searchOpen ? -1 : 0}
               >
@@ -406,14 +381,13 @@ function DesktopHeader() {
                 transition={{ duration: 0.15 }}
               >
                 <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[43px]">
-                  <span className="shrink-0 text-black/50"><SearchSvg /></span>
+                  <span className={`shrink-0 ${hc.searchIcon}`}><SearchSvg /></span>
                   <input
                     autoFocus
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder="Search"
-                    className="flex-1 bg-transparent outline-none text-[16px] text-black placeholder:text-black/40"
-                    style={NAV_FONT}
+                    className={`flex-1 bg-transparent outline-none text-[16px] ${hc.input} ${sansBold}`}
                     onKeyDown={e => {
                       if (e.key === "Escape") closeSearch();
                       if (e.key === "Enter" && searchQuery.trim()) {
@@ -443,7 +417,7 @@ function DesktopHeader() {
                 <AnimatePresence>
                   {hovered === "__theme__" && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-black/8 dark:bg-white/10 shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"
+                      className={`absolute inset-0 rounded-full ${hc.hoverBg}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -452,7 +426,7 @@ function DesktopHeader() {
                     />
                   )}
                 </AnimatePresence>
-                <ThemeToggleButton className={`${ICON_BTN} text-black dark:text-white`} />
+                <ThemeToggleButton className={`${ICON_BTN} ${hc.icon}`} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -467,7 +441,11 @@ function DesktopHeader() {
             <AnimatePresence>
               {(searchOpen || hovered === "__search__") && (
                 <motion.div
-                  className={`absolute inset-0 rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] ${searchOpen && hovered === "__search__" ? "bg-black/15" : searchOpen ? "bg-black/8" : "bg-black/8 dark:bg-white/10"}`}
+                  className={`absolute inset-0 rounded-full ${
+                    searchOpen
+                      ? `${hc.searchCloseRing} ${hovered === "__search__" ? hc.searchCloseHover : hc.searchCloseRest}`
+                      : `${hc.ring} ${hovered === "__search__" ? hc.hoverBgStrong : hc.onDark ? "bg-white/10" : "bg-black/8"}`
+                  }`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -479,7 +457,7 @@ function DesktopHeader() {
             <AnimatePresence initial={false} mode="wait">
               {searchOpen ? (
                 <motion.button key="x"
-                  className={`${ICON_BTN} text-black`}
+                  className={`${ICON_BTN} ${hc.searchCloseIcon}`}
                   initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
                   animate={{ rotate: 0, scale: 1, opacity: 1 }}
                   exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
@@ -489,7 +467,7 @@ function DesktopHeader() {
                 </motion.button>
               ) : (
                 <motion.button key="search"
-                  className={`${ICON_BTN} text-black dark:text-white`}
+                  className={`${ICON_BTN} ${hc.icon}`}
                   initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
                   animate={{ rotate: 0, scale: 1, opacity: 1 }}
                   exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
@@ -507,12 +485,16 @@ function DesktopHeader() {
           {showResults && (
             <motion.div key="results"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={SPRING} className="rounded-[28px] overflow-hidden" style={GLASS}>
+              transition={SPRING} className="rounded-[28px] overflow-hidden" style={hc.searchPanelStyle}>
               <SearchResults
                 query={searchQuery}
-                onSelect={navId => {
-                  const item = NAV_ITEMS.find(i => i.id === navId);
-                  if (item) handleSelect(item);
+                onSelect={(result) => {
+                  navigate(result.href);
+                  closeSearch();
+                }}
+                onViewMore={() => {
+                  const q = searchQuery.trim();
+                  navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
                   closeSearch();
                 }}
               />
@@ -529,6 +511,7 @@ function DesktopHeader() {
 function MobileHeader() {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
+  const hc = useHeaderContrastClasses();
 
   const active = getActiveNavId(pathname);
 
@@ -548,10 +531,10 @@ function MobileHeader() {
   return (
     <LayoutGroup id="mobile-header">
       <div className="flex flex-col gap-2">
-        <div className="w-full rounded-[28px] overflow-hidden" style={MOBILE_GLASS}>
+        <div className={`w-full rounded-[28px] overflow-hidden ${hc.mobileGlass}`} style={hc.mobileGlassStyle}>
 
           {/* Top bar */}
-          <div className="relative flex items-center gap-2 p-2 min-h-[56px]">
+          <div data-header-top-bar className="relative flex items-center gap-2 p-2 min-h-[56px]">
 
             {/* Hamburger — collapses when search opens */}
             <motion.div
@@ -561,7 +544,7 @@ function MobileHeader() {
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               <button onClick={toggleMenu}
-                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors`}
+                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full ${hc.icon} ${hc.searchBtnRest} transition-colors`}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}>
                 <AnimatePresence initial={false} mode="wait">
                   {menuOpen ? (
@@ -589,11 +572,10 @@ function MobileHeader() {
                 >
                   <div className="absolute inset-0 bg-white rounded-full" />
                   <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[48px]">
-                    <span className="shrink-0 text-black/50"><SearchSvg /></span>
+                    <span className={`shrink-0 ${hc.searchIcon}`}><SearchSvg /></span>
                     <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search"
-                      className="flex-1 bg-transparent outline-none text-[16px] text-black placeholder:text-black/40 min-w-0"
-                      style={NAV_FONT}
+                      className={`flex-1 bg-transparent outline-none text-[16px] min-w-0 ${hc.input} ${sansBold}`}
                       onKeyDown={e => {
                         if (e.key === "Escape") closeSearch();
                         if (e.key === "Enter") {
@@ -616,27 +598,31 @@ function MobileHeader() {
               {!searchOpen && (
                 <motion.div
                   key="mobile-theme"
-                  className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} rounded-full hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] transition-colors`}
+                  className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} rounded-full ${hc.searchBtnRest} transition-colors`}
                   initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.15 }}
                 >
-                  <ThemeToggleButton className={`${ICON_BTN} text-black dark:text-white`} />
+                  <ThemeToggleButton className={`${ICON_BTN} ${hc.icon}`} />
                 </motion.div>
               )}
             </AnimatePresence>
 
             {/* Search / close — z-20 floats above search overlay */}
-            <div className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} z-20 rounded-full transition-colors shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset] ${searchOpen ? "bg-black/8 hover:bg-black/15" : "hover:bg-black/8 dark:hover:bg-white/10 shadow-transparent hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}>
+            <div className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} z-20 rounded-full transition-colors ${
+              searchOpen
+                ? `${hc.searchCloseRing} ${hc.searchCloseRest}`
+                : `shadow-transparent ${hc.searchBtnRest}`
+            }`}>
               <AnimatePresence initial={false} mode="wait">
                 {searchOpen ? (
-                  <motion.button key="x" className={`${ICON_BTN} text-black`}
+                  <motion.button key="x" className={`${ICON_BTN} ${hc.searchCloseIcon}`}
                     initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.18 }}
                     onClick={closeSearch} aria-label="Close search"><CloseSvg /></motion.button>
                 ) : (
-                  <motion.button key="search" className={`${ICON_BTN} text-black dark:text-white`}
+                  <motion.button key="search" className={`${ICON_BTN} ${hc.icon}`}
                     initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
@@ -661,8 +647,7 @@ function MobileHeader() {
                         <motion.div layoutId="mobile-pill" className="absolute inset-0 bg-white rounded-full" transition={SPRING} />
                       )}
                       <button onClick={() => handleSelect(item)}
-                        className={`relative z-10 w-full h-[40px] ${TOUCH} px-4 flex items-center text-[16px] text-left rounded-full transition-colors ${active === item.id ? "text-black" : "text-black dark:text-white hover:bg-black/8 dark:hover:bg-white/10 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08)_inset] dark:hover:shadow-[0_0_0_1px_hsla(0,0%,100%,0.12)_inset]"}`}
-                        style={NAV_FONT}>
+                        className={`relative z-10 w-full h-[40px] ${TOUCH} px-4 flex items-center text-[16px] text-left rounded-full transition-colors ${active === item.id ? "text-black" : `${hc.navText(false)} ${hc.searchBtnRest}`} ${sansBold}`}>
                         {item.label}
                       </button>
                     </motion.div>
@@ -678,13 +663,17 @@ function MobileHeader() {
           {searchOpen && (
             <motion.div key="mobile-results"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={SPRING} className="rounded-[28px] overflow-hidden" style={MOBILE_GLASS}>
+              transition={SPRING} className="rounded-[28px] overflow-hidden" style={hc.searchPanelStyle}>
               <SearchResults
                 minTouch
                 query={searchQuery}
-                onSelect={navId => {
-                  const item = NAV_ITEMS.find(i => i.id === navId);
-                  if (item) handleSelect(item);
+                onSelect={(result) => {
+                  navigate(result.href);
+                  closeSearch();
+                }}
+                onViewMore={() => {
+                  const q = searchQuery.trim();
+                  navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
                   closeSearch();
                 }}
               />

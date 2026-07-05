@@ -3,6 +3,7 @@ import TransitionLink from "@/components/transition-link";
 import VideoThumbnail from "@/components/video-thumbnail";
 import type { Project } from "@/lib/projects";
 import { isVideoThumbnail } from "@/lib/projects";
+import { decoMedium, sansLight, sansMedium } from "@/lib/typography";
 
 type ProjectCardProps = {
   project: Project;
@@ -17,22 +18,18 @@ export default function ProjectCard({ project, variant = "grid" }: ProjectCardPr
     return (
       <TransitionLink
         href={href}
-        className="group relative aspect-video rounded-2xl border border-border overflow-hidden cursor-pointer hover:border-muted transition-colors"
+        className="group flex flex-col cursor-pointer"
       >
-        <ProjectThumbnail project={project} isVideo={isVideo} />
-        <div className="absolute inset-0 flex flex-col justify-between p-6 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-          <span
-            className="text-xs uppercase tracking-widest text-white/80"
-            style={{ fontFamily: "var(--font-strawford)" }}
-          >
-            {project.tag} · {project.year}
-          </span>
-          <span
-            className="text-lg sm:text-xl text-white leading-snug"
-            style={{ fontFamily: "var(--font-knile)" }}
-          >
+        <div className="relative aspect-video rounded-2xl border border-border overflow-hidden bg-background hover:border-muted transition-colors">
+          <ProjectThumbnail project={project} isVideo={isVideo} />
+        </div>
+        <div className="pt-4 flex flex-col gap-1">
+          <h2 className={`text-lg sm:text-xl text-foreground leading-snug ${decoMedium}`}>
             {project.title}
-          </span>
+          </h2>
+          <p className={`text-xs uppercase tracking-widest text-muted ${sansLight}`}>
+            {project.tag} · {project.year}
+          </p>
         </div>
       </TransitionLink>
     );
@@ -45,26 +42,15 @@ export default function ProjectCard({ project, variant = "grid" }: ProjectCardPr
     >
       <div className="relative aspect-video overflow-hidden bg-background">
         <ProjectThumbnail project={project} isVideo={isVideo} />
-        <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/50 to-transparent">
-          <span
-            className="text-xs uppercase tracking-widest text-white/80"
-            style={{ fontFamily: "var(--font-strawford)" }}
-          >
-            {project.tag} · {project.year}
-          </span>
-        </div>
       </div>
       <div className="flex flex-col flex-1 p-5 gap-3">
-        <h2
-          className="text-2xl font-normal text-foreground"
-          style={{ fontFamily: "var(--font-knile)" }}
-        >
+        <p className={`text-xs uppercase tracking-widest text-muted mb-1 ${sansLight}`}>
+          {project.tag} · {project.year}
+        </p>
+        <h2 className={`text-2xl ${decoMedium} text-foreground`}>
           {project.title}
         </h2>
-        <p
-          className="text-sm text-muted leading-relaxed flex-1"
-          style={{ fontFamily: "var(--font-strawford)" }}
-        >
+        <p className={`text-sm text-muted leading-relaxed flex-1 ${sansLight}`}>
           {project.desc}
         </p>
         {project.tech && project.tech.length > 0 && (
@@ -72,8 +58,7 @@ export default function ProjectCard({ project, variant = "grid" }: ProjectCardPr
             {project.tech.map((t) => (
               <span
                 key={t}
-                className="px-3 py-1 text-xs rounded-full bg-background border border-border text-muted"
-                style={{ fontFamily: "var(--font-strawford)" }}
+                className={`px-3 py-1 text-xs rounded-full bg-background border border-border text-muted ${sansMedium}`}
               >
                 {t}
               </span>

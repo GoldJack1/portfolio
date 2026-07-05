@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import TransitionLink from "@/components/transition-link";
 import VideoThumbnail from "@/components/video-thumbnail";
 import { PROJECTS, getProject, isVideoThumbnail } from "@/lib/projects";
+import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,29 +32,19 @@ export default async function ProjectDetailPage({ params }: Props) {
     <article className="px-6 sm:px-12 pt-10 sm:pt-14 pb-16 w-full">
       <TransitionLink
         href="/projects"
-        className="inline-block text-sm text-muted hover:text-foreground transition-colors mb-8"
-        style={{ fontFamily: "var(--font-strawford)" }}
+        className={`inline-block text-sm text-muted hover:text-foreground transition-colors mb-8 ${sansLight}`}
       >
         ← Back to projects
       </TransitionLink>
 
       <header className="mb-10 max-w-3xl">
-        <p
-          className="text-xs uppercase tracking-widest text-muted mb-3"
-          style={{ fontFamily: "var(--font-strawford)" }}
-        >
+        <p className={`text-xs uppercase tracking-widest text-muted mb-3 ${sansLight}`}>
           {project.tag} · {project.year}
         </p>
-        <h1
-          className="text-5xl sm:text-7xl font-normal text-foreground mb-6"
-          style={{ fontFamily: "var(--font-knile)" }}
-        >
+        <h1 className={`text-5xl sm:text-7xl ${decoMedium} text-foreground mb-6`}>
           {project.title}
         </h1>
-        <p
-          className="text-lg text-muted leading-relaxed"
-          style={{ fontFamily: "var(--font-strawford)" }}
-        >
+        <p className={`text-lg text-muted leading-relaxed ${sansLight}`}>
           {project.desc}
         </p>
       </header>
@@ -80,11 +71,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       {project.body && project.body.length > 0 && (
         <div className="max-w-3xl space-y-6 mb-12">
           {project.body.map((paragraph) => (
-            <p
-              key={paragraph}
-              className="text-base sm:text-lg text-muted leading-relaxed"
-              style={{ fontFamily: "var(--font-strawford)" }}
-            >
+            <p key={paragraph} className="text-base sm:text-lg text-muted leading-relaxed">
               {paragraph}
             </p>
           ))}
@@ -99,8 +86,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full bg-foreground text-background text-sm hover:opacity-80 transition-opacity"
-              style={{ fontFamily: "var(--font-strawford)" }}
+              className={`px-5 py-2.5 rounded-full bg-foreground text-background text-sm hover:opacity-80 transition-opacity ${sansBold}`}
             >
               {link.label}
             </a>
@@ -109,11 +95,8 @@ export default async function ProjectDetailPage({ params }: Props) {
       )}
 
       {project.pdf && (
-        <div className="mb-12 w-full">
-          <p
-            className="text-sm text-muted mb-4"
-            style={{ fontFamily: "var(--font-strawford)" }}
-          >
+        <div data-header-tone="light" className="mb-12 w-full">
+          <p className={`text-sm text-muted mb-4 ${sansLight}`}>
             Full project outcome (PDF)
           </p>
           <div className="flex flex-wrap gap-3 mb-4">
@@ -121,16 +104,14 @@ export default async function ProjectDetailPage({ params }: Props) {
               href={project.pdf}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full border border-border text-foreground text-sm hover:bg-surface transition-colors"
-              style={{ fontFamily: "var(--font-strawford)" }}
+              className={`px-5 py-2.5 rounded-full border border-border text-foreground text-sm hover:bg-surface transition-colors ${sansBold}`}
             >
               Open PDF
             </a>
             <a
               href={project.pdf}
               download
-              className="px-5 py-2.5 rounded-full border border-border text-foreground text-sm hover:bg-surface transition-colors"
-              style={{ fontFamily: "var(--font-strawford)" }}
+              className={`px-5 py-2.5 rounded-full border border-border text-foreground text-sm hover:bg-surface transition-colors ${sansBold}`}
             >
               Download PDF
             </a>
@@ -138,7 +119,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <iframe
             src={project.pdf}
             title={`${project.title} PDF`}
-            className="w-full min-h-[600px] border border-border rounded-2xl bg-white"
+            className="hidden md:block w-full min-h-[600px] border border-border rounded-2xl bg-white"
           />
         </div>
       )}
@@ -147,13 +128,11 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div className="space-y-10 mb-12 max-w-4xl">
           {project.embeds.map((embed) => (
             <div key={embed.src} className={embed.hideOnMobile ? "hidden md:block" : undefined}>
-              <p
-                className="text-sm text-muted mb-3"
-                style={{ fontFamily: "var(--font-strawford)" }}
-              >
+              <p className={`text-sm text-muted mb-3 ${sansLight}`}>
                 {embed.title}
               </p>
               <div
+                data-header-tone="dark"
                 className={`relative w-full rounded-2xl overflow-hidden border border-border bg-black ${
                   embed.src.includes("youtube") ? "aspect-video" : "min-h-[520px] sm:min-h-[600px]"
                 }`}
@@ -175,10 +154,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {project.gallery.length > 0 && (
         <section>
-          <h2
-            className="text-2xl font-normal text-foreground mb-6"
-            style={{ fontFamily: "var(--font-knile)" }}
-          >
+          <h2 className={`text-2xl ${decoMedium} text-foreground mb-6`}>
             Gallery
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -205,8 +181,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           {project.tech.map((t) => (
             <span
               key={t}
-              className="px-3 py-1 text-xs rounded-full bg-surface border border-border text-muted"
-              style={{ fontFamily: "var(--font-strawford)" }}
+              className={`px-3 py-1 text-xs rounded-full bg-surface border border-border text-muted ${sansMedium}`}
             >
               {t}
             </span>
