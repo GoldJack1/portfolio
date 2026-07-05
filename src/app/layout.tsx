@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/theme-provider";
 import ThemeInitScript from "@/components/theme-init-script";
 import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import PageTransition from "@/components/page-transition";
 
 const strawford = localFont({
@@ -45,6 +46,7 @@ export default function RootLayout({
           <main className="relative z-0 flex-1 flex flex-col pt-[123px] sm:pt-[155px] overflow-x-clip">
             <PageTransition>{children}</PageTransition>
           </main>
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>

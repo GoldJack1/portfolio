@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
-import { NAV_ITEMS, type NavItem } from "@/lib/nav-order";
+import { NAV_ITEMS, getActiveNavId, type NavItem } from "@/lib/nav-order";
 import { useNavigateWithScroll } from "@/hooks/use-navigate-with-scroll";
 
 // ─── Site config ─────────────────────────────────────────────────────────────
@@ -234,7 +234,7 @@ function DesktopHeader() {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
 
-  const active = NAV_ITEMS.find(i => i.href === pathname)?.id ?? NAV_ITEMS[0]?.id ?? "";
+  const active = getActiveNavId(pathname);
 
   const [hovered,     setHovered]     = useState<string | null>(null);
   const [searchOpen,  setSearchOpen]  = useState(false);
@@ -530,7 +530,7 @@ function MobileHeader() {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
 
-  const active = NAV_ITEMS.find(i => i.href === pathname)?.id ?? NAV_ITEMS[0]?.id ?? "";
+  const active = getActiveNavId(pathname);
 
   const [menuOpen,    setMenuOpen]    = useState(false);
   const [searchOpen,  setSearchOpen]  = useState(false);

@@ -2,7 +2,10 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import Image from "next/image";
 import TransitionLink from "@/components/transition-link";
+import VideoThumbnail from "@/components/video-thumbnail";
+import { PROJECTS, isVideoThumbnail } from "@/lib/projects";
 
 interface SitePage {
   id: string;
@@ -13,45 +16,31 @@ interface SitePage {
   color?: string;
   tag?: string;
   year?: string;
-  gradient?: string;
+  thumbnail?: string;
   tech?: string[];
 }
 
-const ALL_PAGES: SitePage[] = [
+const SITE_PAGES: SitePage[] = [
   { id: "home",     title: "Home",     desc: "Welcome — designer & developer portfolio.",          href: "/",        category: "Page", color: "#a5b4fc" },
   { id: "projects", title: "Projects", desc: "A selection of work across design and engineering.", href: "/projects", category: "Page", color: "#86efac" },
   { id: "about",    title: "About",    desc: "Background, experience, skills, and more.",          href: "/about",    category: "Page", color: "#fde68a" },
   { id: "contact",  title: "Contact",  desc: "Get in touch — always open to new projects.",        href: "/contact",  category: "Page", color: "#f9a8d4" },
-  {
-    id: "alpha", title: "Project Alpha", desc: "A full-stack dashboard for real-time analytics with custom data visualisation and role-based access control.",
-    href: "/projects", category: "Project", tag: "Web App", year: "2025",
-    gradient: "from-violet-500/20 to-indigo-500/20", tech: ["Next.js", "TypeScript", "Postgres"],
-  },
-  {
-    id: "beta", title: "Project Beta", desc: "Component library and design token system built to unify a product suite across web and mobile platforms.",
-    href: "/projects", category: "Project", tag: "Design System", year: "2025",
-    gradient: "from-emerald-500/20 to-teal-500/20", tech: ["Figma", "React", "Storybook"],
-  },
-  {
-    id: "gamma", title: "Project Gamma", desc: "Cross-platform fitness tracking app with personalised workout plans and progress visualisation.",
-    href: "/projects", category: "Project", tag: "Mobile", year: "2024",
-    gradient: "from-amber-500/20 to-orange-500/20", tech: ["React Native", "Expo", "Supabase"],
-  },
-  {
-    id: "delta", title: "Project Delta", desc: "Brand identity and digital presence for a London-based creative studio — logo, type, and web.",
-    href: "/projects", category: "Project", tag: "Branding", year: "2024",
-    gradient: "from-rose-500/20 to-pink-500/20", tech: ["Figma", "Framer", "Motion"],
-  },
-  {
-    id: "epsilon", title: "Project Epsilon", desc: "High-performance storefront with headless CMS, edge caching, and a custom checkout flow.",
-    href: "/projects", category: "Project", tag: "E-commerce", year: "2023",
-    gradient: "from-sky-500/20 to-cyan-500/20", tech: ["Next.js", "Shopify", "Tailwind"],
-  },
-  {
-    id: "zeta", title: "Project Zeta", desc: "CLI and web interface for automating repetitive design handoff tasks between Figma and code.",
-    href: "/projects", category: "Project", tag: "Tool", year: "2023",
-    gradient: "from-fuchsia-500/20 to-purple-500/20", tech: ["Node.js", "Figma API", "React"],
-  },
+];
+
+const ALL_PAGES: SitePage[] = [
+  ...SITE_PAGES,
+  ...PROJECTS.map((p) => ({
+    id: p.slug,
+    title: p.title,
+    desc: p.desc,
+    href: `/projects/${p.slug}`,
+    category: "Project" as const,
+    color: "#86efac",
+    tag: p.tag,
+    year: p.year,
+    thumbnail: p.thumbnail,
+    tech: p.tech,
+  })),
 ];
 
 function PageRow({ page }: { page: SitePage }) {
@@ -82,19 +71,39 @@ function PageRow({ page }: { page: SitePage }) {
   );
 }
 
-function ProjectCard({ page }: { page: SitePage }) {
+function SearchProjectCard({ page }: { page: SitePage }) {
+  const isVideo = page.thumbnail ? isVideoThumbnail(page.thumbnail) : false;
+
   return (
     <TransitionLink
       href={page.href}
       className="group flex flex-col rounded-2xl bg-surface border border-border hover:border-muted transition-colors overflow-hidden cursor-pointer"
     >
-      <div className={`aspect-video bg-gradient-to-br ${page.gradient} flex items-end p-5`}>
-        <span
-          className="text-xs uppercase tracking-widest text-muted"
-          style={{ fontFamily: "var(--font-strawford)" }}
-        >
-          {page.tag} · {page.year}
-        </span>
+      <div className="relative aspect-video overflow-hidden bg-background">
+        {page.thumbnail && (
+          isVideo ? (
+            <VideoThumbnail
+              src={page.thumbnail}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <Image
+              src={page.thumbnail}
+              alt={page.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, 50vw"
+            />
+          )
+        )}
+        <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/50 to-transparent">
+          <span
+            className="text-xs uppercase tracking-widest text-white/80"
+            style={{ fontFamily: "var(--font-strawford)" }}
+          >
+            {page.tag} · {page.year}
+          </span>
+        </div>
       </div>
       <div className="flex flex-col flex-1 p-5 gap-3">
         <h2
@@ -268,7 +277,7 @@ export default function SearchPageClient() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {projects.map((p) => (
-                  <ProjectCard key={p.id} page={p} />
+                  <SearchProjectCard key={p.id} page={p} />
                 ))}
               </div>
             </div>

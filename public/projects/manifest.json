@@ -1,0 +1,109 @@
+{
+  "receipty": {
+    "thumbnail": "/projects/receipty/thumbnail.jpg",
+    "gallery": [
+      "/projects/receipty/gallery/01.jpg",
+      "/projects/receipty/gallery/02.jpg",
+      "/projects/receipty/gallery/03.jpg",
+      "/projects/receipty/gallery/04.jpg",
+      "/projects/receipty/gallery/05.jpg",
+      "/projects/receipty/gallery/06.jpg",
+      "/projects/receipty/gallery/07.jpg",
+      "/projects/receipty/gallery/08.jpg",
+      "/projects/receipty/gallery/09.jpg",
+      "/projects/receipty/gallery/10.jpg",
+      "/projects/receipty/gallery/11.jpg",
+      "/projects/receipty/gallery/12.jpg",
+      "/projects/receipty/gallery/13.jpg",
+      "/projects/receipty/gallery/14.jpg",
+      "/projects/receipty/gallery/15.png",
+      "/projects/receipty/gallery/16.jpg"
+    ]
+  },
+  "sheffield-tram-train": {
+    "thumbnail": "/projects/sheffield-tram-train/thumbnail.jpg",
+    "gallery": [
+      "/projects/sheffield-tram-train/gallery/01.jpg",
+      "/projects/sheffield-tram-train/gallery/02.jpg",
+      "/projects/sheffield-tram-train/gallery/03.jpg",
+      "/projects/sheffield-tram-train/gallery/04.jpg",
+      "/projects/sheffield-tram-train/gallery/05.jpg",
+      "/projects/sheffield-tram-train/gallery/06.png",
+      "/projects/sheffield-tram-train/gallery/07.jpg"
+    ]
+  },
+  "diabetes-support-advert": {
+    "thumbnail": "/projects/diabetes-support-advert/thumbnail.jpg",
+    "gallery": [
+      "/projects/diabetes-support-advert/gallery/01.jpg",
+      "/projects/diabetes-support-advert/gallery/02.jpg",
+      "/projects/diabetes-support-advert/gallery/03.jpg",
+      "/projects/diabetes-support-advert/gallery/04.jpg",
+      "/projects/diabetes-support-advert/gallery/05.jpg",
+      "/projects/diabetes-support-advert/gallery/06.png",
+      "/projects/diabetes-support-advert/gallery/07.jpg",
+      "/projects/diabetes-support-advert/gallery/08.jpg"
+    ]
+  },
+  "northern-rail": {
+    "thumbnail": "/projects/northern-rail/thumbnail.jpg",
+    "gallery": [
+      "/projects/northern-rail/gallery/01.jpg",
+      "/projects/northern-rail/gallery/02.jpg",
+      "/projects/northern-rail/gallery/03.jpg",
+      "/projects/northern-rail/gallery/04.jpg",
+      "/projects/northern-rail/gallery/05.jpg",
+      "/projects/northern-rail/gallery/06.jpg",
+      "/projects/northern-rail/gallery/07.jpg",
+      "/projects/northern-rail/gallery/08.jpg",
+      "/projects/northern-rail/gallery/09.jpg",
+      "/projects/northern-rail/gallery/10.jpg",
+      "/projects/northern-rail/gallery/11.jpg",
+      "/projects/northern-rail/gallery/12.jpg",
+      "/projects/northern-rail/gallery/13.jpg",
+      "/projects/northern-rail/gallery/14.jpg",
+      "/projects/northern-rail/gallery/15.jpg",
+      "/projects/northern-rail/gallery/16.jpg",
+      "/projects/northern-rail/gallery/17.jpg",
+      "/projects/northern-rail/gallery/18.png",
+      "/projects/northern-rail/gallery/19.jpg",
+      "/projects/northern-rail/gallery/20.jpg"
+    ]
+  },
+  "leeds-corn-exchange": {
+    "thumbnail": "/projects/leeds-corn-exchange/thumbnail.jpg",
+    "gallery": [
+      "/projects/leeds-corn-exchange/gallery/01.jpg",
+      "/projects/leeds-corn-exchange/gallery/02.png",
+      "/projects/leeds-corn-exchange/gallery/03.png",
+      "/projects/leeds-corn-exchange/gallery/04.png",
+      "/projects/leeds-corn-exchange/gallery/05.png",
+      "/projects/leeds-corn-exchange/gallery/06.png",
+      "/projects/leeds-corn-exchange/gallery/07.png",
+      "/projects/leeds-corn-exchange/gallery/08.png",
+      "/projects/leeds-corn-exchange/gallery/09.png",
+      "/projects/leeds-corn-exchange/gallery/10.png",
+      "/projects/leeds-corn-exchange/gallery/11.png",
+      "/projects/leeds-corn-exchange/gallery/12.png",
+      "/projects/leeds-corn-exchange/gallery/13.png",
+      "/projects/leeds-corn-exchange/gallery/14.jpg",
+      "/projects/leeds-corn-exchange/gallery/15.jpg",
+      "/projects/leeds-corn-exchange/gallery/16.jpg",
+      "/projects/leeds-corn-exchange/gallery/17.jpg"
+    ]
+  },
+  "great-british-railways": {
+    "thumbnail": "/projects/great-british-railways/thumbnail.jpg",
+    "gallery": [],
+    "pdf": "/projects/great-british-railways/gbr-outcome.pdf"
+  },
+  "rail-statistics": {
+    "thumbnail": "/projects/rail-statistics/thumbnail.jpg",
+    "gallery": []
+  },
+  "webtext": {
+    "thumbnail": "/projects/webtext/thumbnail.mp4",
+    "gallery": [],
+    "video": "/projects/webtext/thumbnail.mp4"
+  }
+}

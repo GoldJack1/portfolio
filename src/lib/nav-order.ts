@@ -21,6 +21,17 @@ export function getNavIndex(pathname: string): number | null {
   return NAV_INDEX.get(normalizePath(pathname)) ?? null;
 }
 
+/** Resolve which nav tab is active, including nested routes (e.g. /projects/[slug]). */
+export function getActiveNavId(pathname: string): string {
+  const path = normalizePath(pathname);
+
+  if (path === "/projects" || path.startsWith("/projects/")) {
+    return "projects";
+  }
+
+  return NAV_ITEMS.find((i) => i.href === path)?.id ?? NAV_ITEMS[0]?.id ?? "home";
+}
+
 export function isSearchRoute(pathname: string): boolean {
   return normalizePath(pathname) === "/search";
 }

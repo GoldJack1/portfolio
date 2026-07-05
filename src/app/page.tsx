@@ -1,6 +1,10 @@
 import TransitionLink from "@/components/transition-link";
+import ProjectCard from "@/components/project-card";
+import { getFeaturedProjects } from "@/lib/projects";
 
 export default function Home() {
+  const featured = getFeaturedProjects();
+
   return (
     <div className="flex flex-col">
 
@@ -59,29 +63,8 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {[
-            { name: "Project Alpha", year: "2025", tag: "Web App", color: "from-violet-500/20 to-indigo-500/20" },
-            { name: "Project Beta",  year: "2025", tag: "Design",  color: "from-emerald-500/20 to-teal-500/20" },
-            { name: "Project Gamma", year: "2024", tag: "Mobile",  color: "from-amber-500/20 to-orange-500/20" },
-            { name: "Project Delta", year: "2024", tag: "Branding", color: "from-rose-500/20 to-pink-500/20" },
-          ].map((p) => (
-            <div
-              key={p.name}
-              className={`group relative aspect-video rounded-2xl bg-gradient-to-br ${p.color} border border-border flex flex-col justify-between p-6 cursor-pointer hover:border-muted transition-colors`}
-            >
-              <span
-                className="text-xs uppercase tracking-widest text-muted"
-                style={{ fontFamily: "var(--font-strawford)" }}
-              >
-                {p.tag} · {p.year}
-              </span>
-              <span
-                className="text-2xl text-foreground"
-                style={{ fontFamily: "var(--font-knile)" }}
-              >
-                {p.name}
-              </span>
-            </div>
+          {featured.map((project) => (
+            <ProjectCard key={project.slug} project={project} variant="compact" />
           ))}
         </div>
       </section>
