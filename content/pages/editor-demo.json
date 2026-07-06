@@ -52,11 +52,11 @@
     },
     {
       "type": "cta",
-      "heading": "Ready to add your own page?",
+      "heading": "Welcomd to the new page",
       "body": "Open /admin on Netlify, create a new Page, pick sections, and publish.",
       "headingTypography": {
         "font": "deco",
-        "weight": "medium",
+        "weight": "bold",
         "size": "3xl"
       },
       "style": "card",
