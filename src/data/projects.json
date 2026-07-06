@@ -1,5 +1,6 @@
 [
   {
+    "type": "Project",
     "slug": "great-british-railways",
     "title": "Great British Railways",
     "year": "2025",
@@ -26,6 +27,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "rail-statistics",
     "title": "Rail Statistics",
     "year": "2025",
@@ -49,6 +51,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "webtext",
     "title": "INTERNET + TELETEXT = WEBTEXT",
     "year": "2024",
@@ -80,6 +83,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "leeds-corn-exchange",
     "title": "Leeds Corn Exchange",
     "year": "2024",
@@ -124,6 +128,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "northern-rail",
     "title": "Northern England Railway",
     "year": "2024",
@@ -157,6 +162,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "receipty",
     "title": "Receipty",
     "year": "2024",
@@ -187,6 +193,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "diabetes-support-advert",
     "title": "Diabetes Support App",
     "year": "2023",
@@ -208,6 +215,7 @@
     ]
   },
   {
+    "type": "Project",
     "slug": "sheffield-tram-train",
     "title": "Sheffield Tram & Train",
     "year": "2023",

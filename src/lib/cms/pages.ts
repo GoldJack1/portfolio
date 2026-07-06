@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
-import siteSettingsData from "@/data/site-settings.json";
-import type { CmsPage, CmsSiteSettings } from "./types";
+import type { CmsPage } from "./types";
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
 const PAGES_DIR = path.join(CONTENT_ROOT, "pages");
@@ -34,8 +33,4 @@ export function getCmsPage(slug: string): CmsPage | undefined {
 
 export function getCmsNavPages(): CmsPage[] {
   return getAllCmsPages().filter((page) => page.showInNav);
-}
-
-export function getSiteSettings(): CmsSiteSettings {
-  return siteSettingsData as CmsSiteSettings;
 }

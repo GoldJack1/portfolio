@@ -1,4 +1,5 @@
 {
+  "type": "CustomPage",
   "title": "Editor demo",
   "slug": "editor-demo",
   "seoDescription": "Example page built with the block editor — edit this in /admin.",

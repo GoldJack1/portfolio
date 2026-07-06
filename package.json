@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
+    "dev:visual-editor": "node scripts/dev-with-content-watch.mjs 3000",
     "build": "npm run copy-cms && npm run sync-content && next build",
     "copy-cms": "mkdir -p public/admin/vendor && cp node_modules/decap-cms/dist/decap-cms.js public/admin/vendor/decap-cms.js",
     "sync-content": "node scripts/sync-projects.mjs && node scripts/sync-site-pages.mjs && node scripts/sync-site-settings.mjs && node scripts/sync-cms-nav-pages.mjs",
@@ -24,13 +25,15 @@
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
-    "fontkit": "^2.0.4",
+    "@stackbit/cms-git": "^1.0.38",
+    "@stackbit/types": "^2.1.15",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "fontkit": "^2.0.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

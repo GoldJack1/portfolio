@@ -1,5 +1,6 @@
 {
   "home": {
+    "type": "SitePage",
     "route": "home",
     "title": "Home",
     "seoDescription": "Jack Wingate — graphic and UI/UX designer. Brands, interfaces, and digital products from West Yorkshire.",
@@ -86,6 +87,7 @@
     ]
   },
   "about": {
+    "type": "SitePage",
     "route": "about",
     "title": "About",
     "seoDescription": "About Jack Wingate — graphic and UI/UX designer, First-Class graduate, transport and product design.",
@@ -289,6 +291,7 @@
     ]
   },
   "projects": {
+    "type": "SitePage",
     "route": "projects",
     "title": "Projects",
     "seoDescription": "Selected graphic design, UI/UX, and product work by Jack Wingate.",
@@ -314,6 +317,7 @@
     ]
   },
   "contact": {
+    "type": "SitePage",
     "route": "contact",
     "title": "Contact",
     "seoDescription": "Get in touch with Jack Wingate for freelance and full-time design roles.",
