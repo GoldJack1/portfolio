@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "next build",
+    "build": "npm run copy-cms && next build",
+    "copy-cms": "mkdir -p public/admin/vendor && cp node_modules/decap-cms/dist/decap-cms.js public/admin/vendor/decap-cms.js",
+    "postinstall": "npm run copy-cms",
     "start": "next start",
     "lint": "eslint"
   },
@@ -21,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "decap-cms": "^3.14.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",

@@ -9,11 +9,11 @@
 # Plugin is auto-installed by Netlify for Next.js — no need to pin here.
 
 [[redirects]]
-  from = "/admin/*"
+  from = "/admin"
   to = "/admin/index.html"
   status = 200
 
 [[redirects]]
-  from = "/admin"
+  from = "/admin/"
   to = "/admin/index.html"
   status = 200

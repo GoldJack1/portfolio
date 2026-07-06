@@ -4,7 +4,73 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Site Editor</title>
-    <script src="https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js"></script>
+    <style>
+      #cms-boot-fallback {
+        box-sizing: border-box;
+        font-family: system-ui, sans-serif;
+        max-width: 32rem;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+        color: #171717;
+        line-height: 1.5;
+      }
+      #cms-boot-fallback h1 {
+        font-size: 1.25rem;
+        margin: 0 0 0.75rem;
+      }
+      #cms-boot-fallback p {
+        margin: 0 0 0.75rem;
+        color: #525252;
+      }
+      #cms-boot-fallback code {
+        font-size: 0.9em;
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <div id="cms-boot-fallback">
+      <h1>Loading editor…</h1>
+      <p>This can take a few seconds on first load.</p>
+    </div>
+    <script src="/admin/vendor/decap-cms.js"></script>
+    <script>
+      (function () {
+        var fallback = document.getElementById("cms-boot-fallback");
+
+        function showError(message) {
+          if (!fallback) return;
+          fallback.innerHTML =
+            "<h1>Editor failed to load</h1><p>" +
+            message +
+            "</p><p>Try a hard refresh. If it still fails, disable ad blockers for this site.</p>";
+        }
+
+        window.addEventListener("error", function (event) {
+          if (event.filename && event.filename.indexOf("decap-cms") !== -1) {
+            showError("The editor script could not run in this browser.");
+          }
+        });
+
+        if (typeof window.CMS === "undefined") {
+          showError("The editor script did not load. Check that /admin/vendor/decap-cms.js is available.");
+          return;
+        }
+
+        fetch("/admin/config.yml")
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("Could not load CMS config (" + response.status + ").");
+            }
+            return response.text();
+          })
+          .then(function (config) {
+            window.CMS.init({ config: config });
+            if (fallback) fallback.remove();
+          })
+          .catch(function (error) {
+            showError(error.message || "Unknown error starting the editor.");
+          });
+      })();
+    </script>
+  </body>
 </html>
