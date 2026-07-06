@@ -1,87 +1,88 @@
 {
-  "type": "SitePage",
-  "route": "home",
-  "title": "Home",
-  "seoDescription": "Jack Wingate — graphic and UI/UX designer. Brands, interfaces, and digital products from West Yorkshire.",
-  "pageWidth": "full",
-  "blocks": [
-    {
-      "type": "hero",
-      "eyebrow": "Graphic & UI/UX designer",
-      "heading": "Jack Wingate",
-      "body": "I design brands, interfaces, and digital products — then bring them to life with AI-assisted builds, from transport campaigns to apps on the App Store.",
-      "headingTypography": {
-        "font": "deco",
-        "weight": "medium",
-        "size": "7xl"
-      },
-      "bodyTypography": {
-        "font": "deco",
-        "weight": "medium",
-        "size": "lg"
-      },
-      "layout": "left",
-      "minHeight": "tall",
-      "paddingBottom": "lg",
-      "buttons": [
+    "type": "SitePage",
+    "route": "home",
+    "title": "Home",
+    "seoDescription": "Jack Wingate — graphic and UI/UX designer. Brands, interfaces, and digital products from West Yorkshire.",
+    "pageWidth": "full",
+    "blocks": [
         {
-          "label": "View work",
-          "href": "/projects",
-          "variant": "primary",
-          "icon": "arrow-right",
-          "iconPosition": "right"
+            "type": "hero",
+            "eyebrow": "Graphic & UI/UX designer",
+            "heading": "Jack Wingate",
+            "body": "I design brands, interfaces, and digital products — then bring them to life with AI-assisted builds, from transport campaigns to apps on the App Store.",
+            "headingTypography": {
+                "font": "deco",
+                "weight": "medium",
+                "size": "7xl"
+            },
+            "bodyTypography": {
+                "font": "deco",
+                "weight": "medium",
+                "size": "lg"
+            },
+            "layout": "left",
+            "minHeight": "tall",
+            "paddingBottom": "lg",
+            "buttons": [
+                {
+                    "label": "View work",
+                    "href": "/projects",
+                    "variant": "primary",
+                    "icon": "arrow-right",
+                    "iconPosition": "right"
+                },
+                {
+                    "label": "Get in touch",
+                    "href": "/contact",
+                    "variant": "secondary",
+                    "icon": "chevron-right",
+                    "iconPosition": "right"
+                }
+            ]
         },
         {
-          "label": "Get in touch",
-          "href": "/contact",
-          "variant": "secondary",
-          "icon": "chevron-right",
-          "iconPosition": "right"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "body": "This site is currently being worked on — features, pages, and information may not be correct.",
-      "typography": {
-        "font": "sans",
-        "weight": "light",
-        "size": "sm"
-      },
-      "paddingTop": "none",
-      "paddingBottom": "lg"
-    },
-    {
-      "type": "featuredProjects",
-      "heading": "Selected work",
-      "headingTypography": {
-        "font": "deco",
-        "weight": "medium",
-        "size": "3xl"
-      },
-      "linkLabel": "All projects",
-      "linkHref": "/projects",
-      "columns": "2"
-    },
-    {
-      "type": "cta",
-      "heading": "About me",
-      "body": "First-Class Graphic Design graduate based in West Yorkshire. I design brands, interfaces, and products — and use AI-assisted builds to turn designs into real apps and sites.",
-      "headingTypography": {
-        "font": "deco",
-        "weight": "medium",
-        "size": "3xl"
-      },
-      "style": "card",
-      "buttons": [
+            "type": "text",
+            "body": "This site is currently being worked on — features, pages, and information may not be correct.",
+            "typography": {
+                "font": "sans",
+                "weight": "light",
+                "size": "sm"
+            },
+            "paddingTop": "none",
+            "paddingBottom": "lg"
+        },
         {
-          "label": "Learn more",
-          "href": "/about",
-          "variant": "secondary",
-          "icon": "chevron-right",
-          "iconPosition": "right"
+            "type": "featuredProjects",
+            "heading": "Selected work",
+            "headingTypography": {
+                "font": "deco",
+                "weight": "medium",
+                "size": "3xl"
+            },
+            "linkLabel": "All projects",
+            "linkHref": "/projects",
+            "columns": "2"
+        },
+        {
+            "type": "cta",
+            "heading": "About me",
+            "body": "First-Class Graphic Design graduate based in West Yorkshire. I design brands, interfaces, and products — and use AI-assisted builds to turn designs into real apps and sites.",
+            "headingTypography": {
+                "font": "deco",
+                "weight": "medium",
+                "size": "3xl"
+            },
+            "style": "card",
+            "buttons": [
+                {
+                    "label": "Learn more",
+                    "href": "/about",
+                    "variant": "secondary",
+                    "icon": "chevron-right",
+                    "iconPosition": "right"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ],
+    "showBackLink": true
 }
