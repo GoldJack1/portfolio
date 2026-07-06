@@ -13,10 +13,6 @@ local_backend: true
 media_folder: public
 public_folder: /
 
-media_library:
-  config:
-    max_file_size: 104857600
-
 site_url: https://jackwingateportfolio.netlify.app
 
 show_preview_links: true
@@ -753,6 +749,10 @@ collections:
         file: content/site-pages/home.json
         preview_path: /
         fields:
+          - label: Type
+            name: type
+            widget: hidden
+            default: SitePage
           - label: Title
             name: title
             widget: string
@@ -801,6 +801,10 @@ collections:
         file: content/site-pages/about.json
         preview_path: /about
         fields:
+          - label: Type
+            name: type
+            widget: hidden
+            default: SitePage
           - label: Title
             name: title
             widget: string
@@ -849,6 +853,10 @@ collections:
         file: content/site-pages/projects.json
         preview_path: /projects
         fields:
+          - label: Type
+            name: type
+            widget: hidden
+            default: SitePage
           - label: Title
             name: title
             widget: string
@@ -897,6 +905,10 @@ collections:
         file: content/site-pages/contact.json
         preview_path: /contact
         fields:
+          - label: Type
+            name: type
+            widget: hidden
+            default: SitePage
           - label: Title
             name: title
             widget: string
@@ -952,6 +964,10 @@ collections:
     summary: "{{title}} — /pages/{{slug}}"
     preview_path: "pages/{{slug}}"
     fields:
+      - label: Type
+        name: type
+        widget: hidden
+        default: CustomPage
       - label: Title
         name: title
         widget: string
@@ -1016,6 +1032,7 @@ collections:
     summary: "{{title}} ({{year}})"
     preview_path: "projects/{{slug}}"
     fields:
+      - { label: Type, name: type, widget: hidden, default: Project }
       - { label: URL slug, name: slug, widget: string, hint: "Lowercase with hyphens, e.g. rail-statistics" }
       - { label: Title, name: title, widget: string }
       - { label: Sort order, name: sortOrder, widget: number, value_type: int, default: 0, required: false }
@@ -1071,6 +1088,7 @@ collections:
         name: settings
         file: content/site/settings.json
         fields:
+          - { label: Type, name: type, widget: hidden, default: SiteSettings }
           - { label: Site name, name: siteName, widget: string }
           - { label: Site description, name: siteDescription, widget: text }
           - { label: Default social preview image, name: defaultOgImage, widget: image, required: false }
