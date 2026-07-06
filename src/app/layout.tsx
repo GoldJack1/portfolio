@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import ThemeProvider from "@/components/theme-provider";
 import ThemeInitScript from "@/components/theme-init-script";
@@ -10,26 +9,7 @@ import SiteFooter from "@/components/site-footer";
 import PageTransition from "@/components/page-transition";
 import { buildNavItems } from "@/lib/cms/navigation";
 import { rootMetadata } from "@/lib/site-metadata";
-
-const strawford = localFont({
-  src: [
-    { path: "../fonts/Strawford-Light.otf", weight: "300", style: "normal" },
-    { path: "../fonts/Strawford-Medium.otf", weight: "500", style: "normal" },
-    { path: "../fonts/Strawford-Bold.otf", weight: "700", style: "normal" },
-  ],
-  variable: "--font-strawford",
-  display: "swap",
-});
-
-const knile = localFont({
-  src: [
-    { path: "../fonts/Knile-Light.otf", weight: "300", style: "normal" },
-    { path: "../fonts/Knile-Medium.otf", weight: "500", style: "normal" },
-    { path: "../fonts/Knile-Bold.otf", weight: "700", style: "normal" },
-  ],
-  variable: "--font-knile",
-  display: "swap",
-});
+import { knile, strawford } from "@/lib/local-fonts";
 
 export const metadata: Metadata = rootMetadata;
 

@@ -8,42 +8,38 @@ import { getActiveNavId, type NavItem, NAV_ITEMS } from "@/lib/nav-order";
 import { useNavigateWithScroll } from "@/hooks/use-navigate-with-scroll";
 import { useHeaderContrastClasses } from "@/hooks/use-header-contrast-classes";
 import { headerSearchResults, type SearchResult } from "@/lib/site-search";
+import { defaultSansIconWeight } from "@/lib/icons/icon-weight-from-class";
 import { sansBold, sansLight, sansMedium } from "@/lib/typography";
+import Icon, { AnimatedMenuIcon } from "@/components/ui/icon";
 
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.8 };
+const HEADER_ICON_SIZE = 16;
+const HEADER_ICON_WEIGHT = defaultSansIconWeight;
 
-const ICON_PROPS = {
-  width: 16, height: 16, viewBox: "0 0 16 16", fill: "none",
-  stroke: "currentColor", strokeWidth: "1.75",
-  strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
-};
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-function SearchSvg() {
-  return <svg {...ICON_PROPS}><circle cx="7" cy="7" r="4.5" /><line x1="10.5" y1="10.5" x2="14" y2="14" /></svg>;
-}
-function CloseSvg() {
-  return <svg {...ICON_PROPS}><line x1="3.5" y1="3.5" x2="12.5" y2="12.5" /><line x1="12.5" y1="3.5" x2="3.5" y2="12.5" /></svg>;
-}
-function HamburgerSvg() {
-  return <svg {...ICON_PROPS}><line x1="2.5" y1="5" x2="13.5" y2="5" /><line x1="2.5" y1="8" x2="13.5" y2="8" /><line x1="2.5" y1="11" x2="13.5" y2="11" /></svg>;
-}
-function SunSvg() {
+function HeaderSearchIcon() {
   return (
-    <svg {...ICON_PROPS}>
-      <circle cx="8" cy="8" r="3" />
-      <line x1="8" y1="1.5" x2="8" y2="3" /><line x1="8" y1="13" x2="8" y2="14.5" />
-      <line x1="1.5" y1="8" x2="3" y2="8" /><line x1="13" y1="8" x2="14.5" y2="8" />
-      <line x1="3.4" y1="3.4" x2="4.4" y2="4.4" /><line x1="11.6" y1="11.6" x2="12.6" y2="12.6" />
-      <line x1="12.6" y1="3.4" x2="11.6" y2="4.4" /><line x1="4.4" y1="11.6" x2="3.4" y2="12.6" />
-    </svg>
+    <Icon
+      name="search"
+      font="sans"
+      weight={HEADER_ICON_WEIGHT}
+      size={HEADER_ICON_SIZE}
+      aria-hidden
+    />
   );
 }
-function MoonSvg() {
-  return <svg {...ICON_PROPS}><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3c-.5 2 .5 5 3 6.5 1.5.8 3 .8 3.5 0z" /></svg>;
+
+function HeaderCloseIcon() {
+  return (
+    <Icon
+      name="cross"
+      font="sans"
+      weight={HEADER_ICON_WEIGHT}
+      size={HEADER_ICON_SIZE}
+      aria-hidden
+    />
+  );
 }
 
 function ThemeToggleIcon() {
@@ -69,7 +65,7 @@ function ThemeToggleIcon() {
           transition={{ duration: 0.18 }}
           className="flex"
         >
-          <SunSvg />
+          <Icon name="sun" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
         </motion.span>
       ) : (
         <motion.span
@@ -80,7 +76,7 @@ function ThemeToggleIcon() {
           transition={{ duration: 0.18 }}
           className="flex"
         >
-          <MoonSvg />
+          <Icon name="moon" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
         </motion.span>
       )}
     </AnimatePresence>
@@ -381,7 +377,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                 transition={{ duration: 0.15 }}
               >
                 <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[43px]">
-                  <span className={`shrink-0 ${hc.searchIcon}`}><SearchSvg /></span>
+                  <span className={`shrink-0 ${hc.searchIcon}`}><HeaderSearchIcon /></span>
                   <input
                     autoFocus
                     value={searchQuery}
@@ -463,7 +459,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                   exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
                   transition={{ duration: 0.18 }}
                   onClick={closeSearch} aria-label="Close search">
-                  <CloseSvg />
+                  <HeaderCloseIcon />
                 </motion.button>
               ) : (
                 <motion.button key="search"
@@ -473,7 +469,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                   exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
                   transition={{ duration: 0.18 }}
                   onClick={openSearch} aria-label="Open search">
-                  <SearchSvg />
+                  <HeaderSearchIcon />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -546,15 +542,12 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
               <button onClick={toggleMenu}
                 className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full ${hc.icon} ${hc.searchBtnRest} transition-colors`}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}>
-                <AnimatePresence initial={false} mode="wait">
-                  {menuOpen ? (
-                    <motion.span key="x" initial={{ rotate: -90, scale: 0.5 }} animate={{ rotate: 0, scale: 1 }}
-                      exit={{ rotate: 90, scale: 0.5 }} transition={{ duration: 0.18 }} className="flex"><CloseSvg /></motion.span>
-                  ) : (
-                    <motion.span key="b" initial={{ rotate: 90, scale: 0.5 }} animate={{ rotate: 0, scale: 1 }}
-                      exit={{ rotate: -90, scale: 0.5 }} transition={{ duration: 0.18 }} className="flex"><HamburgerSvg /></motion.span>
-                  )}
-                </AnimatePresence>
+                <AnimatedMenuIcon
+                  isOpen={menuOpen}
+                  font="sans"
+                  weight={HEADER_ICON_WEIGHT}
+                  size={HEADER_ICON_SIZE}
+                />
               </button>
             </motion.div>
 
@@ -572,7 +565,7 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
                 >
                   <div className="absolute inset-0 bg-white rounded-full" />
                   <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[48px]">
-                    <span className={`shrink-0 ${hc.searchIcon}`}><SearchSvg /></span>
+                    <span className={`shrink-0 ${hc.searchIcon}`}><HeaderSearchIcon /></span>
                     <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search"
                       className={`flex-1 bg-transparent outline-none text-[16px] min-w-0 ${hc.input} ${sansBold}`}
@@ -620,14 +613,14 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.18 }}
-                    onClick={closeSearch} aria-label="Close search"><CloseSvg /></motion.button>
+                    onClick={closeSearch} aria-label="Close search"><HeaderCloseIcon /></motion.button>
                 ) : (
                   <motion.button key="search" className={`${ICON_BTN} ${hc.icon}`}
                     initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.18 }}
-                    onClick={openSearch} aria-label="Search"><SearchSvg /></motion.button>
+                    onClick={openSearch} aria-label="Search"><HeaderSearchIcon /></motion.button>
                 )}
               </AnimatePresence>
             </div>

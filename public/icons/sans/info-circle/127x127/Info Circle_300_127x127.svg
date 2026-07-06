@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 127 127">
+  <!-- Generator: Adobe Illustrator 30.1.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 136)  -->
+  <g>
+    <g>
+      <rect x="59" y="33.78" width="9.01" height="9.01"/>
+      <path d="M67.01,34.77v7.02h-7.02v-7.02h7.02M69,32.78h-10.99v10.99h10.99v-10.99h0Z"/>
+    </g>
+    <g>
+      <polygon points="51.98 92.84 51.98 83.84 59 83.84 59 63.9 51.98 63.9 51.98 54.9 68 54.9 68 83.84 75.02 83.84 75.02 92.84 51.98 92.84"/>
+      <path d="M67.01,55.89v28.94h7.02v7.02h-21.06v-7.02h7.02v-21.92h-7.02v-7.02h14.04M69,53.9h-18.01v10.99h7.02v17.95h-7.02v10.99h25.03v-10.99h-7.02v-28.94h0Z"/>
+    </g>
+  </g>
+  <circle id="Outer" cx="63.5" cy="63.5" r="56.85" fill="none" stroke="#000" stroke-width="13.3"/>
+</svg>
