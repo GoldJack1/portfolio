@@ -5,6 +5,7 @@ import TransitionLink from "@/components/transition-link";
 import type { CmsButton } from "@/lib/cms/types";
 import { isCmsIconName } from "@/lib/cms/icon-names";
 import { BUTTON_SIZE_CLASSES } from "@/lib/cms/typography";
+import { iconWeightFromClass } from "@/lib/icons/icon-weight-from-class";
 import { sansBold } from "@/lib/typography";
 
 type CmsButtonProps = {
@@ -20,7 +21,7 @@ export default function CmsButton({ button, className = "" }: CmsButtonProps) {
   const iconPosition = button.iconPosition ?? "left";
   const iconName = isCmsIconName(button.icon) ? (button.icon as StrokeIconName) : undefined;
 
-  const classes = `inline-flex items-center justify-center rounded-full transition-opacity ${sansBold} ${BUTTON_SIZE_CLASSES[size]} ${
+  const classes = `icon-text-row justify-center rounded-full transition-opacity ${sansBold} ${BUTTON_SIZE_CLASSES[size]} ${
     variant === "ghost"
       ? "text-foreground hover:bg-surface"
       : variant === "secondary"
@@ -31,11 +32,11 @@ export default function CmsButton({ button, className = "" }: CmsButtonProps) {
   const content = (
     <>
       {iconName && iconPosition === "left" ? (
-        <Icon name={iconName} size={size === "lg" ? 18 : size === "sm" ? 14 : 16} />
+        <Icon name={iconName} font="sans" weight={iconWeightFromClass(sansBold)} />
       ) : null}
       <span>{button.label}</span>
       {iconName && iconPosition === "right" ? (
-        <Icon name={iconName} size={size === "lg" ? 18 : size === "sm" ? 14 : 16} />
+        <Icon name={iconName} font="sans" weight={iconWeightFromClass(sansBold)} />
       ) : null}
     </>
   );

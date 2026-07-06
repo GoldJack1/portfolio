@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import {
-  getBaseStrokeWidth,
   getStrokeWidth,
   type AnchorWeight,
   type IconFont,
@@ -33,6 +32,30 @@ import {
 } from "@/lib/icons/remap-static-icon";
 
 const VIEWBOX_SIZE = 32;
+/** Paths were drawn at weight 100 in the 32×32 viewBox — used only for compound-icon inset math */
+const PATH_DESIGN_STROKE = 2.22;
+const ICON_INLINE_CLASS = "icon-inline";
+
+/** Size in px or CSS length. Omit to use 1cap (matches text cap height). */
+function resolveIconSizeStyle(size?: number | string): CSSProperties {
+  const sizeValue = size ?? "1cap";
+  const dimensions =
+    typeof sizeValue === "number"
+      ? { width: `${sizeValue}px`, height: `${sizeValue}px` }
+      : { width: sizeValue, height: sizeValue };
+
+  return {
+    ...dimensions,
+    fontSize: "inherit",
+    flex: "none",
+    minWidth: 0,
+    minHeight: 0,
+  };
+}
+
+function iconWrapperClassName(className?: string): string {
+  return className ? `${ICON_INLINE_CLASS} ${className}` : ICON_INLINE_CLASS;
+}
 
 type IconPathData = {
   paths: string[];
@@ -47,6 +70,13 @@ type IconPathData = {
 
 const STATIC_ICONS = ["star", "info-circle", "help-circle", "controls"] as const;
 type StaticIconName = (typeof STATIC_ICONS)[number];
+export type StrokeIconName = keyof typeof iconPaths | StaticIconName;
+
+const OVERFLOW_VISIBLE_ICONS = new Set<StrokeIconName>(["refresh", "search", "sun", "moon"]);
+
+function iconNeedsOverflowVisible(name: StrokeIconName): boolean {
+  return OVERFLOW_VISIBLE_ICONS.has(name);
+}
 
 const iconPaths: Record<string, IconPathData> = {
   star: { paths: [] },
@@ -226,22 +256,14 @@ const iconPaths: Record<string, IconPathData> = {
   },
 };
 
-function calculateScaleFactor(
-  strokeWidth: number,
-  baseStrokeWidth: number,
-  inset = 0,
-): number {
-  const originalContentSize = VIEWBOX_SIZE - baseStrokeWidth;
+function calculateScaleFactor(strokeWidth: number, inset = 0): number {
+  const originalContentSize = VIEWBOX_SIZE - PATH_DESIGN_STROKE;
   const availableSize = VIEWBOX_SIZE - strokeWidth - inset * 2;
   return availableSize / originalContentSize;
 }
 
-function calculateCompoundScaleFactor(
-  strokeWidth: number,
-  baseStrokeWidth: number,
-  outerSize: number,
-): number {
-  const strokeIncrease = strokeWidth - baseStrokeWidth;
+function calculateCompoundScaleFactor(strokeWidth: number, outerSize: number): number {
+  const strokeIncrease = strokeWidth - PATH_DESIGN_STROKE;
   if (strokeIncrease <= 0.001) return 1;
   const strokeIncreasePerSide = strokeIncrease / 2;
   const shrinkMultiplier = 5.6;
@@ -249,13 +271,12 @@ function calculateCompoundScaleFactor(
   return Math.max(0.5, 1 - reductionRatio);
 }
 
-export type StrokeIconName = keyof typeof iconPaths | StaticIconName;
-
 export interface IconProps {
   name: StrokeIconName;
   font?: IconFont;
   weight?: number;
   className?: string;
+  /** Omit to use 1cap — matches text cap height. Pass `1em` or px for explicit box size. */
   size?: number | string;
   strokeWidth?: number;
   color?: string;
@@ -287,8 +308,7 @@ function StaticFetchedIcon({
   "aria-label": ariaLabel,
   "aria-hidden": ariaHidden,
 }: StaticIconProps) {
-  const sizeValue = size ?? 20;
-  const sizeNum = typeof sizeValue === "number" ? sizeValue : 20;
+  const sizeNum = typeof size === "number" ? size : 16;
   const closestSize = getSize(sizeNum);
   const closestWeight = getWeight(weight);
   const assetPath = getAssetPath(font, closestSize, closestWeight);
@@ -322,19 +342,13 @@ function StaticFetchedIcon({
     };
   }, [assetPath, label, preserveFillNone]);
 
-  const sizeStyle =
-    typeof sizeValue === "number"
-      ? { width: `${sizeValue}px`, height: `${sizeValue}px` }
-      : { width: sizeValue, height: sizeValue };
+  const sizeStyle = resolveIconSizeStyle(size);
 
   if (!svgContent) {
     return (
       <span
-        className={className}
+        className={iconWrapperClassName(className)}
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
           ...sizeStyle,
         }}
         aria-label={ariaLabel}
@@ -362,11 +376,8 @@ function StaticFetchedIcon({
 
   return (
     <span
-      className={className}
+      className={iconWrapperClassName(className)}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
         color: color || undefined,
         ...sizeStyle,
       }}
@@ -378,7 +389,7 @@ function StaticFetchedIcon({
         xmlns="http://www.w3.org/2000/svg"
         viewBox={viewBox}
         fill="currentColor"
-        style={{ width: "100%", height: "100%" }}
+        style={{ display: "block", width: "100%", height: "100%" }}
         dangerouslySetInnerHTML={{ __html: innerContent }}
       />
     </span>
@@ -478,35 +489,31 @@ export function Icon({
     return null;
   }
 
-  const baseStrokeWidth = getBaseStrokeWidth(font);
   const calculatedStrokeWidth = customStrokeWidth ?? getStrokeWidth(font, weight);
-  const scaleFactor = calculateScaleFactor(calculatedStrokeWidth, baseStrokeWidth, inset);
   const center = VIEWBOX_SIZE / 2;
-  const translateOffset = center * (1 - scaleFactor);
   const compound = iconData.compound;
   const isCompound = !!compound;
+
+  const scaleFactor = isCompound
+    ? calculateScaleFactor(calculatedStrokeWidth, inset)
+    : 1;
+  const translateOffset = center * (1 - scaleFactor);
   const scaledOuterSize =
     compound?.outerSize ? compound.outerSize * scaleFactor : 0;
   const innerScaleFactor =
     compound && scaledOuterSize > 0
-      ? calculateCompoundScaleFactor(calculatedStrokeWidth, baseStrokeWidth, scaledOuterSize)
+      ? calculateCompoundScaleFactor(calculatedStrokeWidth, scaledOuterSize)
       : 1;
 
-  const sizeValue = size ?? "1em";
-  const sizeStyle =
-    typeof sizeValue === "number"
-      ? { width: `${sizeValue}px`, height: `${sizeValue}px` }
-      : { width: sizeValue, height: sizeValue };
+  const sizeStyle = resolveIconSizeStyle(size);
+  const overflowVisible = iconNeedsOverflowVisible(name);
 
   return (
     <span
-      className={className}
+      className={iconWrapperClassName(className)}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
         ...sizeStyle,
-        ...(name === "refresh" ? { overflow: "visible" as const } : {}),
+        ...(overflowVisible ? { overflow: "visible" as const } : {}),
       }}
       aria-label={ariaLabel}
       aria-hidden={ariaHidden ?? !ariaLabel}
@@ -519,8 +526,8 @@ export function Icon({
         stroke={color || "currentColor"}
         strokeLinecap="round"
         strokeLinejoin={iconData.strokeLinejoin}
-        overflow={name === "refresh" ? "visible" : undefined}
-        style={{ width: "100%", height: "100%" }}
+        overflow={overflowVisible ? "visible" : undefined}
+        style={{ display: "block", width: "100%", height: "100%" }}
       >
         {isCompound && compound ? (
           <>
@@ -548,14 +555,12 @@ export function Icon({
             </g>
           </>
         ) : (
-          <g
-            transform={`translate(${translateOffset}, ${translateOffset}) scale(${scaleFactor})${iconData.rotate != null ? ` rotate(${iconData.rotate} 16 16)` : ""}`}
-          >
+          <g transform={iconData.rotate != null ? `rotate(${iconData.rotate} 16 16)` : undefined}>
             {iconData.paths.map((d, i) => (
               <path
                 key={i}
                 d={d}
-                strokeWidth={calculatedStrokeWidth / scaleFactor}
+                strokeWidth={calculatedStrokeWidth}
                 style={{ transition: "stroke-width 200ms ease-out" }}
               />
             ))}
@@ -577,7 +582,7 @@ export function hasIcon(name: string): name is StrokeIconName {
 export interface AnimatedMenuIconProps {
   isOpen: boolean;
   font?: IconFont;
-  size?: number;
+  size?: number | string;
   weight?: number;
   className?: string;
 }
@@ -586,24 +591,25 @@ export interface AnimatedMenuIconProps {
 export function AnimatedMenuIcon({
   isOpen,
   font = "sans",
-  size = 16,
+  size,
   weight = 500,
   className,
 }: AnimatedMenuIconProps) {
   const strokeWidth = getStrokeWidth(font, weight);
+  const sizeStyle = resolveIconSizeStyle(size);
 
   return (
-    <svg
-      className={className}
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      style={{ overflow: "visible" }}
-      aria-hidden
-    >
+    <span className={iconWrapperClassName(className)} style={sizeStyle}>
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 32 32"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        style={{ display: "block", overflow: "visible" }}
+        aria-hidden
+      >
       <line
         x1="1.11"
         y1={isOpen ? "1.11" : "5.052"}
@@ -632,6 +638,7 @@ export function AnimatedMenuIcon({
         style={{ transition: "all 300ms ease-in-out", transformOrigin: "center" }}
       />
     </svg>
+    </span>
   );
 }
 

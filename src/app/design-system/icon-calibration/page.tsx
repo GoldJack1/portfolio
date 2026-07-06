@@ -2,19 +2,16 @@
 
 import Link from "next/link";
 import { useCallback, useState } from "react";
+import Icon from "@/components/ui/icon";
 import {
   ICON_ANCHOR_WEIGHTS,
-  strokeWidths as extractedStrokeWidths,
+  ICON_WEIGHTS,
+  strokeWidths as calibratedStrokeWidths,
   WEIGHT_NAMES,
-  type AnchorWeight,
   type IconFont,
+  type IconWeight,
 } from "@/config/icon-weights";
-
-const WEIGHT_NAMES_ANCHOR: Record<AnchorWeight, string> = {
-  300: WEIGHT_NAMES[300],
-  500: WEIGHT_NAMES[500],
-  700: WEIGHT_NAMES[700],
-};
+import { extractedAt, extractedStrokeWidths } from "@/lib/icons/extracted-stroke-seeds";
 
 const FONT_TABS: { id: IconFont; label: string; className: string }[] = [
   { id: "sans", label: "Strawford", className: "font-sans" },
@@ -23,61 +20,33 @@ const FONT_TABS: { id: IconFont; label: string; className: string }[] = [
 
 const sampleText = "Hamburger";
 
-const iconPaths = {
-  cross: "M6,6 L26,26 M26,6 L6,26",
-  plus: "M16,6 L16,26 M6,16 L26,16",
-  minus: "M6,16 L26,16",
-};
-
-function IconPreview({
-  path,
-  strokeWidth,
-  size,
-}: {
-  path: string;
-  strokeWidth: number;
-  size: number;
-}) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      width={size}
-      height={size}
-      className="inline-block shrink-0 align-middle"
-      style={{ verticalAlign: "middle", marginTop: "-0.1em" }}
-    >
-      <path
-        d={path}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function WeightRow({
   weight,
   strokeWidth,
+  extractedStroke,
   onStrokeChange,
   fontSize,
   fontClassName,
+  font,
+  hasStaticAsset,
 }: {
-  weight: AnchorWeight;
+  weight: IconWeight;
   strokeWidth: number;
-  onStrokeChange: (weight: AnchorWeight, value: number) => void;
+  extractedStroke: number;
+  onStrokeChange: (weight: IconWeight, value: number) => void;
   fontSize: number;
   fontClassName: string;
+  font: IconFont;
+  hasStaticAsset: boolean;
 }) {
-  const iconSize = fontSize;
-
   return (
     <div className="flex flex-wrap items-center gap-4 border-b border-border py-4">
       <div className="w-28 shrink-0">
-        <span className="text-sm text-muted">{weight}</span>
-        <span className="ml-2 text-xs text-muted">{WEIGHT_NAMES_ANCHOR[weight]}</span>
+        <span className="text-sm text-foreground">{weight}</span>
+        <span className="ml-2 text-xs text-muted">{WEIGHT_NAMES[weight]}</span>
+        {hasStaticAsset ? (
+          <span className="mt-0.5 block text-[10px] uppercase tracking-wide text-muted">Static SVG</span>
+        ) : null}
       </div>
       <div
         className={`w-44 shrink-0 text-foreground ${fontClassName}`}
@@ -86,12 +55,12 @@ function WeightRow({
         {sampleText}
       </div>
       <div
-        className="flex w-28 shrink-0 items-center justify-center gap-2 text-foreground"
-        style={{ fontSize: `${fontSize}px`, lineHeight: 1 }}
+        className={`flex w-28 shrink-0 items-center justify-center gap-2 text-foreground ${fontClassName}`}
+        style={{ fontSize: `${fontSize}px`, lineHeight: 1, fontWeight: weight }}
       >
-        <IconPreview path={iconPaths.plus} strokeWidth={strokeWidth} size={iconSize} />
-        <IconPreview path={iconPaths.cross} strokeWidth={strokeWidth} size={iconSize} />
-        <IconPreview path={iconPaths.minus} strokeWidth={strokeWidth} size={iconSize} />
+        <Icon name="plus" font={font} weight={weight} strokeWidth={strokeWidth} size={fontSize} />
+        <Icon name="cross" font={font} weight={weight} strokeWidth={strokeWidth} size={fontSize} />
+        <Icon name="minus" font={font} weight={weight} strokeWidth={strokeWidth} size={fontSize} />
       </div>
       <div className="flex min-w-[200px] flex-1 items-center gap-3">
         <input
@@ -112,26 +81,39 @@ function WeightRow({
           onChange={(e) => onStrokeChange(weight, parseFloat(e.target.value) || 0.1)}
           className="w-20 rounded border border-border bg-surface px-2 py-1 text-center text-sm text-foreground"
         />
+        <button
+          type="button"
+          title="Apply extracted seed for this weight"
+          onClick={() => onStrokeChange(weight, extractedStroke)}
+          className="shrink-0 rounded border border-border px-2 py-1 text-xs text-muted hover:bg-background hover:text-foreground"
+        >
+          Seed {extractedStroke.toFixed(2)}
+        </button>
       </div>
     </div>
   );
 }
 
+function formatStrokeBlock(font: IconFont, values: Record<IconWeight, number>): string {
+  return ICON_WEIGHTS.map((w) => `    ${w}: ${values[w].toFixed(2)},`).join("\n");
+}
+
 export default function IconCalibrationPage() {
   const [activeFont, setActiveFont] = useState<IconFont>("sans");
   const [strokeWidthValues, setStrokeWidthValues] = useState<
-    Record<IconFont, Record<AnchorWeight, number>>
+    Record<IconFont, Record<IconWeight, number>>
   >(() => ({
-    sans: { ...extractedStrokeWidths.sans },
-    deco: { ...extractedStrokeWidths.deco },
+    sans: { ...calibratedStrokeWidths.sans },
+    deco: { ...calibratedStrokeWidths.deco },
   }));
   const [fontSize, setFontSize] = useState(24);
   const [copied, setCopied] = useState(false);
 
   const activeTab = FONT_TABS.find((t) => t.id === activeFont)!;
   const currentValues = strokeWidthValues[activeFont];
+  const extractedValues = extractedStrokeWidths[activeFont];
 
-  const handleStrokeChange = useCallback((font: IconFont, weight: AnchorWeight, value: number) => {
+  const handleStrokeChange = useCallback((font: IconFont, weight: IconWeight, value: number) => {
     setStrokeWidthValues((prev) => ({
       ...prev,
       [font]: {
@@ -148,19 +130,29 @@ export default function IconCalibrationPage() {
     }));
   }, []);
 
+  const resetToCalibrated = useCallback((font: IconFont) => {
+    setStrokeWidthValues((prev) => ({
+      ...prev,
+      [font]: { ...calibratedStrokeWidths[font] },
+    }));
+  }, []);
+
+  const applyAllExtracted = useCallback(() => {
+    setStrokeWidthValues({
+      sans: { ...extractedStrokeWidths.sans },
+      deco: { ...extractedStrokeWidths.deco },
+    });
+  }, []);
+
   const exportValues = useCallback(() => {
     const sans = strokeWidthValues.sans;
     const deco = strokeWidthValues.deco;
-    const tsCode = `export const strokeWidths: Record<IconFont, Record<AnchorWeight, number>> = {
+    const tsCode = `export const strokeWidths: Record<IconFont, Record<IconWeight, number>> = {
   sans: {
-    300: ${sans[300].toFixed(2)},
-    500: ${sans[500].toFixed(2)},
-    700: ${sans[700].toFixed(2)},
+${formatStrokeBlock("sans", sans)}
   },
   deco: {
-    300: ${deco[300].toFixed(2)},
-    500: ${deco[500].toFixed(2)},
-    700: ${deco[700].toFixed(2)},
+${formatStrokeBlock("deco", deco)}
   },
 };
 
@@ -182,7 +174,11 @@ export const baseStrokeWidths: Record<IconFont, number> = {
           <div>
             <h1 className="font-deco text-3xl font-bold text-foreground">Icon Stroke Calibration</h1>
             <p className="mt-2 text-muted">
-              Adjust stroke width per font weight until icons visually match text thickness.
+              Set stroke width for each font weight (100–800) until icons match text thickness.
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              Extracted seeds from OTF metrics: {new Date(extractedAt).toLocaleString()} — run{" "}
+              <code className="rounded bg-surface px-1">npm run extract-icon-metrics</code> to refresh.
             </p>
           </div>
           <Link
@@ -211,7 +207,7 @@ export const baseStrokeWidths: Record<IconFont, number> = {
         </div>
 
         <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-3">
               <label className="text-sm text-muted">Font size</label>
               <input
@@ -233,6 +229,20 @@ export const baseStrokeWidths: Record<IconFont, number> = {
             </button>
             <button
               type="button"
+              onClick={() => resetToCalibrated(activeFont)}
+              className="rounded-lg border border-border px-4 py-2 text-sm text-foreground hover:bg-background"
+            >
+              Reset {activeTab.label} to saved
+            </button>
+            <button
+              type="button"
+              onClick={applyAllExtracted}
+              className="rounded-lg border border-border px-4 py-2 text-sm text-foreground hover:bg-background"
+            >
+              Apply all extracted seeds
+            </button>
+            <button
+              type="button"
               onClick={exportValues}
               className="ml-auto rounded-lg bg-foreground px-4 py-2 text-sm text-background"
             >
@@ -248,14 +258,17 @@ export const baseStrokeWidths: Record<IconFont, number> = {
             <div className="w-28 shrink-0">Icons</div>
             <div className="flex-1">Stroke (32×32 viewBox)</div>
           </div>
-          {ICON_ANCHOR_WEIGHTS.map((weight) => (
+          {ICON_WEIGHTS.map((weight) => (
             <WeightRow
               key={weight}
               weight={weight}
               strokeWidth={currentValues[weight]}
+              extractedStroke={extractedValues[weight]}
               onStrokeChange={(w, v) => handleStrokeChange(activeFont, w, v)}
               fontSize={fontSize}
               fontClassName={activeTab.className}
+              font={activeFont}
+              hasStaticAsset={ICON_ANCHOR_WEIGHTS.includes(weight as (typeof ICON_ANCHOR_WEIGHTS)[number])}
             />
           ))}
         </div>
@@ -263,15 +276,17 @@ export const baseStrokeWidths: Record<IconFont, number> = {
         <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
           <h2 className="font-deco text-xl font-semibold text-foreground">In-context preview</h2>
           <div className="mt-4 space-y-3">
-            {ICON_ANCHOR_WEIGHTS.map((weight) => (
+            {ICON_WEIGHTS.map((weight) => (
               <div
                 key={weight}
                 className={`flex items-center gap-2 text-foreground ${activeTab.className}`}
                 style={{ fontWeight: weight, fontSize: `${fontSize}px`, lineHeight: 1.2 }}
               >
                 <span className="inline-flex items-center gap-1.5">
-                  <IconPreview
-                    path={iconPaths.plus}
+                  <Icon
+                    name="plus"
+                    font={activeFont}
+                    weight={weight}
                     strokeWidth={currentValues[weight]}
                     size={fontSize}
                   />
@@ -279,15 +294,17 @@ export const baseStrokeWidths: Record<IconFont, number> = {
                 </span>
                 <span className="mx-3 text-muted">|</span>
                 <span className="inline-flex items-center gap-1.5">
-                  <IconPreview
-                    path={iconPaths.cross}
+                  <Icon
+                    name="cross"
+                    font={activeFont}
+                    weight={weight}
                     strokeWidth={currentValues[weight]}
                     size={fontSize}
                   />
                   <span>Close</span>
                 </span>
                 <span className="ml-auto text-xs text-muted">
-                  {weight} ({WEIGHT_NAMES_ANCHOR[weight]})
+                  {weight} ({WEIGHT_NAMES[weight]})
                 </span>
               </div>
             ))}
@@ -296,8 +313,9 @@ export const baseStrokeWidths: Record<IconFont, number> = {
 
         <p className="mt-6 text-sm text-muted">
           Paste exported values into{" "}
-          <code className="rounded bg-surface px-1">src/config/icon-weights.ts</code>, then regenerate
-          static SVGs via the Illustrator script with matching stroke tables.
+          <code className="rounded bg-surface px-1">src/config/icon-weights.ts</code>. Weights marked
+          &quot;Static SVG&quot; have pre-baked assets at 300 / 500 / 700 — other weights use dynamic
+          paths or runtime remapping.
         </p>
       </div>
     </div>

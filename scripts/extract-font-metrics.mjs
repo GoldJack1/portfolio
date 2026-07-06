@@ -13,7 +13,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 900];
+const WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800];
 const WEIGHT_NAMES = {
   100: "Thin",
   200: "ExtraLight",
@@ -22,7 +22,7 @@ const WEIGHT_NAMES = {
   500: "Medium",
   600: "SemiBold",
   700: "Bold",
-  900: "Black",
+  800: "Black",
 };
 
 const FONT_FAMILIES = {
@@ -35,7 +35,7 @@ const FONT_FAMILIES = {
       400: path.join(__dirname, "..", "src", "fonts", "Strawford-Regular.otf"),
       500: path.join(__dirname, "..", "src", "fonts", "Strawford-Medium.otf"),
       700: path.join(__dirname, "..", "src", "fonts", "Strawford-Bold.otf"),
-      900: path.join(__dirname, "..", "src", "fonts", "Strawford-Black.otf"),
+      800: path.join(__dirname, "..", "src", "fonts", "Strawford-Black.otf"),
     },
   },
   deco: {
@@ -48,7 +48,7 @@ const FONT_FAMILIES = {
       500: path.join(__dirname, "..", "src", "fonts", "Knile-Medium.otf"),
       600: path.join(__dirname, "..", "src", "fonts", "Knile-SemiBold.otf"),
       700: path.join(__dirname, "..", "src", "fonts", "Knile-Bold.otf"),
-      900: path.join(__dirname, "..", "src", "fonts", "Knile-Black.otf"),
+      800: path.join(__dirname, "..", "src", "fonts", "Knile-Black.otf"),
     },
   },
 };
@@ -178,78 +178,16 @@ function writeOutputs(results) {
   };
   fs.writeFileSync(path.join(outputDir, "font-metrics.json"), JSON.stringify(fontMetrics, null, 2));
 
-  const sans = results.sans.strokeWidths;
-  const deco = results.deco.strokeWidths;
+  const sansAnchors = [300, 500, 700].map((w) => `    ${w}: ${results.sans.strokeWidths[w]?.toFixed(2) ?? "N/A"}`).join("\n");
+  const decoAnchors = [300, 500, 700].map((w) => `    ${w}: ${results.deco.strokeWidths[w]?.toFixed(2) ?? "N/A"}`).join("\n");
 
-  const tsContent = `/**
- * Icon stroke widths calibrated to Strawford (sans) and Knile (deco).
- * Auto-generated: ${generatedAt}
- * Run \`npm run extract-icon-metrics\` to re-seed, then fine-tune at /design-system/icon-calibration.
- */
-
-export type IconFont = "sans" | "deco";
-export type IconWeight = 300 | 500 | 700;
-
-export const ICON_WEIGHTS: IconWeight[] = [300, 500, 700];
-
-export const strokeWidths: Record<IconFont, Record<IconWeight, number>> = {
-  sans: {
-    300: ${sans[300].toFixed(2)},
-    500: ${sans[500].toFixed(2)},
-    700: ${sans[700].toFixed(2)},
-  },
-  deco: {
-    300: ${deco[300].toFixed(2)},
-    500: ${deco[500].toFixed(2)},
-    700: ${deco[700].toFixed(2)},
-  },
-};
-
-/** Baseline stroke at weight 300 — anchors path inset math in Icon component */
-export const baseStrokeWidths: Record<IconFont, number> = {
-  sans: strokeWidths.sans[300],
-  deco: strokeWidths.deco[300],
-};
-
-export const strokePercentages: Record<IconFont, Record<IconWeight, number>> = {
-  sans: {
-    300: strokeWidths.sans[300] / 32,
-    500: strokeWidths.sans[500] / 32,
-    700: strokeWidths.sans[700] / 32,
-  },
-  deco: {
-    300: strokeWidths.deco[300] / 32,
-    500: strokeWidths.deco[500] / 32,
-    700: strokeWidths.deco[700] / 32,
-  },
-};
-
-export function normalizeIconWeight(weight: number): IconWeight {
-  const sorted = ICON_WEIGHTS;
-  let closest: IconWeight = sorted[0];
-  let minDiff = Math.abs(weight - closest);
-  for (const w of sorted) {
-    const diff = Math.abs(weight - w);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closest = w;
-    }
+  console.log(`\n✅ Wrote src/config/font-metrics.json`);
+  console.log(`\nPer-weight stroke seeds (32×32 viewBox) — fine-tune at /design-system/icon-calibration:\n`);
+  for (const key of ["sans", "deco"]) {
+    const lines = WEIGHTS.map((w) => `    ${w}: ${results[key].strokeWidths[w]?.toFixed(2) ?? "N/A"}`).join("\n");
+    console.log(`  ${key}:\n${lines}\n`);
   }
-  return closest;
-}
-
-export function getStrokeWidth(font: IconFont, weight: number): number {
-  const normalized = normalizeIconWeight(weight);
-  return strokeWidths[font][normalized];
-}
-
-export function getBaseStrokeWidth(font: IconFont): number {
-  return baseStrokeWidths[font];
-}
-`;
-
-  fs.writeFileSync(path.join(outputDir, "icon-weights.ts"), tsContent);
-  console.log(`\n✅ Wrote src/config/font-metrics.json and src/config/icon-weights.ts`);
+  console.log(`  Does NOT overwrite src/config/icon-weights.ts — paste exported values after visual calibration.`);
 }
 
 function main() {

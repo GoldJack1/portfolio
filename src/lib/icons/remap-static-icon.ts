@@ -26,7 +26,7 @@ const GEOLOGICA_FULL_AT_32: Record<number, number> = {
 };
 
 function interpolateTable(table: Record<number, number>, weight: number): number {
-  weight = Math.max(100, Math.min(900, weight));
+  weight = Math.max(100, Math.min(800, weight));
   const points = Object.keys(table)
     .map(Number)
     .sort((a, b) => a - b);

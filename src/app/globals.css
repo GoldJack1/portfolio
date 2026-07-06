@@ -99,6 +99,17 @@ html.dark[data-header-mixed="true"][data-header-on="dark"] {
   --color-surface:    var(--surface);
   --font-sans: var(--font-strawford), system-ui, sans-serif;
   --font-deco: var(--font-knile), system-ui, sans-serif;
+
+  /* 100–800 scale: thin → black (black at 800, not 900) */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 800;
 }
 
 /* ── Base styles ─────────────────────────────────────────────────────────── */
@@ -127,4 +138,34 @@ body {
 .header-glass-mobile {
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
+}
+
+/* Inline icons — 1cap matches text cap height; use size="1em" for full em-box */
+.icon-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 1cap;
+  height: 1cap;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+  vertical-align: -0.05em;
+  flex-shrink: 0;
+  line-height: 0;
+  font-size: inherit;
+}
+
+/* Icon + text in flex rows — optical centering (vertical-align ignored in flex) */
+:where(.icon-text-row) > .icon-inline {
+  vertical-align: unset;
+  translate: 0 0.05em;
+}
+
+/* Tight rows for icon + label buttons and links */
+.icon-text-row {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
 }

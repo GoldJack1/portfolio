@@ -1,10 +1,82 @@
 {
-  "generatedAt": "2026-07-06T11:04:14.384Z",
+  "generatedAt": "2026-07-06T12:16:37.223Z",
   "note": "Visible width approximations from l/I/i stems. Fine-tune at /design-system/icon-calibration.",
   "families": {
     "sans": {
       "label": "Strawford",
       "weights": {
+        "100": {
+          "weight": 100,
+          "weightName": "Thin",
+          "fontFamily": "Strawford Thin",
+          "unitsPerEm": 1000,
+          "stemWidth": 122.3,
+          "percentage": 12.23,
+          "strokeFor32pxViewBox": 3.91,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 95,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 235,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 37,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 10,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 7,
+              "isSimpleStem": false
+            }
+          ]
+        },
+        "200": {
+          "weight": 200,
+          "weightName": "ExtraLight",
+          "fontFamily": "Strawford ExtraLight",
+          "unitsPerEm": 1000,
+          "stemWidth": 141.7,
+          "percentage": 14.17,
+          "strokeFor32pxViewBox": 4.53,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 116,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 249,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 60,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 32,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 4,
+              "isSimpleStem": false
+            }
+          ]
+        },
         "300": {
           "weight": 300,
           "weightName": "Light",
@@ -37,6 +109,42 @@
             {
               "char": "n",
               "width": 4,
+              "isSimpleStem": false
+            }
+          ]
+        },
+        "400": {
+          "weight": 400,
+          "weightName": "Regular",
+          "fontFamily": "Strawford",
+          "unitsPerEm": 1000,
+          "stemWidth": 179.3,
+          "percentage": 17.93,
+          "strokeFor32pxViewBox": 5.74,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 156,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 275,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 107,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 75,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 5,
               "isSimpleStem": false
             }
           ]
@@ -112,17 +220,129 @@
               "isSimpleStem": false
             }
           ]
+        },
+        "800": {
+          "weight": 800,
+          "weightName": "Black",
+          "fontFamily": "Strawford Black",
+          "unitsPerEm": 1000,
+          "stemWidth": 240,
+          "percentage": 24,
+          "strokeFor32pxViewBox": 7.68,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 206,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 331,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 183,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 170,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 6,
+              "isSimpleStem": false
+            }
+          ]
         }
       },
       "strokeWidths": {
+        "100": 3.91,
+        "200": 4.53,
         "300": 5.12,
+        "400": 5.74,
         "500": 6.36,
-        "700": 7.06
+        "700": 7.06,
+        "800": 7.68
       }
     },
     "deco": {
       "label": "Knile",
       "weights": {
+        "100": {
+          "weight": 100,
+          "weightName": "Thin",
+          "fontFamily": "Knile ",
+          "unitsPerEm": 1000,
+          "stemWidth": 187,
+          "percentage": 18.7,
+          "strokeFor32pxViewBox": 5.98,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 185,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 191,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 185,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 4,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 3,
+              "isSimpleStem": false
+            }
+          ]
+        },
+        "200": {
+          "weight": 200,
+          "weightName": "ExtraLight",
+          "fontFamily": "Knile",
+          "unitsPerEm": 1000,
+          "stemWidth": 198.7,
+          "percentage": 19.87,
+          "strokeFor32pxViewBox": 6.36,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 195,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 206,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 195,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 26,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 7,
+              "isSimpleStem": false
+            }
+          ]
+        },
         "300": {
           "weight": 300,
           "weightName": "Light",
@@ -155,6 +375,42 @@
             {
               "char": "n",
               "width": 3,
+              "isSimpleStem": false
+            }
+          ]
+        },
+        "400": {
+          "weight": 400,
+          "weightName": "Regular",
+          "fontFamily": "Knile",
+          "unitsPerEm": 1000,
+          "stemWidth": 240.3,
+          "percentage": 24.03,
+          "strokeFor32pxViewBox": 7.69,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 233,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 256,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 232,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 84,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 6,
               "isSimpleStem": false
             }
           ]
@@ -195,6 +451,42 @@
             }
           ]
         },
+        "600": {
+          "weight": 600,
+          "weightName": "SemiBold",
+          "fontFamily": "Knile",
+          "unitsPerEm": 1000,
+          "stemWidth": 280.3,
+          "percentage": 28.03,
+          "strokeFor32pxViewBox": 8.97,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 273,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 294,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 274,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 75,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 6,
+              "isSimpleStem": false
+            }
+          ]
+        },
         "700": {
           "weight": 700,
           "weightName": "Bold",
@@ -230,12 +522,53 @@
               "isSimpleStem": false
             }
           ]
+        },
+        "800": {
+          "weight": 800,
+          "weightName": "Black",
+          "fontFamily": "Knile",
+          "unitsPerEm": 1000,
+          "stemWidth": 338,
+          "percentage": 33.8,
+          "strokeFor32pxViewBox": 10.82,
+          "rawMeasurements": [
+            {
+              "char": "l",
+              "width": 333,
+              "isSimpleStem": true
+            },
+            {
+              "char": "I",
+              "width": 348,
+              "isSimpleStem": true
+            },
+            {
+              "char": "i",
+              "width": 333,
+              "isSimpleStem": true
+            },
+            {
+              "char": "H",
+              "width": 60,
+              "isSimpleStem": false
+            },
+            {
+              "char": "n",
+              "width": 4,
+              "isSimpleStem": false
+            }
+          ]
         }
       },
       "strokeWidths": {
+        "100": 5.98,
+        "200": 6.36,
         "300": 6.97,
+        "400": 7.69,
         "500": 8.17,
-        "700": 9.77
+        "600": 8.97,
+        "700": 9.77,
+        "800": 10.82
       }
     }
   }

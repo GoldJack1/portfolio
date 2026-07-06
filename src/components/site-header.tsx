@@ -8,15 +8,16 @@ import { getActiveNavId, type NavItem, NAV_ITEMS } from "@/lib/nav-order";
 import { useNavigateWithScroll } from "@/hooks/use-navigate-with-scroll";
 import { useHeaderContrastClasses } from "@/hooks/use-header-contrast-classes";
 import { headerSearchResults, type SearchResult } from "@/lib/site-search";
-import { defaultSansIconWeight } from "@/lib/icons/icon-weight-from-class";
+import { iconWeightFromClass } from "@/lib/icons/icon-weight-from-class";
 import { sansBold, sansLight, sansMedium } from "@/lib/typography";
 import Icon, { AnimatedMenuIcon } from "@/components/ui/icon";
 
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.8 };
-const HEADER_ICON_SIZE = 16;
-const HEADER_ICON_WEIGHT = defaultSansIconWeight;
+const HEADER_ICON_WEIGHT = iconWeightFromClass(sansBold);
+/** Match bold 16px nav label — full em box, not cap height */
+const HEADER_ICON_SIZE = "1em" as const;
 
 function HeaderSearchIcon() {
   return (
@@ -63,7 +64,7 @@ function ThemeToggleIcon() {
           animate={{ rotate: 0, scale: 1, opacity: 1 }}
           exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="flex"
+          className="flex text-[16px] leading-none"
         >
           <Icon name="sun" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
         </motion.span>
@@ -74,7 +75,7 @@ function ThemeToggleIcon() {
           animate={{ rotate: 0, scale: 1, opacity: 1 }}
           exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="flex"
+          className="flex text-[16px] leading-none"
         >
           <Icon name="moon" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
         </motion.span>
@@ -272,7 +273,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
   const closeSearch = () => { setSearchOpen(false); setSearchQuery(""); setShowResults(false); };
 
   const navText = (id: string) => hc.navText(pillAt === id);
-  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10";
+  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10 text-[16px] leading-none";
 
   return (
     <LayoutGroup id="desktop-header">
@@ -319,7 +320,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                   )}
                 </AnimatePresence>
                 <button
-                  className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)} ${sansBold}`}
+                  className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] leading-none whitespace-nowrap ${navText(item.id)} ${sansBold}`}
                   onClick={() => handleSelect(item)}
                   tabIndex={searchOpen ? -1 : 0}
                 >
@@ -354,7 +355,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                 )}
               </AnimatePresence>
               <button
-                className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] whitespace-nowrap ${navText(item.id)} ${sansBold}`}
+                className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] leading-none whitespace-nowrap ${navText(item.id)} ${sansBold}`}
                 onClick={() => handleSelect(item)}
                 tabIndex={searchOpen ? -1 : 0}
               >
@@ -377,13 +378,13 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                 transition={{ duration: 0.15 }}
               >
                 <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[43px]">
-                  <span className={`shrink-0 ${hc.searchIcon}`}><HeaderSearchIcon /></span>
+                  <span className={`shrink-0 text-[16px] leading-none ${hc.searchIcon}`}><HeaderSearchIcon /></span>
                   <input
                     autoFocus
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder="Search"
-                    className={`flex-1 bg-transparent outline-none text-[16px] ${hc.input} ${sansBold}`}
+                    className={`flex-1 bg-transparent outline-none text-[16px] leading-none ${hc.input} ${sansBold}`}
                     onKeyDown={e => {
                       if (e.key === "Escape") closeSearch();
                       if (e.key === "Enter" && searchQuery.trim()) {
@@ -521,7 +522,7 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
 
   const handleSelect = (item: NavItem) => { navigate(item.href); setMenuOpen(false); };
 
-  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10";
+  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10 text-[16px] leading-none";
   const TOUCH = "min-h-[40px] min-w-[40px]";
 
   return (
@@ -540,7 +541,7 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               <button onClick={toggleMenu}
-                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full ${hc.icon} ${hc.searchBtnRest} transition-colors`}
+                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full text-[16px] leading-none ${hc.icon} ${hc.searchBtnRest} transition-colors`}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}>
                 <AnimatedMenuIcon
                   isOpen={menuOpen}
@@ -565,10 +566,10 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
                 >
                   <div className="absolute inset-0 bg-white rounded-full" />
                   <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[48px]">
-                    <span className={`shrink-0 ${hc.searchIcon}`}><HeaderSearchIcon /></span>
+                    <span className={`shrink-0 text-[16px] leading-none ${hc.searchIcon}`}><HeaderSearchIcon /></span>
                     <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search"
-                      className={`flex-1 bg-transparent outline-none text-[16px] min-w-0 ${hc.input} ${sansBold}`}
+                      className={`flex-1 bg-transparent outline-none text-[16px] leading-none min-w-0 ${hc.input} ${sansBold}`}
                       onKeyDown={e => {
                         if (e.key === "Escape") closeSearch();
                         if (e.key === "Enter") {

@@ -9,7 +9,7 @@ const WEIGHT_BY_TAILWIND: Record<string, number> = {
   "font-semibold": 600,
   "font-bold": 700,
   "font-extrabold": 800,
-  "font-black": 900,
+  "font-black": 800,
 };
 
 /**
@@ -32,7 +32,7 @@ export function iconWeightFromCSSValue(weight: string | number | undefined): num
   if (weight === undefined) return 500;
   const n = typeof weight === "number" ? weight : parseInt(weight, 10);
   if (Number.isNaN(n)) return 500;
-  return Math.max(100, Math.min(900, n));
+  return Math.max(100, Math.min(800, n));
 }
 
 /** Default icon weights aligned with typography tokens */

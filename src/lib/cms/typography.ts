@@ -94,9 +94,9 @@ export const GALLERY_COLUMN_CLASSES = {
 } as const;
 
 export const BUTTON_SIZE_CLASSES = {
-  sm: "px-4 py-2 text-sm gap-1.5",
-  md: "px-6 py-3 text-[15px] gap-2",
-  lg: "px-8 py-3.5 text-base gap-2.5",
+  sm: "px-4 py-2 text-sm leading-none gap-1.5",
+  md: "px-6 py-3 text-[15px] leading-none gap-2",
+  lg: "px-8 py-3.5 text-base leading-none gap-2.5",
 } as const;
 
 export const TWO_COLUMN_RATIO_CLASSES = {

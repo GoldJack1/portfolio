@@ -179,7 +179,7 @@ export default function IconsPage() {
             <ControlSlider
               label="Font weight"
               min={100}
-              max={900}
+              max={800}
               step={1}
               value={weight}
               onChange={(w) => {

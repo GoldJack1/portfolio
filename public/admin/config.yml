@@ -241,7 +241,7 @@ x-block-types: &block-types
       - label: Images
         name: images
         widget: list
-        field: { label: Image, widget: image }
+        field: { label: Image, name: image, widget: image }
       - label: Columns
         name: columns
         widget: select
@@ -408,7 +408,7 @@ x-block-types: &block-types
           - label: Items
             name: items
             widget: list
-            field: { label: Item, widget: string }
+            field: { label: Item, name: item, widget: string }
       - <<: *section-style
 
   - label: Bullet list
@@ -423,7 +423,7 @@ x-block-types: &block-types
       - label: Items
         name: items
         widget: list
-        field: { label: Item, widget: string }
+        field: { label: Item, name: item, widget: string }
       - label: List typography
         <<: *typography
         name: typography
@@ -697,19 +697,19 @@ collections:
         name: body
         widget: list
         required: false
-        field: { label: Paragraph, widget: text }
+        field: { label: Paragraph, name: paragraph, widget: text }
       - label: Tech stack
         name: tech
         widget: list
         required: false
-        field: { label: Technology, widget: string }
+        field: { label: Technology, name: technology, widget: string }
       - { label: Featured, name: featured, widget: boolean, default: false, required: false }
       - { label: Thumbnail, name: thumbnail, widget: image }
       - label: Gallery
         name: gallery
         widget: list
         required: false
-        field: { label: Image, widget: image }
+        field: { label: Image, name: image, widget: image }
       - label: Links
         name: links
         widget: list
