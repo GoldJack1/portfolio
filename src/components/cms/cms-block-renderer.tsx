@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import ProjectCard from "@/components/project-card";
 import type { CmsBlock } from "@/lib/cms/types";
-import { getAllProjects, getFeaturedProjects } from "@/lib/projects";
+import { getAllProjects, getFeaturedProjects, resolveProjectSelection } from "@/lib/projects";
 import {
   GALLERY_COLUMN_CLASSES,
   HERO_MIN_HEIGHT_CLASSES,
@@ -308,7 +308,11 @@ export default function CmsBlockRenderer({
             );
 
           case "featuredProjects": {
-            const featured = getFeaturedProjects();
+            const featured = resolveProjectSelection(
+              block.projectSlugs,
+              getFeaturedProjects,
+              block.limit,
+            );
             const columns = block.columns ?? "2";
             return (
               <section key={key} className={sectionClass}>
@@ -347,7 +351,10 @@ export default function CmsBlockRenderer({
           }
 
           case "projectGrid": {
-            const projects = getAllProjects();
+            const projects = resolveProjectSelection(
+              block.mode === "selected" ? block.projectSlugs : undefined,
+              getAllProjects,
+            );
             return (
               <section key={key} className={sectionClass}>
                 {block.heading ? (
@@ -493,6 +500,143 @@ export default function CmsBlockRenderer({
                 <CmsContactForm submitLabel={block.submitLabel} successMessage={block.successMessage} />
               </section>
             );
+
+          case "video":
+            if (!block.src) return null;
+            return (
+              <section key={key} className={sectionClass}>
+                <div className="relative w-full aspect-video overflow-hidden rounded-surface border border-border bg-black">
+                  <video
+                    src={block.src}
+                    poster={block.poster}
+                    controls
+                    playsInline
+                    autoPlay={block.autoplay}
+                    loop={block.loop}
+                    muted={block.muted ?? block.autoplay}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
+                {block.caption ? (
+                  <p className={`mt-3 text-sm text-muted ${sansLight}`}>{block.caption}</p>
+                ) : null}
+              </section>
+            );
+
+          case "quote":
+            return (
+              <section key={key} className={sectionClass}>
+                <blockquote className="border-l-2 border-border pl-6">
+                  <p className={`text-xl sm:text-2xl text-foreground leading-relaxed ${typographyClassName(block.typography, { size: "2xl", weight: "medium" })}`}>
+                    {block.text}
+                  </p>
+                  {block.cite ? (
+                    <footer className={`mt-4 text-sm text-muted ${sansLight}`}>— {block.cite}</footer>
+                  ) : null}
+                </blockquote>
+              </section>
+            );
+
+          case "faq":
+            return (
+              <section key={key} className={sectionClass}>
+                {block.heading ? (
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-8"
+                  >
+                    {block.heading}
+                  </CmsHeading>
+                ) : null}
+                <div className="flex flex-col gap-4">
+                  {block.items.map((item) => (
+                    <details key={item.question} className="rounded-surface border border-border bg-surface p-5">
+                      <summary className={`cursor-pointer text-foreground ${sansMedium}`}>{item.question}</summary>
+                      <p className={`mt-3 text-muted leading-relaxed ${sansLight}`}>{item.answer}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            );
+
+          case "stats": {
+            const columns = block.columns ?? "3";
+            const colsClass =
+              columns === "2" ? "grid-cols-2" : columns === "4" ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-1 sm:grid-cols-3";
+            return (
+              <section key={key} className={sectionClass}>
+                {block.heading ? (
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-8"
+                  >
+                    {block.heading}
+                  </CmsHeading>
+                ) : null}
+                <div className={`grid gap-6 ${colsClass}`}>
+                  {block.items.map((item) => (
+                    <div key={`${item.value}-${item.label}`} className="rounded-surface border border-border bg-surface p-6 text-center">
+                      <p className={`text-3xl sm:text-4xl text-foreground mb-2 ${sansMedium}`}>{item.value}</p>
+                      <p className={`text-sm text-muted ${sansLight}`}>{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          }
+
+          case "divider":
+            return block.style === "space" ? (
+              <div key={key} className="h-8" aria-hidden />
+            ) : (
+              <hr key={key} className={`${sectionClass} border-border`} />
+            );
+
+          case "logos": {
+            const columns = block.columns ?? "4";
+            const colsClass =
+              columns === "3"
+                ? "grid-cols-2 sm:grid-cols-3"
+                : columns === "5"
+                  ? "grid-cols-2 sm:grid-cols-5"
+                  : columns === "6"
+                    ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+                    : "grid-cols-2 sm:grid-cols-4";
+            return (
+              <section key={key} className={sectionClass}>
+                {block.heading ? (
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-8"
+                  >
+                    {block.heading}
+                  </CmsHeading>
+                ) : null}
+                <div className={`grid gap-6 items-center ${colsClass}`}>
+                  {block.items.map((item) => {
+                    const image = (
+                      <CmsImageFrame
+                        src={item.image}
+                        alt={item.name}
+                        display={{ layout: "full", aspect: "auto", fit: "contain", border: false, radius: "none" }}
+                        sizes="200px"
+                      />
+                    );
+                    return item.href ? (
+                      <a key={item.name} href={item.href} className="block opacity-80 hover:opacity-100 transition-opacity">
+                        {image}
+                      </a>
+                    ) : (
+                      <div key={item.name}>{image}</div>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          }
 
           default:
             return null;

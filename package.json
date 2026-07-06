@@ -6,7 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "npm run copy-cms && npm run sync-content && next build",
     "copy-cms": "mkdir -p public/admin/vendor && cp node_modules/decap-cms/dist/decap-cms.js public/admin/vendor/decap-cms.js",
-    "sync-content": "node scripts/sync-projects.mjs && node scripts/sync-site-pages.mjs",
+    "sync-content": "node scripts/sync-projects.mjs && node scripts/sync-site-pages.mjs && node scripts/sync-site-settings.mjs && node scripts/sync-cms-nav-pages.mjs",
     "sync-projects": "node scripts/sync-projects.mjs",
     "postinstall": "npm run copy-cms",
     "start": "next start",

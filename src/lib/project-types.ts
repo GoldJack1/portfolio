@@ -8,8 +8,13 @@ export type Project = {
   tag: string;
   desc: string;
   body?: string[];
+  bodyMarkdown?: string;
   tech?: string[];
   featured?: boolean;
+  sortOrder?: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
   thumbnail: string;
   gallery: string[];
   links?: ProjectLink[];

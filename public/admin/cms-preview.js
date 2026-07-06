@@ -7,52 +7,54 @@
   var useEffect = React.useEffect;
   var useRef = React.useRef;
 
-  function CmsPagePreview(props) {
-    var entry = props.entry;
-    var iframeRef = useRef(null);
-    var data = entry.getIn(["data"]).toJS();
+  function createIframePreview(src, messageType, readyType, title) {
+    return function Preview(props) {
+      var entry = props.entry;
+      var iframeRef = useRef(null);
+      var data = entry.getIn(["data"]).toJS();
 
-    useEffect(
-      function () {
-        var iframe = iframeRef.current;
-        if (!iframe) return;
+      useEffect(
+        function () {
+          var iframe = iframeRef.current;
+          if (!iframe) return;
 
-        function sendPreview() {
-          if (!iframe.contentWindow) return;
-          iframe.contentWindow.postMessage({ type: "cms-preview", payload: data }, "*");
-        }
-
-        function onReady(event) {
-          if (event.data && event.data.type === "cms-preview-ready") {
-            sendPreview();
+          function sendPreview() {
+            if (!iframe.contentWindow) return;
+            iframe.contentWindow.postMessage({ type: messageType, payload: data }, "*");
           }
-        }
 
-        window.addEventListener("message", onReady);
-        iframe.addEventListener("load", sendPreview);
-        sendPreview();
+          function onReady(event) {
+            if (event.data && event.data.type === readyType) {
+              sendPreview();
+            }
+          }
 
-        return function () {
-          window.removeEventListener("message", onReady);
-          iframe.removeEventListener("load", sendPreview);
-        };
-      },
-      [data]
-    );
+          window.addEventListener("message", onReady);
+          iframe.addEventListener("load", sendPreview);
+          sendPreview();
 
-    return createElement("iframe", {
-      ref: iframeRef,
-      src: "/cms-preview",
-      title: "Page preview",
-      style: {
-        width: "100%",
-        height: "100%",
-        minHeight: "80vh",
-        border: "0",
-        display: "block",
-        background: "transparent",
-      },
-    });
+          return function () {
+            window.removeEventListener("message", onReady);
+            iframe.removeEventListener("load", sendPreview);
+          };
+        },
+        [data]
+      );
+
+      return createElement("iframe", {
+        ref: iframeRef,
+        src: src,
+        title: title,
+        style: {
+          width: "100%",
+          height: "100%",
+          minHeight: "80vh",
+          border: "0",
+          display: "block",
+          background: "transparent",
+        },
+      });
+    };
   }
 
   var CMS = window.CMS || window.DecapCMS;
@@ -61,7 +63,10 @@
     return;
   }
 
-  ["site_pages", "pages"].forEach(function (collectionName) {
-    CMS.registerPreviewTemplate(collectionName, CmsPagePreview);
-  });
+  CMS.registerPreviewTemplate("site_pages", createIframePreview("/cms-preview", "cms-preview", "cms-preview-ready", "Page preview"));
+  CMS.registerPreviewTemplate("pages", createIframePreview("/cms-preview", "cms-preview", "cms-preview-ready", "Page preview"));
+  CMS.registerPreviewTemplate(
+    "projects",
+    createIframePreview("/cms-preview/project", "cms-project-preview", "cms-project-preview-ready", "Project preview")
+  );
 })();

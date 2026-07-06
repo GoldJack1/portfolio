@@ -56,11 +56,15 @@ export type CmsPageWidth = "narrow" | "default" | "wide" | "full";
 
 export type CmsPageSettings = {
   title: string;
+  seoTitle?: string;
   seoDescription?: string;
+  ogImage?: string;
   pageWidth?: CmsPageWidth;
   showBackLink?: boolean;
   backLabel?: string;
   backHref?: string;
+  showInNav?: boolean;
+  navLabel?: string;
 };
 
 export type CmsHeroBlock = CmsSectionStyle & {
@@ -154,6 +158,8 @@ export type CmsFeaturedProjectsBlock = CmsSectionStyle & {
   linkLabel?: string;
   linkHref?: string;
   columns?: "1" | "2";
+  projectSlugs?: Array<string | { slug?: string }>;
+  limit?: number;
 };
 
 export type CmsProjectGridBlock = CmsSectionStyle & {
@@ -162,6 +168,8 @@ export type CmsProjectGridBlock = CmsSectionStyle & {
   intro?: string;
   headingTypography?: CmsTypography;
   introTypography?: CmsTypography;
+  mode?: "all" | "selected";
+  projectSlugs?: Array<string | { slug?: string }>;
 };
 
 export type CmsTimelineItem = {
@@ -218,6 +226,67 @@ export type CmsContactFormBlock = CmsSectionStyle & {
   successMessage?: string;
 };
 
+export type CmsVideoBlock = CmsSectionStyle & {
+  type: "video";
+  src: string;
+  poster?: string;
+  caption?: string;
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
+};
+
+export type CmsQuoteBlock = CmsSectionStyle & {
+  type: "quote";
+  text: string;
+  cite?: string;
+  typography?: CmsTypography;
+};
+
+export type CmsFaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type CmsFaqBlock = CmsSectionStyle & {
+  type: "faq";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  items: CmsFaqItem[];
+};
+
+export type CmsStatItem = {
+  value: string;
+  label: string;
+};
+
+export type CmsStatsBlock = CmsSectionStyle & {
+  type: "stats";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  items: CmsStatItem[];
+  columns?: "2" | "3" | "4";
+};
+
+export type CmsDividerBlock = {
+  type: "divider";
+  style?: "line" | "space";
+};
+
+export type CmsLogoItem = {
+  name: string;
+  image: string;
+  href?: string;
+};
+
+export type CmsLogosBlock = CmsSectionStyle & {
+  type: "logos";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  items: CmsLogoItem[];
+  columns?: "3" | "4" | "5" | "6";
+};
+
 export type CmsBlock =
   | CmsHeroBlock
   | CmsHeadingBlock
@@ -235,7 +304,13 @@ export type CmsBlock =
   | CmsTagGroupsBlock
   | CmsBulletListBlock
   | CmsLinkListBlock
-  | CmsContactFormBlock;
+  | CmsContactFormBlock
+  | CmsVideoBlock
+  | CmsQuoteBlock
+  | CmsFaqBlock
+  | CmsStatsBlock
+  | CmsDividerBlock
+  | CmsLogosBlock;
 
 /** Custom pages at /pages/[slug] */
 export type CmsPage = CmsPageSettings & {
@@ -255,8 +330,37 @@ export type CmsNavLink = {
   label: string;
   href: string;
   external?: boolean;
+  id?: string;
+};
+
+export type CmsNavItem = {
+  id: string;
+  label: string;
+  href: string;
+  visible?: boolean;
+};
+
+export type CmsSocialLink = {
+  id: string;
+  label: string;
+  href: string;
 };
 
 export type CmsSiteSettings = {
+  siteName?: string;
+  siteDescription?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactFormEmail?: string;
+  footerRightsText?: string;
+  defaultOgImage?: string;
+  socialLinks?: CmsSocialLink[];
+  navItems?: CmsNavItem[];
+  searchPageTitle?: string;
+  searchPageDescription?: string;
+  notFoundTitle?: string;
+  notFoundBody?: string;
+  notFoundCtaLabel?: string;
+  notFoundCtaHref?: string;
   extraNav?: CmsNavLink[];
 };

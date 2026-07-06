@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
+import { CONTACT_FORM_EMAIL, SITE_NAME } from "@/lib/site-config";
 
 interface ContactPayload {
   name?: string;
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     },
     body: JSON.stringify({
       from: fromAddress,
-      to: [CONTACT_EMAIL],
+      to: [CONTACT_FORM_EMAIL],
       reply_to: email,
       subject: `Contact form: ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\n${message}`,

@@ -6,6 +6,9 @@ backend:
 # Save commits to a draft branch (PR); Publish merges to main and goes live.
 publish_mode: editorial_workflow
 
+# Enable offline/local editing against the dev server (npm run dev).
+local_backend: true
+
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -127,9 +130,18 @@ x-page-settings: &page-settings
   - label: Title
     name: title
     widget: string
+  - label: SEO title
+    name: seoTitle
+    widget: string
+    required: false
+    hint: Overrides the page title in search results and browser tabs
   - label: SEO description
     name: seoDescription
     widget: text
+    required: false
+  - label: Social preview image
+    name: ogImage
+    widget: image
     required: false
   - label: Page width
     name: pageWidth
@@ -359,6 +371,9 @@ x-block-types: &block-types
         options: ["1", "2", "3"]
         default: "2"
         required: false
+        condition:
+          field: arrangement
+          value: grid
       - label: Spacing
         name: gap
         widget: select
@@ -485,6 +500,19 @@ x-block-types: &block-types
         options: ["1", "2"]
         default: "2"
         required: false
+      - label: Project slugs
+        name: projectSlugs
+        widget: list
+        required: false
+        hint: Leave empty to use all featured projects
+        field: { label: Slug, name: slug, widget: string }
+      - label: Limit
+        name: limit
+        widget: number
+        required: false
+        value_type: int
+        min: 1
+        max: 12
       - <<: *section-style
 
   - label: Project grid
@@ -500,6 +528,124 @@ x-block-types: &block-types
       - label: Intro typography
         <<: *typography
         name: introTypography
+      - label: Mode
+        name: mode
+        widget: select
+        options:
+          - { label: All projects, value: all }
+          - { label: Selected projects, value: selected }
+        default: all
+        required: false
+      - label: Project slugs
+        name: projectSlugs
+        widget: list
+        required: false
+        hint: Only used when mode is Selected projects
+        field: { label: Slug, name: slug, widget: string }
+        condition:
+          field: mode
+          value: selected
+      - <<: *section-style
+
+  - label: Video
+    name: video
+    widget: object
+    summary: "{{fields.caption}}"
+    fields:
+      - { label: Video URL, name: src, widget: string }
+      - { label: Poster image, name: poster, widget: image, required: false }
+      - { label: Caption, name: caption, widget: string, required: false }
+      - { label: Autoplay, name: autoplay, widget: boolean, default: false, required: false }
+      - { label: Loop, name: loop, widget: boolean, default: false, required: false }
+      - { label: Muted, name: muted, widget: boolean, default: false, required: false }
+      - <<: *section-style
+
+  - label: Quote
+    name: quote
+    widget: object
+    summary: "{{fields.text}}"
+    fields:
+      - { label: Quote, name: text, widget: text }
+      - { label: Attribution, name: cite, widget: string, required: false }
+      - <<: *typography
+      - <<: *section-style
+
+  - label: FAQ
+    name: faq
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Items
+        name: items
+        widget: list
+        fields:
+          - { label: Question, name: question, widget: string }
+          - { label: Answer, name: answer, widget: text }
+      - <<: *section-style
+
+  - label: Stats
+    name: stats
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Items
+        name: items
+        widget: list
+        fields:
+          - { label: Value, name: value, widget: string }
+          - { label: Label, name: label, widget: string }
+      - label: Columns
+        name: columns
+        widget: select
+        options: ["2", "3", "4"]
+        default: "3"
+        required: false
+      - <<: *section-style
+
+  - label: Divider
+    name: divider
+    widget: object
+    summary: Divider
+    fields:
+      - label: Style
+        name: style
+        widget: select
+        options:
+          - { label: Line, value: line }
+          - { label: Space only, value: space }
+        default: line
+        required: false
+
+  - label: Logo strip
+    name: logos
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Logos
+        name: items
+        widget: list
+        fields:
+          - { label: Name, name: name, widget: string }
+          - { label: Logo image, name: image, widget: image }
+          - { label: Link URL, name: href, widget: string, required: false }
+      - label: Columns
+        name: columns
+        widget: select
+        options: ["3", "4", "5", "6"]
+        default: "4"
+        required: false
       - <<: *section-style
 
   - label: Timeline
@@ -605,9 +751,17 @@ collections:
           - label: Title
             name: title
             widget: string
+          - label: SEO title
+            name: seoTitle
+            widget: string
+            required: false
           - label: SEO description
             name: seoDescription
             widget: text
+            required: false
+          - label: Social preview image
+            name: ogImage
+            widget: image
             required: false
           - label: Page width
             name: pageWidth
@@ -645,9 +799,17 @@ collections:
           - label: Title
             name: title
             widget: string
+          - label: SEO title
+            name: seoTitle
+            widget: string
+            required: false
           - label: SEO description
             name: seoDescription
             widget: text
+            required: false
+          - label: Social preview image
+            name: ogImage
+            widget: image
             required: false
           - label: Page width
             name: pageWidth
@@ -685,9 +847,17 @@ collections:
           - label: Title
             name: title
             widget: string
+          - label: SEO title
+            name: seoTitle
+            widget: string
+            required: false
           - label: SEO description
             name: seoDescription
             widget: text
+            required: false
+          - label: Social preview image
+            name: ogImage
+            widget: image
             required: false
           - label: Page width
             name: pageWidth
@@ -725,9 +895,17 @@ collections:
           - label: Title
             name: title
             widget: string
+          - label: SEO title
+            name: seoTitle
+            widget: string
+            required: false
           - label: SEO description
             name: seoDescription
             widget: text
+            required: false
+          - label: Social preview image
+            name: ogImage
+            widget: image
             required: false
           - label: Page width
             name: pageWidth
@@ -777,9 +955,17 @@ collections:
         widget: string
         hint: Lowercase letters, numbers, and hyphens only
         pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', Use lowercase letters, numbers, and hyphens]
+      - label: SEO title
+        name: seoTitle
+        widget: string
+        required: false
       - label: SEO description
         name: seoDescription
         widget: text
+        required: false
+      - label: Social preview image
+        name: ogImage
+        widget: image
         required: false
       - label: Show in navigation
         name: showInNav
@@ -823,16 +1009,26 @@ collections:
     format: json
     identifier_field: title
     summary: "{{title}} ({{year}})"
+    preview_path: "projects/{{slug}}"
     fields:
+      - { label: URL slug, name: slug, widget: string, hint: "Lowercase with hyphens, e.g. rail-statistics" }
       - { label: Title, name: title, widget: string }
+      - { label: Sort order, name: sortOrder, widget: number, value_type: int, default: 0, required: false }
       - { label: Year, name: year, widget: string }
       - { label: Tag, name: tag, widget: string }
       - { label: Description, name: desc, widget: text }
+      - label: Body (markdown)
+        name: bodyMarkdown
+        widget: markdown
+        required: false
       - label: Body paragraphs
         name: body
         widget: list
         required: false
         field: { label: Paragraph, name: paragraph, widget: text }
+      - { label: SEO title, name: seoTitle, widget: string, required: false }
+      - { label: SEO description, name: seoDescription, widget: text, required: false }
+      - { label: Social preview image, name: ogImage, widget: image, required: false }
       - label: Tech stack
         name: tech
         widget: list
@@ -870,6 +1066,30 @@ collections:
         name: settings
         file: content/site/settings.json
         fields:
+          - { label: Site name, name: siteName, widget: string }
+          - { label: Site description, name: siteDescription, widget: text }
+          - { label: Default social preview image, name: defaultOgImage, widget: image, required: false }
+          - { label: Contact email, name: contactEmail, widget: string }
+          - { label: Contact phone, name: contactPhone, widget: string, required: false }
+          - { label: Contact form recipient, name: contactFormEmail, widget: string, required: false }
+          - { label: Footer rights text, name: footerRightsText, widget: string, required: false }
+          - label: Social links
+            name: socialLinks
+            widget: list
+            required: false
+            fields:
+              - { label: ID, name: id, widget: string, hint: "linkedin, x, instagram, youtube, bluesky, threads" }
+              - { label: Label, name: label, widget: string }
+              - { label: URL, name: href, widget: string }
+          - label: Main navigation
+            name: navItems
+            widget: list
+            required: false
+            fields:
+              - { label: ID, name: id, widget: string }
+              - { label: Label, name: label, widget: string }
+              - { label: URL, name: href, widget: string }
+              - { label: Visible, name: visible, widget: boolean, default: true, required: false }
           - label: Extra navigation links
             name: extraNav
             widget: list
@@ -878,3 +1098,9 @@ collections:
               - { label: Label, name: label, widget: string }
               - { label: URL, name: href, widget: string }
               - { label: Open in new tab, name: external, widget: boolean, default: false, required: false }
+          - { label: Search page title, name: searchPageTitle, widget: string, required: false }
+          - { label: Search page description, name: searchPageDescription, widget: text, required: false }
+          - { label: 404 title, name: notFoundTitle, widget: string, required: false }
+          - { label: 404 body, name: notFoundBody, widget: text, required: false }
+          - { label: 404 button label, name: notFoundCtaLabel, widget: string, required: false }
+          - { label: 404 button URL, name: notFoundCtaHref, widget: string, required: false }

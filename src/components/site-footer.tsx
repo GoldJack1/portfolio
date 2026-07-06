@@ -2,8 +2,9 @@
 
 import type { ReactNode } from "react";
 import TransitionLink from "@/components/transition-link";
-import { NAV_ITEMS } from "@/lib/nav-order";
-import { SITE_NAME, SOCIAL_LINKS, getCopyrightYear } from "@/lib/site-config";
+import { buildNavItems } from "@/lib/cms/navigation";
+import { getCopyrightYear, SITE_NAME, SOCIAL_LINKS } from "@/lib/site-config";
+import { getFooterRightsText } from "@/lib/site-settings";
 import { sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 const ICON = {
@@ -73,6 +74,7 @@ const SOCIAL_ICONS: Record<string, () => ReactNode> = {
 
 export default function SiteFooter() {
   const year = getCopyrightYear();
+  const navItems = buildNavItems();
 
   return (
     <footer className="mt-auto border-t border-border px-6 sm:px-12 py-10 sm:py-12">
@@ -82,13 +84,13 @@ export default function SiteFooter() {
             © {year} {SITE_NAME}
           </p>
           <p className={`text-xs text-muted ${sansLight}`}>
-            All rights reserved.
+            {getFooterRightsText()}
           </p>
         </div>
 
         <nav aria-label="Footer">
           <ul className={`flex flex-wrap gap-x-6 gap-y-2 ${sansLight}`}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <li key={item.id}>
                 <TransitionLink
                   href={item.href}

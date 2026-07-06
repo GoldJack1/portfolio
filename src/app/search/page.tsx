@@ -2,8 +2,13 @@ import { Suspense } from "react";
 import SearchPageClient from "./SearchPageClient";
 
 import { createPageMetadata } from "@/lib/site-metadata";
+import { getSearchPageMeta } from "@/lib/site-settings";
 
-export const metadata = createPageMetadata("Search", "Search projects and pages on Jack Wingate's portfolio.");
+const searchMeta = getSearchPageMeta();
+
+export const metadata = createPageMetadata(searchMeta.title, {
+  description: searchMeta.description,
+});
 
 export default function SearchPage() {
   return (

@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
+import siteSettingsData from "@/data/site-settings.json";
 import type { CmsPage, CmsSiteSettings } from "./types";
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
 const PAGES_DIR = path.join(CONTENT_ROOT, "pages");
-const SITE_SETTINGS_PATH = path.join(CONTENT_ROOT, "site", "settings.json");
 
 function readJsonFile<T>(filePath: string): T | null {
   try {
@@ -37,5 +37,5 @@ export function getCmsNavPages(): CmsPage[] {
 }
 
 export function getSiteSettings(): CmsSiteSettings {
-  return readJsonFile<CmsSiteSettings>(SITE_SETTINGS_PATH) ?? {};
+  return siteSettingsData as CmsSiteSettings;
 }

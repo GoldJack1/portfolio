@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "editor-demo",
+    "title": "Editor demo",
+    "showInNav": false
+  },
+  {
+    "slug": "new-page",
+    "title": "NEW PAGE",
+    "showInNav": false
+  }
+]

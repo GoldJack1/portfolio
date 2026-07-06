@@ -1,30 +1,76 @@
 import type { Metadata } from "next";
-import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site-config";
+import { getDefaultOgImage, getSiteDescription, getSiteName } from "@/lib/site-settings";
+import { getSiteUrl } from "@/lib/site-config";
 
-export function createPageMetadata(title: string, description?: string): Metadata {
+type PageMetadataOptions = {
+  description?: string;
+  ogImage?: string;
+};
+
+export function createPageMetadata(title: string, options?: string | PageMetadataOptions): Metadata {
+  const resolved =
+    typeof options === "string" ? { description: options } : (options ?? {});
+  const description = resolved.description ?? getSiteDescription();
+  const ogImage = resolved.ogImage ?? getDefaultOgImage();
+  const siteName = getSiteName();
+
   return {
     title,
-    ...(description ? { description } : {}),
+    description,
+    openGraph: {
+      title,
+      description,
+      siteName,
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+    },
+    twitter: {
+      card: ogImage ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
   };
 }
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: SITE_NAME,
-    template: `%s | ${SITE_NAME}`,
+    default: getSiteName(),
+    template: `%s | ${getSiteName()}`,
   },
-  description: SITE_DESCRIPTION,
+  description: getSiteDescription(),
   openGraph: {
     type: "website",
     locale: "en_GB",
-    siteName: SITE_NAME,
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
+    siteName: getSiteName(),
+    title: getSiteName(),
+    description: getSiteDescription(),
+    ...(getDefaultOgImage() ? { images: [{ url: getDefaultOgImage()! }] } : {}),
   },
   twitter: {
-    card: "summary",
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
+    card: getDefaultOgImage() ? "summary_large_image" : "summary",
+    title: getSiteName(),
+    description: getSiteDescription(),
+    ...(getDefaultOgImage() ? { images: [getDefaultOgImage()!] } : {}),
   },
 };
+
+export function createCmsPageMetadata(
+  title: string,
+  seoTitle?: string,
+  seoDescription?: string,
+  ogImage?: string,
+): Metadata {
+  return createPageMetadata(seoTitle?.trim() || title, {
+    description: seoDescription,
+    ogImage,
+  });
+}
+
+export function sitePageMetadata(
+  page: { title: string; seoTitle?: string; seoDescription?: string; ogImage?: string } | null,
+  fallbackTitle: string,
+): Metadata {
+  if (!page) return createPageMetadata(fallbackTitle);
+  return createCmsPageMetadata(page.title, page.seoTitle, page.seoDescription, page.ogImage);
+}

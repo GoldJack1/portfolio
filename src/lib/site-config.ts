@@ -1,40 +1,30 @@
-export interface SocialLink {
-  id: string;
-  label: string;
-  href: string;
-}
+import type { SocialLink } from "./site-settings";
+import {
+  getContactEmail,
+  getContactFormEmail,
+  getContactPhone,
+  getContactPhoneHref,
+  getSiteDescription,
+  getSiteName,
+  getSocialLinks,
+} from "./site-settings";
 
-export const SITE_NAME = "Jack Wingate";
+export type { SocialLink };
 
-export const SITE_DESCRIPTION =
-  "Graphic & UI/UX designer — brands, interfaces, and digital products. Transport, wayfinding, and realism-led design from West Yorkshire.";
+export const SITE_NAME = getSiteName();
+export const SITE_DESCRIPTION = getSiteDescription();
+export const CONTACT_EMAIL = getContactEmail();
+export const CONTACT_FORM_EMAIL = getContactFormEmail();
+export const CONTACT_PHONE = getContactPhone();
+export { getContactPhoneHref };
+
+export const SOCIAL_LINKS: SocialLink[] = getSocialLinks();
 
 /** Canonical site URL for Open Graph / metadata. Set NEXT_PUBLIC_SITE_URL in production. */
 export function getSiteUrl(): string {
   const url = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   return url && url.length > 0 ? url.replace(/\/$/, "") : "https://jackwingate.netlify.app";
 }
-
-/** Your contact email — used in the Elsewhere section and as the form recipient. */
-export const CONTACT_EMAIL = "wingatejack2021@gmail.com";
-
-/** Your phone number — shown in the Elsewhere section (include country code, e.g. +44…). */
-export const CONTACT_PHONE = "(UK) +44 7943 002619";
-
-/** Dialable tel: URI — strips labels like "(UK)", spaces, and other non-digit characters. */
-export function getContactPhoneHref(): string {
-  const dialable = CONTACT_PHONE.replace(/[^\d+]/g, "");
-  return `tel:${dialable}`;
-}
-
-export const SOCIAL_LINKS: SocialLink[] = [
-  { id: "linkedin",  label: "LinkedIn",  href: "https://www.linkedin.com/in/jackwingate2023/" },
-  { id: "x",         label: "X",         href: "https://x.com/jackrailsecrets" },
-  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/jackawingate/" },
-  { id: "youtube",   label: "YouTube",   href: "https://www.youtube.com/@RailwaySecrets" },
-  { id: "bluesky",   label: "Bluesky",   href: "https://bsky.app/profile/jackrailsecrets.bsky.social" },
-  { id: "threads",   label: "Threads",   href: "https://www.threads.com/@jackawingate" },
-];
 
 export function getCopyrightYear(): number {
   return new Date().getFullYear();
