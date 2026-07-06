@@ -3,12 +3,12 @@
   "slug": "editor-demo",
   "seoDescription": "Example page built with the block editor — edit this in /admin.",
   "showInNav": false,
-  "pageWidth": "default",
+  "pageWidth": "wide",
   "blocks": [
     {
       "type": "hero",
       "eyebrow": "CMS page",
-      "heading": "Build pages with blocks",
+      "heading": "This shoule be working",
       "body": "Add new pages from /admin, stack different sections, and control font, weight, and size per block.",
       "headingTypography": {
         "font": "deco",
