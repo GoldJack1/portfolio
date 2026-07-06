@@ -9,12 +9,14 @@ type CmsButtonRowProps = {
 };
 
 export function CmsButtonRow({ buttons, className = "" }: CmsButtonRowProps) {
-  if (!buttons?.length) return null;
+  const validButtons = buttons?.filter((button) => button.label && button.href);
+  if (!validButtons?.length) return null;
 
   return (
     <div className={`flex flex-wrap gap-4 ${className}`}>
-      {buttons.map((button) => {
-        const isExternal = /^https?:\/\//i.test(button.href);
+      {validButtons.map((button) => {
+        const href = button.href!;
+        const isExternal = /^https?:\/\//i.test(href);
         const classes = `px-6 py-3 rounded-full text-[15px] transition-opacity ${sansBold} ${
           button.variant === "secondary"
             ? "border border-border text-foreground hover:bg-surface transition-colors"
@@ -24,8 +26,8 @@ export function CmsButtonRow({ buttons, className = "" }: CmsButtonRowProps) {
         if (isExternal) {
           return (
             <a
-              key={`${button.label}-${button.href}`}
-              href={button.href}
+              key={`${button.label}-${href}`}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               className={classes}
@@ -36,7 +38,7 @@ export function CmsButtonRow({ buttons, className = "" }: CmsButtonRowProps) {
         }
 
         return (
-          <TransitionLink key={`${button.label}-${button.href}`} href={button.href} className={classes}>
+          <TransitionLink key={`${button.label}-${href}`} href={href} className={classes}>
             {button.label}
           </TransitionLink>
         );

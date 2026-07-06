@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import type { CmsBlock } from "@/lib/cms/types";
 import {
@@ -9,7 +8,13 @@ import {
   typographyClassName,
 } from "@/lib/cms/typography";
 import { sansLight } from "@/lib/typography";
+import CmsImage from "./cms-image";
 import { CmsButtonRow, CmsMarkdown } from "./cms-primitives";
+
+function galleryImageSrc(image: string | { image?: string }): string | undefined {
+  if (typeof image === "string") return image || undefined;
+  return image.image || undefined;
+}
 
 type BlockRendererProps = {
   blocks: CmsBlock[];
@@ -72,7 +77,7 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
                     </div>
                     {block.image ? (
                       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-border bg-surface">
-                        <Image src={block.image} alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                        <CmsImage src={block.image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" />
                       </div>
                     ) : null}
                   </div>
@@ -109,7 +114,7 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
                     <CmsButtonRow buttons={block.buttons} className={block.layout === "centered" ? "justify-center" : ""} />
                     {block.image ? (
                       <div className="relative mt-10 aspect-video rounded-2xl overflow-hidden border border-border bg-surface">
-                        <Image src={block.image} alt="" fill className="object-cover" sizes="100vw" priority />
+                        <CmsImage src={block.image} alt="" fill sizes="100vw" priority />
                       </div>
                     ) : null}
                   </div>
@@ -158,6 +163,7 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
             );
 
           case "image": {
+            if (!block.src) return null;
             const layout = block.layout ?? "inset";
             const imageShell =
               layout === "small"
@@ -173,7 +179,7 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
                     layout === "inset" || layout === "small" ? "rounded-2xl" : ""
                   }`}
                 >
-                  <Image src={block.src} alt={block.alt ?? ""} fill className="object-cover" sizes="100vw" />
+                  <CmsImage src={block.src} alt={block.alt ?? ""} fill sizes="100vw" />
                 </div>
                 {block.caption ? (
                   <figcaption className={`mt-3 text-sm text-muted ${sansLight}`}>{block.caption}</figcaption>
@@ -182,21 +188,25 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
             );
           }
 
-          case "gallery":
+          case "gallery": {
+            const images = block.images.map(galleryImageSrc).filter((src): src is string => Boolean(src));
+            if (!images.length) return null;
+
             return (
               <section key={key} className="pb-12">
                 <div className={`grid gap-4 ${GALLERY_COLUMN_CLASSES[block.columns ?? "2"]}`}>
-                  {block.images.map((src) => (
+                  {images.map((src) => (
                     <div
                       key={src}
                       className="relative aspect-[4/3] rounded-xl overflow-hidden border border-border bg-surface"
                     >
-                      <Image src={src} alt="" fill className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
+                      <CmsImage src={src} alt="" fill sizes="(max-width: 640px) 100vw, 50vw" />
                     </div>
                   ))}
                 </div>
               </section>
             );
+          }
 
           case "twoColumn":
             return (
@@ -238,6 +248,7 @@ export default function CmsBlockRenderer({ blocks, pageWidth = "default" }: Bloc
             );
 
           case "embed":
+            if (!block.src) return null;
             return (
               <section key={key} className="pb-12 max-w-4xl">
                 {block.title ? <p className={`text-sm text-muted mb-3 ${sansLight}`}>{block.title}</p> : null}

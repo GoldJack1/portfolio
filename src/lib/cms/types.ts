@@ -21,7 +21,7 @@ export type CmsTypography = {
 
 export type CmsButton = {
   label: string;
-  href: string;
+  href?: string;
   variant?: "primary" | "secondary";
 };
 
@@ -61,7 +61,7 @@ export type CmsImageBlock = {
 
 export type CmsGalleryBlock = {
   type: "gallery";
-  images: string[];
+  images: Array<string | { image?: string }>;
   columns?: "1" | "2" | "3";
 };
 
