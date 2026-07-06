@@ -2,14 +2,24 @@
   "route": "projects",
   "title": "Projects",
   "seoDescription": "Selected graphic design, UI/UX, and product work by Jack Wingate.",
-  "pageWidth": "wide",
+  "pageWidth": "full",
   "blocks": [
     {
       "type": "projectGrid",
       "heading": "Projects",
       "intro": "A selection of work across brand design, UI/UX, motion, and product design.",
-      "headingTypography": { "font": "deco", "weight": "medium", "size": "6xl" },
-      "introTypography": { "font": "sans", "weight": "light", "size": "lg" }
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "6xl",
+        "style": "normal"
+      },
+      "introTypography": {
+        "font": "sans",
+        "weight": "light",
+        "size": "lg",
+        "style": "normal"
+      }
     }
   ]
 }
