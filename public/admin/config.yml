@@ -1,0 +1,267 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: public/uploads
+public_folder: /uploads
+
+site_url: https://jackwingateportfolio.netlify.app
+display_url: https://jackwingateportfolio.netlify.app
+
+x-typography: &typography
+  label: Typography
+  name: typography
+  widget: object
+  collapsed: true
+  fields:
+    - label: Font
+      name: font
+      widget: select
+      options: [sans, deco]
+      default: sans
+    - label: Weight
+      name: weight
+      widget: select
+      options: [light, medium, bold]
+      default: medium
+    - label: Size
+      name: size
+      widget: select
+      options: [xs, sm, base, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
+      default: base
+
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: content/pages
+    create: true
+    slug: "{{slug}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{title}} — /pages/{{slug}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: URL slug
+        name: slug
+        widget: string
+        hint: "Lowercase, hyphens only. Page will live at /pages/your-slug"
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', "Use lowercase letters, numbers, and hyphens"]
+      - label: SEO description
+        name: seoDescription
+        widget: text
+        required: false
+      - label: Show in navigation
+        name: showInNav
+        widget: boolean
+        default: false
+      - label: Navigation label
+        name: navLabel
+        widget: string
+        required: false
+        hint: "Defaults to page title if empty"
+      - label: Page width
+        name: pageWidth
+        widget: select
+        options:
+          - { label: "Narrow (reading)", value: narrow }
+          - { label: "Default", value: default }
+          - { label: "Wide", value: wide }
+          - { label: "Full bleed", value: full }
+        default: default
+      - label: Sections
+        name: blocks
+        widget: list
+        types:
+          - label: Hero
+            name: hero
+            widget: object
+            summary: "{{fields.heading}}"
+            fields:
+              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Body, name: body, widget: text, required: false }
+              - label: Heading typography
+                <<: *typography
+                name: headingTypography
+              - label: Body typography
+                <<: *typography
+                name: bodyTypography
+              - { label: Background image, name: image, widget: image, required: false }
+              - label: Layout
+                name: layout
+                widget: select
+                options:
+                  - { label: "Centered text", value: centered }
+                  - { label: "Left aligned", value: left }
+                  - { label: "Split — text left, image right", value: split-right }
+                  - { label: "Split — image left, text right", value: split-left }
+                default: left
+              - label: Buttons
+                name: buttons
+                widget: list
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+                  - label: Style
+                    name: variant
+                    widget: select
+                    options: [primary, secondary]
+                    default: primary
+
+          - label: Heading
+            name: heading
+            widget: object
+            summary: "{{fields.text}}"
+            fields:
+              - { label: Text, name: text, widget: string }
+              - <<: *typography
+              - label: Alignment
+                name: align
+                widget: select
+                options: [left, center]
+                default: left
+
+          - label: Text
+            name: text
+            widget: object
+            summary: "{{fields.body}}"
+            fields:
+              - { label: Body, name: body, widget: markdown }
+              - <<: *typography
+              - label: Alignment
+                name: align
+                widget: select
+                options: [left, center]
+                default: left
+
+          - label: Image
+            name: image
+            widget: object
+            summary: "{{fields.alt}}"
+            fields:
+              - { label: Image, name: src, widget: image }
+              - { label: Alt text, name: alt, widget: string, required: false }
+              - { label: Caption, name: caption, widget: string, required: false }
+              - label: Layout
+                name: layout
+                widget: select
+                options:
+                  - { label: "Full width", value: full }
+                  - { label: "Inset (rounded)", value: inset }
+                  - { label: "Small centered", value: small }
+                default: inset
+
+          - label: Gallery
+            name: gallery
+            widget: object
+            summary: "{{fields.images | size}} images"
+            fields:
+              - label: Images
+                name: images
+                widget: list
+                field: { label: Image, name: image, widget: image }
+              - label: Columns
+                name: columns
+                widget: select
+                options: ["1", "2", "3"]
+                default: "2"
+
+          - label: Two columns
+            name: twoColumn
+            widget: object
+            summary: "Two column layout"
+            fields:
+              - { label: Left column, name: left, widget: markdown }
+              - label: Left typography
+                <<: *typography
+                name: leftTypography
+              - { label: Right column, name: right, widget: markdown }
+              - label: Right typography
+                <<: *typography
+                name: rightTypography
+              - label: Column ratio
+                name: ratio
+                widget: select
+                options:
+                  - { label: "50 / 50", value: equal }
+                  - { label: "40 / 60", value: narrow-wide }
+                  - { label: "60 / 40", value: wide-narrow }
+                default: equal
+
+          - label: Call to action
+            name: cta
+            widget: object
+            summary: "{{fields.heading}}"
+            fields:
+              - { label: Heading, name: heading, widget: string, required: false }
+              - { label: Body, name: body, widget: text, required: false }
+              - label: Heading typography
+                <<: *typography
+                name: headingTypography
+              - label: Buttons
+                name: buttons
+                widget: list
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+                  - label: Style
+                    name: variant
+                    widget: select
+                    options: [primary, secondary]
+                    default: primary
+              - label: Style
+                name: style
+                widget: select
+                options:
+                  - { label: "Card", value: card }
+                  - { label: "Plain", value: plain }
+                default: card
+
+          - label: Embed
+            name: embed
+            widget: object
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Title, name: title, widget: string, required: false }
+              - { label: Embed URL, name: src, widget: string }
+              - label: Aspect
+                name: aspect
+                widget: select
+                options:
+                  - { label: "Video (16:9)", value: video }
+                  - { label: "Tall page", value: tall }
+                default: video
+
+          - label: Spacer
+            name: spacer
+            widget: object
+            summary: "{{fields.size}} spacing"
+            fields:
+              - label: Size
+                name: size
+                widget: select
+                options: [sm, md, lg, xl]
+                default: md
+
+  - name: site
+    label: Site settings
+    files:
+      - label: General
+        name: settings
+        file: content/site/settings.json
+        fields:
+          - label: Extra navigation links
+            name: extraNav
+            widget: list
+            required: false
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: URL, name: href, widget: string }
+              - { label: Open in new tab, name: external, widget: boolean, default: false }

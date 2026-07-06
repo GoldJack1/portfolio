@@ -29,6 +29,11 @@ export function getActiveNavId(pathname: string): string {
     return "projects";
   }
 
+  if (path === "/pages" || path.startsWith("/pages/")) {
+    const slug = path.replace(/^\/pages\//, "");
+    return slug ? `cms-${slug}` : NAV_ITEMS[0]?.id ?? "home";
+  }
+
   return NAV_ITEMS.find((i) => i.href === path)?.id ?? NAV_ITEMS[0]?.id ?? "home";
 }
 

@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
-import { NAV_ITEMS, getActiveNavId, type NavItem } from "@/lib/nav-order";
+import { getActiveNavId, type NavItem, NAV_ITEMS } from "@/lib/nav-order";
 import { useNavigateWithScroll } from "@/hooks/use-navigate-with-scroll";
 import { useHeaderContrastClasses } from "@/hooks/use-header-contrast-classes";
 import { headerSearchResults, type SearchResult } from "@/lib/site-search";
@@ -206,7 +206,7 @@ function SearchResults({
 // shared-layoutId pill can spring freely between ANY two slots without crossing
 // an overflow or AnimatePresence boundary.
 
-function DesktopHeader() {
+function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
   const hc = useHeaderContrastClasses();
@@ -301,7 +301,7 @@ function DesktopHeader() {
             animate={{ maxWidth: searchOpen ? 0 : 2000, opacity: searchOpen ? 0 : 1 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
           >
-            {NAV_ITEMS.slice(0, -1).map(item => (
+            {navItems.slice(0, -1).map(item => (
               <div
                 key={item.id}
                 ref={(el) => { slotRefs.current[item.id] = el; }}
@@ -337,7 +337,7 @@ function DesktopHeader() {
           <div className="flex-1 min-w-0" />
 
           {/* ── Right nav slot (Contact) — sits next to theme toggle, collapses in search ── */}
-          {NAV_ITEMS.slice(-1).map(item => (
+          {navItems.slice(-1).map(item => (
             <motion.div
               key={item.id}
               ref={(el) => { slotRefs.current[item.id] = el; }}
@@ -508,7 +508,7 @@ function DesktopHeader() {
 
 // ─── Mobile Header ────────────────────────────────────────────────────────────
 
-function MobileHeader() {
+function MobileHeader({ navItems }: { navItems: NavItem[] }) {
   const navigate = useNavigateWithScroll();
   const pathname = usePathname();
   const hc = useHeaderContrastClasses();
@@ -639,7 +639,7 @@ function MobileHeader() {
               <motion.div key="menu" initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
                 transition={SPRING} className="overflow-hidden">
                 <div className="flex flex-col gap-1 px-2 pb-2">
-                  {NAV_ITEMS.map((item, i) => (
+                  {navItems.map((item, i) => (
                     <motion.div key={item.id} className="relative"
                       initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -8, opacity: 0 }}
                       transition={{ ...SPRING, delay: i * 0.04 }}>
@@ -687,11 +687,11 @@ function MobileHeader() {
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 
-export default function SiteHeader() {
+export default function SiteHeader({ navItems = NAV_ITEMS }: { navItems?: NavItem[] }) {
   return (
     <>
-      <div className="hidden sm:block"><DesktopHeader /></div>
-      <div className="sm:hidden"><MobileHeader /></div>
+      <div className="hidden sm:block"><DesktopHeader navItems={navItems} /></div>
+      <div className="sm:hidden"><MobileHeader navItems={navItems} /></div>
     </>
   );
 }

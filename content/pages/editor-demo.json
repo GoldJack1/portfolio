@@ -1,0 +1,72 @@
+{
+  "title": "Editor demo",
+  "slug": "editor-demo",
+  "seoDescription": "Example page built with the block editor — edit this in /admin.",
+  "showInNav": false,
+  "pageWidth": "default",
+  "blocks": [
+    {
+      "type": "hero",
+      "eyebrow": "CMS page",
+      "heading": "Build pages with blocks",
+      "body": "Add new pages from /admin, stack different sections, and control font, weight, and size per block.",
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "6xl"
+      },
+      "bodyTypography": {
+        "font": "sans",
+        "weight": "light",
+        "size": "lg"
+      },
+      "layout": "left",
+      "buttons": [
+        {
+          "label": "View projects",
+          "href": "/projects",
+          "variant": "primary"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    {
+      "type": "twoColumn",
+      "left": "Use **Two columns** when you want a different layout on one page — for example, notes on the left and a longer story on the right.",
+      "right": "Each column has its own typography settings. Change font family (Strawford or Knile), weight, and size from the editor without touching code.",
+      "leftTypography": {
+        "font": "sans",
+        "weight": "medium",
+        "size": "base"
+      },
+      "rightTypography": {
+        "font": "deco",
+        "weight": "light",
+        "size": "lg"
+      },
+      "ratio": "equal"
+    },
+    {
+      "type": "cta",
+      "heading": "Ready to add your own page?",
+      "body": "Open /admin on Netlify, create a new Page, pick sections, and publish.",
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "3xl"
+      },
+      "style": "card",
+      "buttons": [
+        {
+          "label": "Open editor",
+          "href": "/admin",
+          "variant": "primary"
+        }
+      ]
+    }
+  ]
+}
