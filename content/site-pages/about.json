@@ -1,0 +1,127 @@
+{
+  "route": "about",
+  "title": "About",
+  "seoDescription": "About Jack Wingate — graphic and UI/UX designer, First-Class graduate, transport and product design.",
+  "pageWidth": "narrow",
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "About",
+      "typography": { "font": "deco", "weight": "medium", "size": "6xl" },
+      "paddingBottom": "md"
+    },
+    {
+      "type": "text",
+      "body": "I'm Jack Wingate, a First-Class Graphic Design graduate from the University of Huddersfield (2025), based in West Yorkshire. I'm a designer first — my work spans brand, UI/UX, and product design, with a particular interest in transport, wayfinding, and realism-led interfaces that feel intuitive rather than abstract.\n\nAt university I led large self-initiated projects from research through to delivery, including a national Great British Railways brand and app concept, a 10,000-word dissertation on the lack of realism in modern UI with an interactive outcome, and WEBTEXT — a teletext-inspired digital service. Outside of coursework I've designed and shipped Rail Statistics, a self-initiated iOS and Android app, from Figma prototypes to public release.\n\nI work primarily in Figma and Adobe Creative Suite. When something needs to exist as a real app or website, I use AI-assisted workflows to build from my own designs and specs — keeping full ownership of the visual direction and UX. Whether it's campaign graphics, motion, environmental design, or mobile product work, I care about hierarchy, accessibility, and follow-through.",
+      "typography": { "font": "sans", "weight": "medium", "size": "lg" },
+      "paddingBottom": "lg"
+    },
+    {
+      "type": "timeline",
+      "heading": "Education",
+      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "items": [
+        {
+          "period": "2022 – 2025",
+          "title": "BA (Hons) Graphic Design — First Class",
+          "subtitle": "University of Huddersfield"
+        },
+        {
+          "period": "2020 – 2022",
+          "title": "BTEC Level 3 National Extended Diploma in Art & Design",
+          "subtitle": "Wakefield College"
+        },
+        {
+          "period": "2015 – 2020",
+          "title": "7 GCSEs, including English Language & Mathematics",
+          "subtitle": "Ossett Academy"
+        }
+      ]
+    },
+    {
+      "type": "timeline",
+      "heading": "Highlights",
+      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "items": [
+        {
+          "period": "2025 – Present",
+          "title": "Rail Statistics",
+          "description": "End-to-end product and UI/UX design for a self-initiated mobile app helping rail enthusiasts log stations and tickets. Designed skeuomorphic visual identity and interaction patterns, then used AI-assisted builds from my Figma designs to reach public release on the Apple App Store and Google Play."
+        },
+        {
+          "period": "University, 2025",
+          "title": "Great British Railways — Brand & App Concept",
+          "description": "People-first national rail brand identity with a rigorous system across mobile, print, station signage, and wayfinding. Explored accessible information hierarchy and regional-dialect messaging to balance national consistency with local character."
+        },
+        {
+          "period": "University, 2025",
+          "title": "UI/UX Dissertation & Interactive Outcome",
+          "description": "10,000-word research project on the lack of realism in modern UI and its impact on user understanding, paired with an interactive skeuomorphic interface applying tactile, realism-led principles."
+        },
+        {
+          "period": "University, 2024",
+          "title": "WEBTEXT — Interactive Teletext Service",
+          "description": "Interactive teletext-style service modernising retro-tech aesthetics for contemporary digital use, with navigation and layout patterns balancing nostalgia and accessibility."
+        },
+        {
+          "period": "2021 – 2025",
+          "title": "Live industry & charity work",
+          "description": "Public mural for The Ridings shopping centre; typographic zine for CAP Care Charity raising awareness of homelessness; D&AD and Creative Conscience competition entries with team leadership and fast-turnaround deliverables."
+        },
+        {
+          "period": "2025",
+          "title": "Graduate Showcase",
+          "description": "Presented final-year projects to industry professionals and the public at The Graduate Showcase, Huddersfield."
+        }
+      ]
+    },
+    {
+      "type": "tagGroups",
+      "heading": "Skills",
+      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "groups": [
+        {
+          "category": "Design",
+          "items": ["Brand identity", "UI/UX & product design", "Wayfinding", "Information hierarchy", "Typography & layout", "Campaign design", "Realism-led / skeuomorphic UI"]
+        },
+        {
+          "category": "Tools",
+          "items": ["Figma", "Adobe Photoshop", "Illustrator", "InDesign", "After Effects", "Premiere Pro", "MS Office / iWork / G-Suite"]
+        },
+        {
+          "category": "Digital products",
+          "items": ["Wireframing & prototyping", "Design-to-build with AI tools", "Vibe coding apps & sites from designs", "App Store & Play Store release"]
+        },
+        {
+          "category": "Ways of working",
+          "items": ["Project planning", "Research & analysis", "Motion & video production", "Presentation", "Team leadership", "Client & stakeholder communication"]
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "heading": "Interests",
+      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "typography": { "font": "sans", "weight": "light", "size": "base" },
+      "items": [
+        "YouTube — travel, rail, and visual storytelling (filming, editing, publishing)",
+        "Exploring cities to study signage, typography, and public-facing design in context",
+        "Classic menswear and tailoring — proportion, texture, colour, and presentation"
+      ]
+    },
+    {
+      "type": "cta",
+      "style": "plain",
+      "paddingTop": "md",
+      "buttons": [
+        {
+          "label": "Get in touch",
+          "href": "/contact",
+          "variant": "primary",
+          "icon": "arrow-right",
+          "iconPosition": "right"
+        }
+      ]
+    }
+  ]
+}

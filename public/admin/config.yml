@@ -6,13 +6,13 @@ media_folder: public/uploads
 public_folder: /uploads
 
 site_url: https://jackwingateportfolio.netlify.app
-display_url: https://jackwingateportfolio.netlify.app
 
 x-typography: &typography
   label: Typography
   name: typography
   widget: object
   collapsed: true
+  required: false
   fields:
     - label: Font
       name: font
@@ -22,17 +22,609 @@ x-typography: &typography
     - label: Weight
       name: weight
       widget: select
-      options: [light, medium, bold]
+      options: [thin, extralight, light, regular, medium, semibold, bold, black]
       default: medium
+    - label: Style
+      name: style
+      widget: select
+      options: [normal, italic]
+      default: normal
     - label: Size
       name: size
       widget: select
       options: [xs, sm, base, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl]
       default: base
 
+x-section-style: &section-style
+  label: Section style
+  name: sectionStyle
+  widget: object
+  collapsed: true
+  required: false
+  fields:
+    - label: Padding top
+      name: paddingTop
+      widget: select
+      options: [none, sm, md, lg]
+      required: false
+    - label: Padding bottom
+      name: paddingBottom
+      widget: select
+      options: [none, sm, md, lg]
+      required: false
+    - label: Background
+      name: background
+      widget: select
+      options: [none, surface]
+      required: false
+    - label: Text tone
+      name: textTone
+      widget: select
+      options: [default, muted]
+      required: false
+
+x-button-fields: &button-fields
+  - label: Label
+    name: label
+    widget: string
+  - label: Link
+    name: href
+    widget: string
+    required: false
+  - label: Variant
+    name: variant
+    widget: select
+    options: [primary, secondary, ghost]
+    default: primary
+  - label: Size
+    name: size
+    widget: select
+    options: [sm, md, lg]
+    default: md
+  - label: Icon
+    name: icon
+    widget: select
+    options:
+      - arrow-left
+      - arrow-right
+      - arrow-up
+      - arrow-down
+      - chevron-left
+      - chevron-right
+      - chevron-up
+      - chevron-down
+      - checkmark
+      - cross
+      - plus
+      - minus
+      - search
+      - download
+      - upload
+      - link
+      - location
+      - filter
+      - refresh
+      - sun
+      - moon
+      - star
+      - info-circle
+      - help-circle
+    required: false
+  - label: Icon position
+    name: iconPosition
+    widget: select
+    options: [left, right]
+    default: right
+    required: false
+
+x-page-settings: &page-settings
+  - label: Title
+    name: title
+    widget: string
+  - label: SEO description
+    name: seoDescription
+    widget: text
+    required: false
+  - label: Page width
+    name: pageWidth
+    widget: select
+    options:
+      - { label: Narrow, value: narrow }
+      - { label: Default, value: default }
+      - { label: Wide, value: wide }
+      - { label: Full bleed, value: full }
+    default: default
+    required: false
+  - label: Show back link
+    name: showBackLink
+    widget: boolean
+    required: false
+  - label: Back link label
+    name: backLabel
+    widget: string
+    required: false
+  - label: Back link URL
+    name: backHref
+    widget: string
+    required: false
+
+x-block-types: &block-types
+  - label: Hero
+    name: hero
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+      - { label: Heading, name: heading, widget: string }
+      - { label: Body, name: body, widget: text, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Body typography
+        <<: *typography
+        name: bodyTypography
+      - { label: Image, name: image, widget: image, required: false }
+      - label: Layout
+        name: layout
+        widget: select
+        options: [centered, left, split-right, split-left]
+        default: left
+        required: false
+      - label: Min height
+        name: minHeight
+        widget: select
+        options: [auto, medium, tall]
+        default: tall
+        required: false
+      - label: Buttons
+        name: buttons
+        widget: list
+        required: false
+        fields: *button-fields
+      - <<: *section-style
+
+  - label: Heading
+    name: heading
+    widget: object
+    summary: "{{fields.text}}"
+    fields:
+      - { label: Text, name: text, widget: string }
+      - <<: *typography
+      - label: Alignment
+        name: align
+        widget: select
+        options: [left, center]
+        default: left
+        required: false
+      - <<: *section-style
+
+  - label: Text
+    name: text
+    widget: object
+    summary: "{{fields.body}}"
+    fields:
+      - { label: Body, name: body, widget: markdown }
+      - <<: *typography
+      - label: Alignment
+        name: align
+        widget: select
+        options: [left, center]
+        default: left
+        required: false
+      - <<: *section-style
+
+  - label: Image
+    name: image
+    widget: object
+    summary: "{{fields.alt}}"
+    fields:
+      - { label: Image, name: src, widget: image }
+      - { label: Alt text, name: alt, widget: string, required: false }
+      - { label: Caption, name: caption, widget: string, required: false }
+      - label: Layout
+        name: layout
+        widget: select
+        options:
+          - { label: Full width, value: full }
+          - { label: Inset, value: inset }
+          - { label: Small centered, value: small }
+        default: inset
+        required: false
+      - { label: Rounded, name: rounded, widget: boolean, default: false, required: false }
+      - <<: *section-style
+
+  - label: Gallery
+    name: gallery
+    widget: object
+    summary: "{{fields.images | size}} images"
+    fields:
+      - label: Images
+        name: images
+        widget: list
+        field: { label: Image, widget: image }
+      - label: Columns
+        name: columns
+        widget: select
+        options: ["1", "2", "3"]
+        default: "2"
+        required: false
+      - { label: Rounded, name: rounded, widget: boolean, default: false, required: false }
+      - <<: *section-style
+
+  - label: Two columns
+    name: twoColumn
+    widget: object
+    summary: Two column layout
+    fields:
+      - { label: Left column, name: left, widget: markdown }
+      - label: Left typography
+        <<: *typography
+        name: leftTypography
+      - { label: Right column, name: right, widget: markdown }
+      - label: Right typography
+        <<: *typography
+        name: rightTypography
+      - label: Column ratio
+        name: ratio
+        widget: select
+        options:
+          - { label: 50 / 50, value: equal }
+          - { label: 40 / 60, value: narrow-wide }
+          - { label: 60 / 40, value: wide-narrow }
+        default: equal
+        required: false
+      - <<: *section-style
+
+  - label: Call to action
+    name: cta
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - { label: Body, name: body, widget: text, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Body typography
+        <<: *typography
+        name: bodyTypography
+      - label: Buttons
+        name: buttons
+        widget: list
+        required: false
+        fields: *button-fields
+      - label: Style
+        name: style
+        widget: select
+        options: [card, plain]
+        default: card
+        required: false
+      - <<: *section-style
+
+  - label: Embed
+    name: embed
+    widget: object
+    summary: "{{fields.title}}"
+    fields:
+      - { label: Title, name: title, widget: string, required: false }
+      - { label: Embed URL, name: src, widget: string }
+      - label: Aspect
+        name: aspect
+        widget: select
+        options:
+          - { label: "Video (16:9)", value: video }
+          - { label: Tall page, value: tall }
+        default: video
+        required: false
+      - <<: *section-style
+
+  - label: Spacer
+    name: spacer
+    widget: object
+    summary: "{{fields.size}} spacing"
+    fields:
+      - label: Size
+        name: size
+        widget: select
+        options: [sm, md, lg, xl]
+        default: md
+        required: false
+
+  - label: Back link
+    name: backLink
+    widget: object
+    summary: "{{fields.label}}"
+    fields:
+      - { label: Label, name: label, widget: string, required: false }
+      - { label: URL, name: href, widget: string, required: false }
+
+  - label: Featured projects
+    name: featuredProjects
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - { label: Link label, name: linkLabel, widget: string, required: false }
+      - { label: Link URL, name: linkHref, widget: string, required: false }
+      - label: Columns
+        name: columns
+        widget: select
+        options: ["1", "2"]
+        default: "2"
+        required: false
+      - <<: *section-style
+
+  - label: Project grid
+    name: projectGrid
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - { label: Intro, name: intro, widget: text, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Intro typography
+        <<: *typography
+        name: introTypography
+      - <<: *section-style
+
+  - label: Timeline
+    name: timeline
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Items
+        name: items
+        widget: list
+        fields:
+          - { label: Period, name: period, widget: string, required: false }
+          - { label: Title, name: title, widget: string }
+          - { label: Subtitle, name: subtitle, widget: string, required: false }
+          - { label: Description, name: description, widget: text, required: false }
+      - <<: *section-style
+
+  - label: Tag groups
+    name: tagGroups
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Groups
+        name: groups
+        widget: list
+        fields:
+          - { label: Category, name: category, widget: string }
+          - label: Items
+            name: items
+            widget: list
+            field: { label: Item, widget: string }
+      - <<: *section-style
+
+  - label: Bullet list
+    name: bulletList
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Items
+        name: items
+        widget: list
+        field: { label: Item, widget: string }
+      - label: List typography
+        <<: *typography
+        name: typography
+      - <<: *section-style
+
+  - label: Link list
+    name: linkList
+    widget: object
+    summary: "{{fields.heading}}"
+    fields:
+      - { label: Heading, name: heading, widget: string, required: false }
+      - label: Heading typography
+        <<: *typography
+        name: headingTypography
+      - label: Links
+        name: links
+        widget: list
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: URL, name: href, widget: string }
+          - { label: Display text, name: display, widget: string, required: false }
+          - { label: External, name: external, widget: boolean, default: false, required: false }
+      - <<: *section-style
+
+  - label: Contact form
+    name: contactForm
+    widget: object
+    summary: Contact form
+    fields:
+      - { label: Submit label, name: submitLabel, widget: string, required: false }
+      - { label: Success message, name: successMessage, widget: text, required: false }
+      - <<: *section-style
+
+x-blocks-field: &blocks-field
+  label: Sections
+  name: blocks
+  widget: list
+  types: *block-types
+
 collections:
+  - name: site_pages
+    label: Site pages
+    files:
+      - label: Home
+        name: home
+        file: content/site-pages/home.json
+        fields:
+          - label: Title
+            name: title
+            widget: string
+          - label: SEO description
+            name: seoDescription
+            widget: text
+            required: false
+          - label: Page width
+            name: pageWidth
+            widget: select
+            options:
+              - { label: Narrow, value: narrow }
+              - { label: Default, value: default }
+              - { label: Wide, value: wide }
+              - { label: Full bleed, value: full }
+            default: default
+            required: false
+          - label: Show back link
+            name: showBackLink
+            widget: boolean
+            required: false
+          - label: Back link label
+            name: backLabel
+            widget: string
+            required: false
+          - label: Back link URL
+            name: backHref
+            widget: string
+            required: false
+          - label: Route
+            name: route
+            widget: hidden
+            default: home
+          - <<: *blocks-field
+
+      - label: About
+        name: about
+        file: content/site-pages/about.json
+        fields:
+          - label: Title
+            name: title
+            widget: string
+          - label: SEO description
+            name: seoDescription
+            widget: text
+            required: false
+          - label: Page width
+            name: pageWidth
+            widget: select
+            options:
+              - { label: Narrow, value: narrow }
+              - { label: Default, value: default }
+              - { label: Wide, value: wide }
+              - { label: Full bleed, value: full }
+            default: default
+            required: false
+          - label: Show back link
+            name: showBackLink
+            widget: boolean
+            required: false
+          - label: Back link label
+            name: backLabel
+            widget: string
+            required: false
+          - label: Back link URL
+            name: backHref
+            widget: string
+            required: false
+          - label: Route
+            name: route
+            widget: hidden
+            default: about
+          - <<: *blocks-field
+
+      - label: Projects
+        name: projects
+        file: content/site-pages/projects.json
+        fields:
+          - label: Title
+            name: title
+            widget: string
+          - label: SEO description
+            name: seoDescription
+            widget: text
+            required: false
+          - label: Page width
+            name: pageWidth
+            widget: select
+            options:
+              - { label: Narrow, value: narrow }
+              - { label: Default, value: default }
+              - { label: Wide, value: wide }
+              - { label: Full bleed, value: full }
+            default: default
+            required: false
+          - label: Show back link
+            name: showBackLink
+            widget: boolean
+            required: false
+          - label: Back link label
+            name: backLabel
+            widget: string
+            required: false
+          - label: Back link URL
+            name: backHref
+            widget: string
+            required: false
+          - label: Route
+            name: route
+            widget: hidden
+            default: projects
+          - <<: *blocks-field
+
+      - label: Contact
+        name: contact
+        file: content/site-pages/contact.json
+        fields:
+          - label: Title
+            name: title
+            widget: string
+          - label: SEO description
+            name: seoDescription
+            widget: text
+            required: false
+          - label: Page width
+            name: pageWidth
+            widget: select
+            options:
+              - { label: Narrow, value: narrow }
+              - { label: Default, value: default }
+              - { label: Wide, value: wide }
+              - { label: Full bleed, value: full }
+            default: default
+            required: false
+          - label: Show back link
+            name: showBackLink
+            widget: boolean
+            required: false
+          - label: Back link label
+            name: backLabel
+            widget: string
+            required: false
+          - label: Back link URL
+            name: backHref
+            widget: string
+            required: false
+          - label: Route
+            name: route
+            widget: hidden
+            default: contact
+          - <<: *blocks-field
+
   - name: pages
-    label: Pages
+    label: Custom pages
     label_singular: Page
     folder: content/pages
     create: true
@@ -48,8 +640,8 @@ collections:
       - label: URL slug
         name: slug
         widget: string
-        hint: "Lowercase, hyphens only. Page will live at /pages/your-slug"
-        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', "Use lowercase letters, numbers, and hyphens"]
+        hint: Lowercase letters, numbers, and hyphens only
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', Use lowercase letters, numbers, and hyphens]
       - label: SEO description
         name: seoDescription
         widget: text
@@ -62,191 +654,79 @@ collections:
         name: navLabel
         widget: string
         required: false
-        hint: "Defaults to page title if empty"
       - label: Page width
         name: pageWidth
         widget: select
         options:
-          - { label: "Narrow (reading)", value: narrow }
-          - { label: "Default", value: default }
-          - { label: "Wide", value: wide }
-          - { label: "Full bleed", value: full }
+          - { label: Narrow, value: narrow }
+          - { label: Default, value: default }
+          - { label: Wide, value: wide }
+          - { label: Full bleed, value: full }
         default: default
-      - label: Sections
-        name: blocks
+        required: false
+      - label: Show back link
+        name: showBackLink
+        widget: boolean
+        default: true
+      - label: Back link label
+        name: backLabel
+        widget: string
+        required: false
+      - label: Back link URL
+        name: backHref
+        widget: string
+        required: false
+      - <<: *blocks-field
+
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: content/projects
+    create: true
+    slug: "{{slug}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{title}} ({{year}})"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Year, name: year, widget: string }
+      - { label: Tag, name: tag, widget: string }
+      - { label: Description, name: desc, widget: text }
+      - label: Body paragraphs
+        name: body
         widget: list
-        types:
-          - label: Hero
-            name: hero
-            widget: object
-            summary: "{{fields.heading}}"
-            fields:
-              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
-              - { label: Heading, name: heading, widget: string }
-              - { label: Body, name: body, widget: text, required: false }
-              - label: Heading typography
-                <<: *typography
-                name: headingTypography
-              - label: Body typography
-                <<: *typography
-                name: bodyTypography
-              - { label: Background image, name: image, widget: image, required: false }
-              - label: Layout
-                name: layout
-                widget: select
-                options:
-                  - { label: "Centered text", value: centered }
-                  - { label: "Left aligned", value: left }
-                  - { label: "Split — text left, image right", value: split-right }
-                  - { label: "Split — image left, text right", value: split-left }
-                default: left
-              - label: Buttons
-                name: buttons
-                widget: list
-                required: false
-                fields:
-                  - { label: Label, name: label, widget: string }
-                  - { label: Link, name: href, widget: string }
-                  - label: Style
-                    name: variant
-                    widget: select
-                    options: [primary, secondary]
-                    default: primary
-
-          - label: Heading
-            name: heading
-            widget: object
-            summary: "{{fields.text}}"
-            fields:
-              - { label: Text, name: text, widget: string }
-              - <<: *typography
-              - label: Alignment
-                name: align
-                widget: select
-                options: [left, center]
-                default: left
-
-          - label: Text
-            name: text
-            widget: object
-            summary: "{{fields.body}}"
-            fields:
-              - { label: Body, name: body, widget: markdown }
-              - <<: *typography
-              - label: Alignment
-                name: align
-                widget: select
-                options: [left, center]
-                default: left
-
-          - label: Image
-            name: image
-            widget: object
-            summary: "{{fields.alt}}"
-            fields:
-              - { label: Image, name: src, widget: image }
-              - { label: Alt text, name: alt, widget: string, required: false }
-              - { label: Caption, name: caption, widget: string, required: false }
-              - label: Layout
-                name: layout
-                widget: select
-                options:
-                  - { label: "Full width", value: full }
-                  - { label: "Inset (rounded)", value: inset }
-                  - { label: "Small centered", value: small }
-                default: inset
-
-          - label: Gallery
-            name: gallery
-            widget: object
-            summary: "{{fields.images | size}} images"
-            fields:
-              - label: Images
-                name: images
-                widget: list
-                field: { label: Image, name: image, widget: image }
-              - label: Columns
-                name: columns
-                widget: select
-                options: ["1", "2", "3"]
-                default: "2"
-
-          - label: Two columns
-            name: twoColumn
-            widget: object
-            summary: "Two column layout"
-            fields:
-              - { label: Left column, name: left, widget: markdown }
-              - label: Left typography
-                <<: *typography
-                name: leftTypography
-              - { label: Right column, name: right, widget: markdown }
-              - label: Right typography
-                <<: *typography
-                name: rightTypography
-              - label: Column ratio
-                name: ratio
-                widget: select
-                options:
-                  - { label: "50 / 50", value: equal }
-                  - { label: "40 / 60", value: narrow-wide }
-                  - { label: "60 / 40", value: wide-narrow }
-                default: equal
-
-          - label: Call to action
-            name: cta
-            widget: object
-            summary: "{{fields.heading}}"
-            fields:
-              - { label: Heading, name: heading, widget: string, required: false }
-              - { label: Body, name: body, widget: text, required: false }
-              - label: Heading typography
-                <<: *typography
-                name: headingTypography
-              - label: Buttons
-                name: buttons
-                widget: list
-                fields:
-                  - { label: Label, name: label, widget: string }
-                  - { label: Link, name: href, widget: string }
-                  - label: Style
-                    name: variant
-                    widget: select
-                    options: [primary, secondary]
-                    default: primary
-              - label: Style
-                name: style
-                widget: select
-                options:
-                  - { label: "Card", value: card }
-                  - { label: "Plain", value: plain }
-                default: card
-
-          - label: Embed
-            name: embed
-            widget: object
-            summary: "{{fields.title}}"
-            fields:
-              - { label: Title, name: title, widget: string, required: false }
-              - { label: Embed URL, name: src, widget: string }
-              - label: Aspect
-                name: aspect
-                widget: select
-                options:
-                  - { label: "Video (16:9)", value: video }
-                  - { label: "Tall page", value: tall }
-                default: video
-
-          - label: Spacer
-            name: spacer
-            widget: object
-            summary: "{{fields.size}} spacing"
-            fields:
-              - label: Size
-                name: size
-                widget: select
-                options: [sm, md, lg, xl]
-                default: md
+        required: false
+        field: { label: Paragraph, widget: text }
+      - label: Tech stack
+        name: tech
+        widget: list
+        required: false
+        field: { label: Technology, widget: string }
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Thumbnail, name: thumbnail, widget: image }
+      - label: Gallery
+        name: gallery
+        widget: list
+        required: false
+        field: { label: Image, widget: image }
+      - label: Links
+        name: links
+        widget: list
+        required: false
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: URL, name: href, widget: string }
+      - { label: Video URL, name: video, widget: string, required: false }
+      - { label: PDF, name: pdf, widget: file, required: false }
+      - label: Embeds
+        name: embeds
+        widget: list
+        required: false
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Embed URL, name: src, widget: string }
+          - { label: Hide on mobile, name: hideOnMobile, widget: boolean, default: false, required: false }
 
   - name: site
     label: Site settings
@@ -262,4 +742,4 @@ collections:
             fields:
               - { label: Label, name: label, widget: string }
               - { label: URL, name: href, widget: string }
-              - { label: Open in new tab, name: external, widget: boolean, default: false }
+              - { label: Open in new tab, name: external, widget: boolean, default: false, required: false }

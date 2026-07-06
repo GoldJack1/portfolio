@@ -1,0 +1,23 @@
+{
+  "slug": "rail-statistics",
+  "title": "Rail Statistics",
+  "year": "2025",
+  "tag": "Mobile App",
+  "desc": "A functional app for train enthusiasts to track stations visited across Great Britain and train tickets.",
+  "body": [
+    "A functional app for train enthusiasts to track stations visited across Great Britain and train tickets.",
+    "Now available on Google Play and Apple App Stores."
+  ],
+  "tech": [
+    "Mobile"
+  ],
+  "featured": true,
+  "thumbnail": "/projects/rail-statistics/thumbnail.jpg",
+  "gallery": [],
+  "links": [
+    {
+      "label": "Download App",
+      "href": "https://linktr.ee/Railstatistics"
+    }
+  ]
+}

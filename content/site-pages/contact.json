@@ -1,0 +1,42 @@
+{
+  "route": "contact",
+  "title": "Contact",
+  "seoDescription": "Get in touch with Jack Wingate for freelance and full-time design roles.",
+  "pageWidth": "narrow",
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "Contact",
+      "typography": { "font": "deco", "weight": "medium", "size": "6xl" },
+      "paddingBottom": "sm"
+    },
+    {
+      "type": "text",
+      "body": "Available for freelance projects and full-time roles. I'm always happy to talk through an idea — drop me a message and I'll get back to you within a day or two.",
+      "typography": { "font": "sans", "weight": "medium", "size": "lg" },
+      "paddingBottom": "lg"
+    },
+    {
+      "type": "contactForm",
+      "submitLabel": "Send message",
+      "successMessage": "Message sent — I'll get back to you soon.",
+      "paddingBottom": "lg"
+    },
+    {
+      "type": "linkList",
+      "heading": "Elsewhere",
+      "headingTypography": { "font": "deco", "weight": "medium", "size": "xl" },
+      "paddingTop": "lg",
+      "links": [
+        { "label": "Email", "href": "mailto:wingatejack2021@gmail.com", "display": "wingatejack2021@gmail.com" },
+        { "label": "Phone", "href": "tel:+447943002619", "display": "(UK) +44 7943 002619" },
+        { "label": "LinkedIn", "href": "https://www.linkedin.com/in/jackwingate2023/", "external": true },
+        { "label": "X", "href": "https://x.com/jackrailsecrets", "display": "@jackrailsecrets", "external": true },
+        { "label": "Instagram", "href": "https://www.instagram.com/jackawingate/", "external": true },
+        { "label": "YouTube", "href": "https://www.youtube.com/@RailwaySecrets", "external": true },
+        { "label": "Bluesky", "href": "https://bsky.app/profile/jackrailsecrets.bsky.social", "external": true },
+        { "label": "Threads", "href": "https://www.threads.com/@jackawingate", "external": true }
+      ]
+    }
+  ]
+}

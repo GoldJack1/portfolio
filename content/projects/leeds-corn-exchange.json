@@ -1,0 +1,44 @@
+{
+  "slug": "leeds-corn-exchange",
+  "title": "Leeds Corn Exchange",
+  "year": "2024",
+  "tag": "Motion",
+  "desc": "Identity advertisement animation on Leeds Corn Exchange.",
+  "body": [
+    "Identify advertisement animation on Leeds Corn Exchange — motion design exploring identity and place through animated signage."
+  ],
+  "tech": [
+    "After Effects",
+    "Motion",
+    "Identity"
+  ],
+  "thumbnail": "/projects/leeds-corn-exchange/thumbnail.png",
+  "gallery": [
+    "/projects/leeds-corn-exchange/gallery/02.png",
+    "/projects/leeds-corn-exchange/gallery/03.png",
+    "/projects/leeds-corn-exchange/gallery/04.png",
+    "/projects/leeds-corn-exchange/gallery/05.png",
+    "/projects/leeds-corn-exchange/gallery/06.png",
+    "/projects/leeds-corn-exchange/gallery/07.png",
+    "/projects/leeds-corn-exchange/gallery/08.png",
+    "/projects/leeds-corn-exchange/gallery/09.png",
+    "/projects/leeds-corn-exchange/gallery/10.png",
+    "/projects/leeds-corn-exchange/gallery/11.png",
+    "/projects/leeds-corn-exchange/gallery/12.png",
+    "/projects/leeds-corn-exchange/gallery/13.png"
+  ],
+  "embeds": [
+    {
+      "title": "Leeds Corn Exchange — Video 1",
+      "src": "https://www.youtube.com/embed/RnAs-dUGrcY"
+    },
+    {
+      "title": "Leeds Corn Exchange — Video 2",
+      "src": "https://www.youtube.com/embed/AIwGfGzzs54"
+    },
+    {
+      "title": "Leeds Corn Exchange — Video 3",
+      "src": "https://www.youtube.com/embed/Lph2TKAd3Vw"
+    }
+  ]
+}

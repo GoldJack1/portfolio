@@ -1,15 +1,7 @@
-import {
-  ABOUT_HERO,
-  ABOUT_INTRO,
-  ABOUT_TAGLINE,
-  ABOUT_TEASER,
-  ABOUT_WIP_NOTICE,
-  EDUCATION,
-  HIGHLIGHTS,
-  INTERESTS,
-  SKILLS,
-} from "@/lib/about-content";
-import { PROJECTS, type Project } from "@/lib/projects";
+import { blocksSearchText } from "@/lib/cms/search-text";
+import { getSitePage } from "@/lib/cms/site-pages";
+import type { Project } from "@/lib/project-types";
+import { getAllProjects } from "@/lib/projects";
 import { CONTACT_EMAIL, SITE_NAME, SOCIAL_LINKS } from "@/lib/site-config";
 
 export type SearchResult = {
@@ -43,99 +35,59 @@ export function projectSearchText(project: Project): string {
 }
 
 function buildIndex(): IndexEntry[] {
+  const home = getSitePage("home");
+  const about = getSitePage("about");
+  const projectsPage = getSitePage("projects");
+  const contact = getSitePage("contact");
+  const projects = getAllProjects();
+
   const entries: IndexEntry[] = [
     {
       id: "home",
-      title: "Home",
-      desc: ABOUT_HERO,
+      title: home?.title ?? "Home",
+      desc: home?.seoDescription ?? SITE_NAME,
       href: "/",
       category: "Page",
-      text: collectTexts(SITE_NAME, ABOUT_TAGLINE, ABOUT_HERO, ABOUT_TEASER, ABOUT_WIP_NOTICE),
+      text: collectTexts(home?.title, home?.seoDescription, home ? blocksSearchText(home.blocks) : ""),
     },
     {
       id: "projects",
-      title: "Projects",
-      desc: "A selection of work across brand design, UI/UX, motion, and product design.",
+      title: projectsPage?.title ?? "Projects",
+      desc: projectsPage?.seoDescription ?? "Projects",
       href: "/projects",
       category: "Page",
       text: collectTexts(
-        "projects",
-        "brand design",
-        "UI/UX",
-        "motion",
-        "product design",
-        PROJECTS.map((p) => projectSearchText(p)),
+        projectsPage?.title,
+        projectsPage?.seoDescription,
+        projectsPage ? blocksSearchText(projectsPage.blocks) : "",
+        projects.map((p) => projectSearchText(p)),
       ),
     },
     {
       id: "about",
-      title: "About",
-      desc: ABOUT_TEASER,
+      title: about?.title ?? "About",
+      desc: about?.seoDescription ?? "About",
       href: "/about",
       category: "Page",
-      text: collectTexts(ABOUT_INTRO, ABOUT_TAGLINE, ABOUT_TEASER),
+      text: collectTexts(about?.title, about?.seoDescription, about ? blocksSearchText(about.blocks) : ""),
     },
     {
       id: "contact",
-      title: "Contact",
-      desc: "Available for freelance projects and full-time roles.",
+      title: contact?.title ?? "Contact",
+      desc: contact?.seoDescription ?? "Contact",
       href: "/contact",
       category: "Page",
       text: collectTexts(
-        "contact",
-        "freelance",
-        "full-time",
+        contact?.title,
+        contact?.seoDescription,
+        contact ? blocksSearchText(contact.blocks) : "",
         CONTACT_EMAIL,
         SOCIAL_LINKS.map((social) => social.label),
       ),
     },
   ];
 
-  for (const entry of EDUCATION) {
-    entries.push({
-      id: `education-${entry.institution}`,
-      title: entry.institution,
-      desc: entry.qualification,
-      href: "/about",
-      category: "Education",
-      text: collectTexts(entry.institution, entry.qualification, entry.period),
-    });
-  }
-
-  for (const highlight of HIGHLIGHTS) {
-    entries.push({
-      id: `highlight-${highlight.title}`,
-      title: highlight.title,
-      desc: highlight.desc,
-      href: "/about",
-      category: "Highlight",
-      text: collectTexts(highlight.title, highlight.desc, highlight.period),
-    });
-  }
-
-  for (const group of SKILLS) {
-    entries.push({
-      id: `skills-${group.category}`,
-      title: group.category,
-      desc: group.items.join(", "),
-      href: "/about",
-      category: "Skills",
-      text: collectTexts(group.category, group.items),
-    });
-  }
-
-  for (const interest of INTERESTS) {
-    entries.push({
-      id: `interest-${interest.slice(0, 24)}`,
-      title: "Interests",
-      desc: interest,
-      href: "/about",
-      category: "About",
-      text: interest,
-    });
-  }
-
-  for (const project of PROJECTS) {
+  for (const project of projects) {
     entries.push({
       id: `project-${project.slug}`,
       title: project.title,
@@ -204,8 +156,9 @@ export function isProjectResult(result: SearchResult): boolean {
 
 export function searchProjects(query: string): Project[] {
   const trimmed = query.trim();
-  if (!trimmed) return PROJECTS;
-  return PROJECTS.filter((project) => matchesQuery(projectSearchText(project), trimmed));
+  const projects = getAllProjects();
+  if (!trimmed) return projects;
+  return projects.filter((project) => matchesQuery(projectSearchText(project), trimmed));
 }
 
 export function searchPages(query: string): SearchResult[] {

@@ -1,10 +1,9 @@
-import TransitionLink from "@/components/transition-link";
-import type { CmsButton, CmsTypography } from "@/lib/cms/types";
+import CmsButton from "./cms-button";
+import type { CmsButton as CmsButtonType, CmsTypography } from "@/lib/cms/types";
 import { typographyClassName } from "@/lib/cms/typography";
-import { sansBold } from "@/lib/typography";
 
 type CmsButtonRowProps = {
-  buttons?: CmsButton[];
+  buttons?: CmsButtonType[];
   className?: string;
 };
 
@@ -14,35 +13,9 @@ export function CmsButtonRow({ buttons, className = "" }: CmsButtonRowProps) {
 
   return (
     <div className={`flex flex-wrap gap-4 ${className}`}>
-      {validButtons.map((button) => {
-        const href = button.href!;
-        const isExternal = /^https?:\/\//i.test(href);
-        const classes = `px-6 py-3 rounded-full text-[15px] transition-opacity ${sansBold} ${
-          button.variant === "secondary"
-            ? "border border-border text-foreground hover:bg-surface transition-colors"
-            : "bg-foreground text-background hover:opacity-80"
-        }`;
-
-        if (isExternal) {
-          return (
-            <a
-              key={`${button.label}-${href}`}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes}
-            >
-              {button.label}
-            </a>
-          );
-        }
-
-        return (
-          <TransitionLink key={`${button.label}-${href}`} href={href} className={classes}>
-            {button.label}
-          </TransitionLink>
-        );
-      })}
+      {validButtons.map((button) => (
+        <CmsButton key={`${button.label}-${button.href}`} button={button} />
+      ))}
     </div>
   );
 }
@@ -60,12 +33,10 @@ export function CmsMarkdown({
   defaults,
   className = "",
 }: CmsMarkdownProps) {
-  const proseClass = typographyClassName(typography, defaults);
+  if (!content?.trim()) return null;
 
   return (
-    <div
-      className={`cms-markdown space-y-4 text-muted leading-relaxed ${proseClass} ${className}`}
-    >
+    <div className={`cms-markdown space-y-4 text-muted leading-relaxed ${typographyClassName(typography, defaults)} ${className}`}>
       {content.split(/\n{2,}/).map((paragraph) => (
         <p key={paragraph.slice(0, 48)}>{paragraph.trim()}</p>
       ))}

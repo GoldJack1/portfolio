@@ -1,0 +1,21 @@
+{
+  "slug": "diabetes-support-advert",
+  "title": "Diabetes Support App",
+  "year": "2023",
+  "tag": "Advertising",
+  "desc": "Social media advertisement promoting a fictional diabetes support app.",
+  "body": [
+    "Advertisement for a fictional diabetes support app — social media creative designed to raise awareness and encourage sign-ups."
+  ],
+  "tech": [
+    "Advertising",
+    "Social Media",
+    "Motion"
+  ],
+  "thumbnail": "/projects/diabetes-support-advert/thumbnail.jpg",
+  "gallery": [
+    "/projects/diabetes-support-advert/gallery/01.jpg",
+    "/projects/diabetes-support-advert/gallery/02.jpg",
+    "/projects/diabetes-support-advert/gallery/04.jpg"
+  ]
+}

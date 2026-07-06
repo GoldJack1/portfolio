@@ -1,5 +1,16 @@
+import type { CmsIconName } from "./icon-names";
+
 export type CmsFont = "sans" | "deco";
-export type CmsWeight = "light" | "medium" | "bold";
+export type CmsWeight =
+  | "thin"
+  | "extralight"
+  | "light"
+  | "regular"
+  | "medium"
+  | "semibold"
+  | "bold"
+  | "black";
+export type CmsStyle = "normal" | "italic";
 export type CmsSize =
   | "xs"
   | "sm"
@@ -16,16 +27,42 @@ export type CmsSize =
 export type CmsTypography = {
   font?: CmsFont;
   weight?: CmsWeight;
+  style?: CmsStyle;
   size?: CmsSize;
 };
+
+export type CmsButtonVariant = "primary" | "secondary" | "ghost";
+export type CmsButtonSize = "sm" | "md" | "lg";
+export type CmsIconPosition = "left" | "right";
 
 export type CmsButton = {
   label: string;
   href?: string;
-  variant?: "primary" | "secondary";
+  variant?: CmsButtonVariant;
+  size?: CmsButtonSize;
+  icon?: CmsIconName;
+  iconPosition?: CmsIconPosition;
 };
 
-export type CmsHeroBlock = {
+export type CmsSectionStyle = {
+  paddingTop?: "none" | "sm" | "md" | "lg";
+  paddingBottom?: "none" | "sm" | "md" | "lg";
+  background?: "none" | "surface";
+  textTone?: "default" | "muted";
+};
+
+export type CmsPageWidth = "narrow" | "default" | "wide" | "full";
+
+export type CmsPageSettings = {
+  title: string;
+  seoDescription?: string;
+  pageWidth?: CmsPageWidth;
+  showBackLink?: boolean;
+  backLabel?: string;
+  backHref?: string;
+};
+
+export type CmsHeroBlock = CmsSectionStyle & {
   type: "hero";
   eyebrow?: string;
   heading: string;
@@ -34,38 +71,41 @@ export type CmsHeroBlock = {
   bodyTypography?: CmsTypography;
   image?: string;
   layout?: "centered" | "left" | "split-right" | "split-left";
+  minHeight?: "auto" | "medium" | "tall";
   buttons?: CmsButton[];
 };
 
-export type CmsHeadingBlock = {
+export type CmsHeadingBlock = CmsSectionStyle & {
   type: "heading";
   text: string;
   typography?: CmsTypography;
   align?: "left" | "center";
 };
 
-export type CmsTextBlock = {
+export type CmsTextBlock = CmsSectionStyle & {
   type: "text";
   body: string;
   typography?: CmsTypography;
   align?: "left" | "center";
 };
 
-export type CmsImageBlock = {
+export type CmsImageBlock = CmsSectionStyle & {
   type: "image";
   src: string;
   alt?: string;
   caption?: string;
   layout?: "full" | "inset" | "small";
+  rounded?: boolean;
 };
 
-export type CmsGalleryBlock = {
+export type CmsGalleryBlock = CmsSectionStyle & {
   type: "gallery";
   images: Array<string | { image?: string }>;
   columns?: "1" | "2" | "3";
+  rounded?: boolean;
 };
 
-export type CmsTwoColumnBlock = {
+export type CmsTwoColumnBlock = CmsSectionStyle & {
   type: "twoColumn";
   left: string;
   leftTypography?: CmsTypography;
@@ -74,16 +114,17 @@ export type CmsTwoColumnBlock = {
   ratio?: "equal" | "narrow-wide" | "wide-narrow";
 };
 
-export type CmsCtaBlock = {
+export type CmsCtaBlock = CmsSectionStyle & {
   type: "cta";
   heading?: string;
   body?: string;
   headingTypography?: CmsTypography;
+  bodyTypography?: CmsTypography;
   buttons?: CmsButton[];
   style?: "card" | "plain";
 };
 
-export type CmsEmbedBlock = {
+export type CmsEmbedBlock = CmsSectionStyle & {
   type: "embed";
   title?: string;
   src: string;
@@ -95,6 +136,83 @@ export type CmsSpacerBlock = {
   size?: "sm" | "md" | "lg" | "xl";
 };
 
+export type CmsBackLinkBlock = {
+  type: "backLink";
+  label?: string;
+  href?: string;
+};
+
+export type CmsFeaturedProjectsBlock = CmsSectionStyle & {
+  type: "featuredProjects";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  linkLabel?: string;
+  linkHref?: string;
+  columns?: "1" | "2";
+};
+
+export type CmsProjectGridBlock = CmsSectionStyle & {
+  type: "projectGrid";
+  heading?: string;
+  intro?: string;
+  headingTypography?: CmsTypography;
+  introTypography?: CmsTypography;
+};
+
+export type CmsTimelineItem = {
+  period?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+};
+
+export type CmsTimelineBlock = CmsSectionStyle & {
+  type: "timeline";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  items: CmsTimelineItem[];
+};
+
+export type CmsTagGroup = {
+  category: string;
+  items: string[];
+};
+
+export type CmsTagGroupsBlock = CmsSectionStyle & {
+  type: "tagGroups";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  groups: CmsTagGroup[];
+};
+
+export type CmsBulletListBlock = CmsSectionStyle & {
+  type: "bulletList";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  items: string[];
+  typography?: CmsTypography;
+};
+
+export type CmsLinkListItem = {
+  label: string;
+  href: string;
+  display?: string;
+  external?: boolean;
+};
+
+export type CmsLinkListBlock = CmsSectionStyle & {
+  type: "linkList";
+  heading?: string;
+  headingTypography?: CmsTypography;
+  links: CmsLinkListItem[];
+};
+
+export type CmsContactFormBlock = CmsSectionStyle & {
+  type: "contactForm";
+  submitLabel?: string;
+  successMessage?: string;
+};
+
 export type CmsBlock =
   | CmsHeroBlock
   | CmsHeadingBlock
@@ -104,17 +222,27 @@ export type CmsBlock =
   | CmsTwoColumnBlock
   | CmsCtaBlock
   | CmsEmbedBlock
-  | CmsSpacerBlock;
+  | CmsSpacerBlock
+  | CmsBackLinkBlock
+  | CmsFeaturedProjectsBlock
+  | CmsProjectGridBlock
+  | CmsTimelineBlock
+  | CmsTagGroupsBlock
+  | CmsBulletListBlock
+  | CmsLinkListBlock
+  | CmsContactFormBlock;
 
-export type CmsPageWidth = "narrow" | "default" | "wide" | "full";
-
-export type CmsPage = {
-  title: string;
+/** Custom pages at /pages/[slug] */
+export type CmsPage = CmsPageSettings & {
   slug: string;
-  seoDescription?: string;
   showInNav?: boolean;
   navLabel?: string;
-  pageWidth?: CmsPageWidth;
+  blocks: CmsBlock[];
+};
+
+/** Core site routes (/, /about, etc.) */
+export type CmsSitePage = CmsPageSettings & {
+  route: "home" | "about" | "projects" | "contact";
   blocks: CmsBlock[];
 };
 

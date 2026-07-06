@@ -1,0 +1,30 @@
+{
+  "slug": "receipty",
+  "title": "Receipty",
+  "year": "2024",
+  "tag": "Mobile",
+  "desc": "An app that digitalises receipts onto your phone — designed for A App for Good.",
+  "body": [
+    "A App for Good — Receipty digitalises receipts onto your phone, making it easier to track spending and reduce paper waste."
+  ],
+  "tech": [
+    "Figma",
+    "UI Design",
+    "Mobile"
+  ],
+  "featured": true,
+  "thumbnail": "/projects/receipty/thumbnail.jpg",
+  "gallery": [
+    "/projects/receipty/gallery/02.jpg",
+    "/projects/receipty/gallery/03.jpg",
+    "/projects/receipty/gallery/04.jpg",
+    "/projects/receipty/gallery/05.jpg",
+    "/projects/receipty/gallery/06.jpg",
+    "/projects/receipty/gallery/07.jpg",
+    "/projects/receipty/gallery/08.jpg",
+    "/projects/receipty/gallery/09.jpg",
+    "/projects/receipty/gallery/10.jpg",
+    "/projects/receipty/gallery/11.jpg",
+    "/projects/receipty/gallery/12.jpg"
+  ]
+}

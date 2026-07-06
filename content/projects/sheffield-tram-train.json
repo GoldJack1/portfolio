@@ -1,0 +1,30 @@
+{
+  "slug": "sheffield-tram-train",
+  "title": "Sheffield Tram & Train",
+  "year": "2023",
+  "tag": "Design",
+  "desc": "Redesigning the Sheffield tram and train network with a reimagined map.",
+  "body": [
+    "Reimagined map of the tram and train network in Sheffield — a fresh take on wayfinding and network identity for South Yorkshire."
+  ],
+  "tech": [
+    "Map Design",
+    "Transport",
+    "Illustration"
+  ],
+  "thumbnail": "/projects/sheffield-tram-train/thumbnail.jpg",
+  "gallery": [
+    "/projects/sheffield-tram-train/gallery/02.jpg",
+    "/projects/sheffield-tram-train/gallery/03.jpg"
+  ],
+  "embeds": [
+    {
+      "title": "Sheffield Tram & Train — Video 1",
+      "src": "https://www.youtube.com/embed/rV3fJ4SYYas"
+    },
+    {
+      "title": "Sheffield Tram & Train — Video 2",
+      "src": "https://www.youtube.com/embed/YOZ0OG-8xqM"
+    }
+  ]
+}

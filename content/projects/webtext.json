@@ -1,0 +1,31 @@
+{
+  "slug": "webtext",
+  "title": "INTERNET + TELETEXT = WEBTEXT",
+  "year": "2024",
+  "tag": "Concept",
+  "desc": "A retro-inspired concept blending the nostalgia of teletext with the use of today's modern web.",
+  "body": [
+    "INTERNET + TELETEXT = WEBTEXT",
+    "Warning: This video has some intermittent moments of flickering on the CRT. Please skip forward to 0:36 if you have epilepsy."
+  ],
+  "tech": [
+    "Video",
+    "Teletext",
+    "Web"
+  ],
+  "featured": true,
+  "thumbnail": "/projects/webtext/thumbnail.mp4",
+  "gallery": [],
+  "video": "/projects/webtext/thumbnail.mp4",
+  "embeds": [
+    {
+      "title": "INTERNET + TELETEXT = WEBTEXT",
+      "src": "https://www.youtube.com/embed/uCOQdq30EuQ"
+    },
+    {
+      "title": "Muttlee teletext viewer",
+      "src": "https://teletext-webtext-jw25.netlify.app/",
+      "hideOnMobile": true
+    }
+  ]
+}

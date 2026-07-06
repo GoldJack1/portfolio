@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "npm run copy-cms && next build",
+    "build": "npm run copy-cms && npm run sync-content && next build",
     "copy-cms": "mkdir -p public/admin/vendor && cp node_modules/decap-cms/dist/decap-cms.js public/admin/vendor/decap-cms.js",
+    "sync-content": "node scripts/sync-projects.mjs && node scripts/sync-site-pages.mjs",
+    "sync-projects": "node scripts/sync-projects.mjs",
     "postinstall": "npm run copy-cms",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "extract-icon-metrics": "node scripts/extract-font-metrics.mjs",
+    "copy-static-icons": "node scripts/copy-static-icons.mjs"
   },
   "dependencies": {
     "decap-cms": "^3.14.1",
@@ -20,6 +24,7 @@
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "fontkit": "^2.0.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

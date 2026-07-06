@@ -1,15 +1,16 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import CmsBackLink from "@/components/cms/cms-back-link";
 import TransitionLink from "@/components/transition-link";
 import VideoThumbnail from "@/components/video-thumbnail";
-import { PROJECTS, getProject, isVideoThumbnail } from "@/lib/projects";
+import { getAllProjects, getProject, isVideoThumbnail } from "@/lib/projects";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.slug }));
+  return getAllProjects().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -28,12 +29,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   return (
     <article className="px-6 sm:px-12 pt-10 sm:pt-14 pb-16 w-full">
-      <TransitionLink
-        href="/projects"
-        className={`inline-block text-sm text-muted hover:text-foreground transition-colors mb-8 ${sansLight}`}
-      >
-        ← Back to projects
-      </TransitionLink>
+      <CmsBackLink label="Back to projects" href="/projects" />
 
       <header className="mb-10 max-w-3xl">
         <p className={`text-xs uppercase tracking-widest text-muted mb-3 ${sansLight}`}>

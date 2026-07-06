@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import CmsBlockRenderer from "@/components/cms/cms-block-renderer";
+import CmsPageShell from "@/components/cms/cms-page-shell";
 import { getAllCmsPages, getCmsPage } from "@/lib/cms/pages";
 import { createPageMetadata } from "@/lib/site-metadata";
 
@@ -22,8 +22,11 @@ export default async function CmsPageRoute({ params }: Props) {
   if (!page) notFound();
 
   return (
-    <article className="pb-16 w-full">
-      <CmsBlockRenderer blocks={page.blocks} pageWidth={page.pageWidth} />
-    </article>
+    <CmsPageShell
+      {...page}
+      showBackLink={page.showBackLink ?? true}
+      backLabel={page.backLabel ?? "Back"}
+      backHref={page.backHref ?? "/"}
+    />
   );
 }
