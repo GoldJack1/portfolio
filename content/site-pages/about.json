@@ -7,19 +7,34 @@
     {
       "type": "heading",
       "text": "About",
-      "typography": { "font": "deco", "weight": "medium", "size": "6xl" },
+      "typography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "6xl",
+        "style": "normal"
+      },
       "paddingBottom": "md"
     },
     {
       "type": "text",
       "body": "I'm Jack Wingate, a First-Class Graphic Design graduate from the University of Huddersfield (2025), based in West Yorkshire. I'm a designer first — my work spans brand, UI/UX, and product design, with a particular interest in transport, wayfinding, and realism-led interfaces that feel intuitive rather than abstract.\n\nAt university I led large self-initiated projects from research through to delivery, including a national Great British Railways brand and app concept, a 10,000-word dissertation on the lack of realism in modern UI with an interactive outcome, and WEBTEXT — a teletext-inspired digital service. Outside of coursework I've designed and shipped Rail Statistics, a self-initiated iOS and Android app, from Figma prototypes to public release.\n\nI work primarily in Figma and Adobe Creative Suite. When something needs to exist as a real app or website, I use AI-assisted workflows to build from my own designs and specs — keeping full ownership of the visual direction and UX. Whether it's campaign graphics, motion, environmental design, or mobile product work, I care about hierarchy, accessibility, and follow-through.",
-      "typography": { "font": "sans", "weight": "medium", "size": "lg" },
+      "typography": {
+        "font": "sans",
+        "weight": "medium",
+        "size": "lg",
+        "style": "normal"
+      },
       "paddingBottom": "lg"
     },
     {
       "type": "timeline",
       "heading": "Education",
-      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "2xl",
+        "style": "normal"
+      },
       "items": [
         {
           "period": "2022 – 2025",
@@ -41,7 +56,12 @@
     {
       "type": "timeline",
       "heading": "Highlights",
-      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "2xl",
+        "style": "normal"
+      },
       "items": [
         {
           "period": "2025 – Present",
@@ -78,31 +98,74 @@
     {
       "type": "tagGroups",
       "heading": "Skills",
-      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "2xl",
+        "style": "normal"
+      },
       "groups": [
         {
           "category": "Design",
-          "items": ["Brand identity", "UI/UX & product design", "Wayfinding", "Information hierarchy", "Typography & layout", "Campaign design", "Realism-led / skeuomorphic UI"]
+          "items": [
+            "Brand identity",
+            "UI/UX & product design",
+            "Wayfinding",
+            "Information hierarchy",
+            "Typography & layout",
+            "Campaign design",
+            "Realism-led / skeuomorphic UI"
+          ]
         },
         {
           "category": "Tools",
-          "items": ["Figma", "Adobe Photoshop", "Illustrator", "InDesign", "After Effects", "Premiere Pro", "MS Office / iWork / G-Suite"]
+          "items": [
+            "Figma",
+            "Adobe Photoshop",
+            "Illustrator",
+            "InDesign",
+            "After Effects",
+            "Premiere Pro",
+            "MS Office / iWork / G-Suite"
+          ]
         },
         {
           "category": "Digital products",
-          "items": ["Wireframing & prototyping", "Design-to-build with AI tools", "Vibe coding apps & sites from designs", "App Store & Play Store release"]
+          "items": [
+            "Wireframing & prototyping",
+            "Design-to-build with AI tools",
+            "Vibe coding apps & sites from designs",
+            "App Store & Play Store release"
+          ]
         },
         {
           "category": "Ways of working",
-          "items": ["Project planning", "Research & analysis", "Motion & video production", "Presentation", "Team leadership", "Client & stakeholder communication"]
+          "items": [
+            "Project planning",
+            "Research & analysis",
+            "Motion & video production",
+            "Presentation",
+            "Team leadership",
+            "Client & stakeholder communication"
+          ]
         }
       ]
     },
     {
       "type": "bulletList",
       "heading": "Interests",
-      "headingTypography": { "font": "deco", "weight": "medium", "size": "2xl" },
-      "typography": { "font": "sans", "weight": "light", "size": "base" },
+      "headingTypography": {
+        "font": "deco",
+        "weight": "medium",
+        "size": "2xl",
+        "style": "normal"
+      },
+      "typography": {
+        "font": "sans",
+        "weight": "light",
+        "size": "base",
+        "style": "normal"
+      },
       "items": [
         "YouTube — travel, rail, and visual storytelling (filming, editing, publishing)",
         "Exploring cities to study signage, typography, and public-facing design in context",
@@ -119,9 +182,22 @@
           "href": "/contact",
           "variant": "primary",
           "icon": "arrow-right",
-          "iconPosition": "right"
+          "iconPosition": "right",
+          "size": "md"
         }
-      ]
+      ],
+      "headingTypography": {
+        "font": "sans",
+        "weight": "regular",
+        "style": "normal",
+        "size": "base"
+      },
+      "bodyTypography": {
+        "font": "sans",
+        "weight": "medium",
+        "size": "base",
+        "style": "normal"
+      }
     }
   ]
 }
