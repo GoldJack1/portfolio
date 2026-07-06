@@ -9,8 +9,13 @@ publish_mode: editorial_workflow
 # Enable offline/local editing against the dev server (npm run dev).
 local_backend: true
 
-media_folder: public/uploads
-public_folder: /uploads
+# Site media lives under public/ (projects, uploads, etc.) so the Media tab shows all assets.
+media_folder: public
+public_folder: /
+
+media_library:
+  config:
+    max_file_size: 104857600
 
 site_url: https://jackwingateportfolio.netlify.app
 
