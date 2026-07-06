@@ -1,0 +1,18 @@
+{
+  "showInNav": false,
+  "pageWidth": "full",
+  "title": "NEW PAGE",
+  "slug": "new-page",
+  "blocks": [
+    {
+      "type": "heading",
+      "typography": {
+        "font": "deco",
+        "weight": "light",
+        "size": "lg"
+      },
+      "align": "left",
+      "text": "This is a test of the new page"
+    }
+  ]
+}
