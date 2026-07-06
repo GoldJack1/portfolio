@@ -2,7 +2,7 @@
   "route": "projects",
   "title": "Projects",
   "seoDescription": "Selected graphic design, UI/UX, and product work by Jack Wingate.",
-  "pageWidth": "wide",
+  "pageWidth": "full",
   "blocks": [
     {
       "type": "projectGrid",

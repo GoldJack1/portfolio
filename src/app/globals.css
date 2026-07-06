@@ -14,6 +14,19 @@
   --header-glass-bg:   hsla(0, 0%, 100%, 0.22);
   --header-glass-ring: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
   --header-glass-blur: 25px;
+
+  /* Site-wide corner radius — change this one value to update headers, cards, and images */
+  --surface-radius: 28px;
+
+  /* Header shell + control radii — derived from --surface-radius */
+  --header-shell-radius: var(--surface-radius);
+  --header-shell-padding: 8px;
+  --header-inner-radius: calc(var(--header-shell-radius) - var(--header-shell-padding));
+  --header-desktop-control: 35px;
+  --header-desktop-outer-radius: calc(
+    (var(--header-desktop-control) + 2 * var(--header-shell-padding)) / 2
+  );
+  --header-desktop-inner-radius: calc(var(--header-desktop-control) / 2);
 }
 
 .dark {
@@ -97,6 +110,8 @@ html.dark[data-header-mixed="true"][data-header-on="dark"] {
   --color-muted:      var(--muted);
   --color-border:     var(--border);
   --color-surface:    var(--surface);
+  --radius-surface: var(--surface-radius);
+  --radius-surface-sm: var(--header-inner-radius);
   --font-sans: var(--font-strawford), system-ui, sans-serif;
   --font-deco: var(--font-knile), system-ui, sans-serif;
 
@@ -140,6 +155,32 @@ body {
   -webkit-backface-visibility: hidden;
 }
 
+.header-shell {
+  border-radius: var(--header-shell-radius);
+}
+
+.header-control-surface {
+  border-radius: var(--header-inner-radius);
+}
+
+/* End controls flush with shell edge — outer corners match shell, inner corners match controls */
+.header-cap-left {
+  border-radius: var(--header-shell-radius) var(--header-inner-radius)
+    var(--header-inner-radius) var(--header-shell-radius);
+}
+
+.header-cap-right {
+  border-radius: var(--header-inner-radius) var(--header-shell-radius)
+    var(--header-shell-radius) var(--header-inner-radius);
+}
+
+@media (min-width: 640px) {
+  .header-cap-right {
+    border-radius: var(--header-desktop-inner-radius) var(--header-desktop-outer-radius)
+      var(--header-desktop-outer-radius) var(--header-desktop-inner-radius);
+  }
+}
+
 /* Inline icons — 1cap matches text cap height; use size="1em" for full em-box */
 .icon-inline {
   display: inline-flex;
@@ -157,15 +198,26 @@ body {
   font-size: inherit;
 }
 
-/* Icon + text in flex rows — optical centering (vertical-align ignored in flex) */
+/* Icon + text in flex rows — both icon and label vertically centered in the row */
 :where(.icon-text-row) > .icon-inline {
   vertical-align: unset;
-  translate: 0 0.05em;
+  translate: none;
 }
 
 /* Tight rows for icon + label buttons and links */
 .icon-text-row {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Header nav labels — vertically centered in pill buttons */
+[data-header-top-bar] .header-nav-btn {
+  line-height: 1;
+}
+
+[data-header-top-bar] .header-nav-label {
+  display: block;
   line-height: 1;
 }

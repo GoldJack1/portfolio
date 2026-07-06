@@ -14,6 +14,31 @@ const SIZE_CLASSES: Record<NonNullable<CmsTypography["size"]>, string> = {
   "7xl": "text-7xl",
 };
 
+/** Tailwind default rem sizes — used for fit-to-width heading bounds. */
+export const SIZE_REM: Record<NonNullable<CmsTypography["size"]>, number> = {
+  xs: 0.75,
+  sm: 0.875,
+  base: 1,
+  lg: 1.125,
+  xl: 1.25,
+  "2xl": 1.5,
+  "3xl": 1.875,
+  "4xl": 2.25,
+  "5xl": 3,
+  "6xl": 3.75,
+  "7xl": 4.5,
+};
+
+const HEADING_MIN_REM: Partial<Record<NonNullable<CmsTypography["size"]>, number>> = {
+  "7xl": 3,
+  "6xl": 2.75,
+  "5xl": 2.5,
+  "4xl": 1.875,
+  "3xl": 1.25,
+  "2xl": 1.125,
+  xl: 1.125,
+};
+
 const FONT_CLASSES: Record<NonNullable<CmsTypography["font"]>, string> = {
   sans: "font-sans",
   deco: "font-deco",
@@ -73,6 +98,38 @@ export function typographyClassName(
     .join(" ");
 }
 
+export function headingTypographyClassName(
+  typography?: CmsTypography,
+  defaults: Partial<CmsTypography> = {},
+): string {
+  const merged = { ...DEFAULT_TYPOGRAPHY, ...defaults, ...typography };
+  const weight = resolveWeight(merged.weight);
+  const style = merged.style ?? "normal";
+
+  return [FONT_CLASSES[merged.font], WEIGHT_CLASSES[weight], STYLE_CLASSES[style]]
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function resolveHeadingSize(
+  typography?: CmsTypography,
+  defaults: Partial<CmsTypography> = {},
+): NonNullable<CmsTypography["size"]> {
+  const merged = { ...DEFAULT_TYPOGRAPHY, ...defaults, ...typography };
+  return merged.size;
+}
+
+export function getHeadingSizeBounds(size: NonNullable<CmsTypography["size"]>) {
+  const maxSizeRem = SIZE_REM[size];
+  const minSizeRem = HEADING_MIN_REM[size] ?? Math.max(maxSizeRem * 0.75, SIZE_REM.lg);
+  return { minSizeRem, maxSizeRem };
+}
+
+/** Max scale when filling line width — 1.65 × design size (~119px for 7xl). */
+export const HEADING_FILL_MAX_SCALE = 1.65;
+/** Fraction of container width used as a fill-width ceiling. */
+export const HEADING_FILL_WIDTH_RATIO = 0.085;
+
 export const PAGE_WIDTH_CLASSES = {
   narrow: "max-w-3xl",
   default: "max-w-5xl",
@@ -94,9 +151,9 @@ export const GALLERY_COLUMN_CLASSES = {
 } as const;
 
 export const BUTTON_SIZE_CLASSES = {
-  sm: "px-4 py-2 text-sm leading-none gap-1.5",
-  md: "px-6 py-3 text-[15px] leading-none gap-2",
-  lg: "px-8 py-3.5 text-base leading-none gap-2.5",
+  sm: "px-4 h-8 text-sm leading-none gap-1.5",
+  md: "px-6 h-10 text-[15px] leading-none gap-2",
+  lg: "px-8 h-11 text-base leading-none gap-2.5",
 } as const;
 
 export const TWO_COLUMN_RATIO_CLASSES = {

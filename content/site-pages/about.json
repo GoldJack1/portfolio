@@ -2,7 +2,7 @@
   "route": "about",
   "title": "About",
   "seoDescription": "About Jack Wingate — graphic and UI/UX designer, First-Class graduate, transport and product design.",
-  "pageWidth": "narrow",
+  "pageWidth": "full",
   "blocks": [
     {
       "type": "heading",

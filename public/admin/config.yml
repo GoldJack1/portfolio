@@ -1,11 +1,17 @@
 backend:
   name: git-gateway
   branch: main
+  squash_merges: true
+
+# Save commits to a draft branch (PR); Publish merges to main and goes live.
+publish_mode: editorial_workflow
 
 media_folder: public/uploads
 public_folder: /uploads
 
 site_url: https://jackwingateportfolio.netlify.app
+
+show_preview_links: true
 
 x-typography: &typography
   label: Typography
@@ -133,7 +139,7 @@ x-page-settings: &page-settings
       - { label: Default, value: default }
       - { label: Wide, value: wide }
       - { label: Full bleed, value: full }
-    default: default
+    default: full
     required: false
   - label: Show back link
     name: showBackLink
@@ -147,6 +153,87 @@ x-page-settings: &page-settings
     name: backHref
     widget: string
     required: false
+
+x-img-layout: &img-layout
+  label: Layout
+  name: layout
+  widget: select
+  options:
+    - { label: Full width, value: full }
+    - { label: Fill width (edge to edge, cropped), value: bleed }
+    - { label: Inset, value: inset }
+    - { label: Small, value: small }
+  default: inset
+  required: false
+
+x-img-aspect: &img-aspect
+  label: Aspect ratio
+  name: aspect
+  widget: select
+  options:
+    - { label: Natural (no crop), value: auto }
+    - { label: Square (1:1), value: square }
+    - { label: Standard (4:3), value: standard }
+    - { label: Video (16:9), value: video }
+    - { label: Portrait (3:4), value: portrait }
+    - { label: Tall (4:5), value: tall }
+    - { label: Cinematic (21:9), value: cinematic }
+  default: video
+  required: false
+
+x-img-fit: &img-fit
+  label: Image fit
+  name: fit
+  widget: select
+  options:
+    - { label: Cover (fill frame, may crop), value: cover }
+    - { label: Contain (show full image), value: contain }
+  default: cover
+  required: false
+
+x-img-crop: &img-crop
+  label: Crop focus
+  name: crop
+  widget: select
+  hint: Which part of the image to keep when cropping (Cover fit)
+  options:
+    - { label: Center, value: center }
+    - { label: Top, value: top }
+    - { label: Bottom, value: bottom }
+    - { label: Left, value: left }
+    - { label: Right, value: right }
+  default: center
+  required: false
+
+x-img-align: &img-align
+  label: Alignment
+  name: align
+  widget: select
+  options:
+    - { label: Left, value: left }
+    - { label: Center, value: center }
+    - { label: Right, value: right }
+  default: center
+  required: false
+
+x-img-radius: &img-radius
+  label: Corner radius
+  name: radius
+  widget: select
+  options:
+    - { label: Square, value: none }
+    - { label: Slightly rounded, value: sm }
+    - { label: Rounded, value: lg }
+    - { label: Circle / pill, value: full }
+  default: lg
+  required: false
+
+x-img-border: &img-border
+  label: Show border
+  name: border
+  widget: boolean
+  default: true
+  required: false
 
 x-block-types: &block-types
   - label: Hero
@@ -164,6 +251,17 @@ x-block-types: &block-types
         <<: *typography
         name: bodyTypography
       - { label: Image, name: image, widget: image, required: false }
+      - label: Image display
+        name: imageDisplay
+        widget: object
+        collapsed: true
+        required: false
+        fields:
+          - *img-aspect
+          - *img-fit
+          - *img-crop
+          - *img-radius
+          - *img-border
       - label: Layout
         name: layout
         widget: select
@@ -221,16 +319,19 @@ x-block-types: &block-types
       - { label: Image, name: src, widget: image }
       - { label: Alt text, name: alt, widget: string, required: false }
       - { label: Caption, name: caption, widget: string, required: false }
-      - label: Layout
-        name: layout
+      - label: Caption alignment
+        name: captionAlign
         widget: select
-        options:
-          - { label: Full width, value: full }
-          - { label: Inset, value: inset }
-          - { label: Small centered, value: small }
-        default: inset
+        options: [left, center]
+        default: left
         required: false
-      - { label: Rounded, name: rounded, widget: boolean, default: false, required: false }
+      - *img-layout
+      - *img-aspect
+      - *img-fit
+      - *img-crop
+      - *img-align
+      - *img-radius
+      - *img-border
       - <<: *section-style
 
   - label: Gallery
@@ -242,13 +343,42 @@ x-block-types: &block-types
         name: images
         widget: list
         field: { label: Image, name: image, widget: image }
+      - label: Arrangement
+        name: arrangement
+        widget: select
+        options:
+          - { label: Grid, value: grid }
+          - { label: Vertical stack (touching), value: vertical }
+          - { label: Horizontal row (touching), value: horizontal }
+        default: grid
+        required: false
       - label: Columns
         name: columns
         widget: select
+        hint: Only used for Grid arrangement
         options: ["1", "2", "3"]
         default: "2"
         required: false
-      - { label: Rounded, name: rounded, widget: boolean, default: false, required: false }
+      - label: Spacing
+        name: gap
+        widget: select
+        options:
+          - { label: None, value: none }
+          - { label: Small, value: sm }
+          - { label: Medium, value: md }
+        default: none
+        required: false
+      - label: Edge to edge
+        name: bleed
+        widget: boolean
+        hint: Stretch the group to full page width
+        default: false
+        required: false
+      - *img-aspect
+      - *img-fit
+      - *img-crop
+      - *img-radius
+      - *img-border
       - <<: *section-style
 
   - label: Two columns
@@ -470,6 +600,7 @@ collections:
       - label: Home
         name: home
         file: content/site-pages/home.json
+        preview_path: /
         fields:
           - label: Title
             name: title
@@ -486,7 +617,7 @@ collections:
               - { label: Default, value: default }
               - { label: Wide, value: wide }
               - { label: Full bleed, value: full }
-            default: default
+            default: full
             required: false
           - label: Show back link
             name: showBackLink
@@ -509,6 +640,7 @@ collections:
       - label: About
         name: about
         file: content/site-pages/about.json
+        preview_path: /about
         fields:
           - label: Title
             name: title
@@ -525,7 +657,7 @@ collections:
               - { label: Default, value: default }
               - { label: Wide, value: wide }
               - { label: Full bleed, value: full }
-            default: default
+            default: full
             required: false
           - label: Show back link
             name: showBackLink
@@ -548,6 +680,7 @@ collections:
       - label: Projects
         name: projects
         file: content/site-pages/projects.json
+        preview_path: /projects
         fields:
           - label: Title
             name: title
@@ -564,7 +697,7 @@ collections:
               - { label: Default, value: default }
               - { label: Wide, value: wide }
               - { label: Full bleed, value: full }
-            default: default
+            default: full
             required: false
           - label: Show back link
             name: showBackLink
@@ -587,6 +720,7 @@ collections:
       - label: Contact
         name: contact
         file: content/site-pages/contact.json
+        preview_path: /contact
         fields:
           - label: Title
             name: title
@@ -603,7 +737,7 @@ collections:
               - { label: Default, value: default }
               - { label: Wide, value: wide }
               - { label: Full bleed, value: full }
-            default: default
+            default: full
             required: false
           - label: Show back link
             name: showBackLink
@@ -633,6 +767,7 @@ collections:
     format: json
     identifier_field: title
     summary: "{{title}} — /pages/{{slug}}"
+    preview_path: "pages/{{slug}}"
     fields:
       - label: Title
         name: title
@@ -662,7 +797,7 @@ collections:
           - { label: Default, value: default }
           - { label: Wide, value: wide }
           - { label: Full bleed, value: full }
-        default: default
+        default: full
         required: false
       - label: Show back link
         name: showBackLink

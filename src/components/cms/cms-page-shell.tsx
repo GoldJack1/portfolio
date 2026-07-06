@@ -9,7 +9,7 @@ type CmsPageShellProps = CmsPageSettings & {
 
 export default function CmsPageShell({
   title,
-  pageWidth = "default",
+  pageWidth = "full",
   showBackLink,
   backLabel,
   backHref,

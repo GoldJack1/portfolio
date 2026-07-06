@@ -10,6 +10,7 @@ import {
   searchSite,
   type SearchResult,
 } from "@/lib/site-search";
+import CmsHeading from "@/components/cms/cms-heading";
 import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 function PageRow({ page }: { page: SearchResult }) {
@@ -88,9 +89,13 @@ export default function SearchPageClient() {
 
   return (
     <section className="px-6 sm:px-12 pt-10 sm:pt-14 pb-16 w-full">
-      <h1 className={`text-5xl sm:text-7xl ${decoMedium} text-foreground mb-4`}>
+      <CmsHeading
+        as="h1"
+        typography={{ font: "deco", weight: "medium", size: "7xl" }}
+        className="mb-4"
+      >
         Search
-      </h1>
+      </CmsHeading>
 
       <input
         ref={inputRef}

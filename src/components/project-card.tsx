@@ -20,7 +20,7 @@ export default function ProjectCard({ project, variant = "grid" }: ProjectCardPr
         href={href}
         className="group flex flex-col cursor-pointer"
       >
-        <div className="relative aspect-video rounded-2xl border border-border overflow-hidden bg-background hover:border-muted transition-colors">
+        <div className="relative aspect-video rounded-surface border border-border overflow-hidden bg-background hover:border-muted transition-colors">
           <ProjectThumbnail project={project} isVideo={isVideo} />
         </div>
         <div className="pt-4 flex flex-col gap-1">
@@ -38,9 +38,9 @@ export default function ProjectCard({ project, variant = "grid" }: ProjectCardPr
   return (
     <TransitionLink
       href={href}
-      className="group flex flex-col rounded-2xl bg-surface border border-border hover:border-muted transition-colors overflow-hidden cursor-pointer"
+      className="group flex flex-col rounded-surface bg-surface border border-border hover:border-muted transition-colors overflow-hidden cursor-pointer"
     >
-      <div className="relative aspect-video overflow-hidden bg-background">
+      <div className="relative aspect-video overflow-hidden rounded-t-surface bg-background">
         <ProjectThumbnail project={project} isVideo={isVideo} />
       </div>
       <div className="flex flex-col flex-1 p-5 gap-3">

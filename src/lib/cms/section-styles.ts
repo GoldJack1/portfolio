@@ -24,7 +24,7 @@ export function sectionClassName(style?: CmsSectionStyle, defaults?: CmsSectionS
     SECTION_PADDING_BOTTOM[merged.paddingBottom ?? "md"],
   ];
   if (merged.background === "surface") {
-    classes.push("rounded-2xl bg-surface border border-border p-8 sm:p-12");
+    classes.push("rounded-surface bg-surface border border-border p-8 sm:p-12");
   }
   if (merged.textTone === "muted") {
     classes.push("text-muted");

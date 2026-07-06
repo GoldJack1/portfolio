@@ -16,8 +16,10 @@ import Icon, { AnimatedMenuIcon } from "@/components/ui/icon";
 
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.8 };
 const HEADER_ICON_WEIGHT = iconWeightFromClass(sansBold);
-/** Match bold 16px nav label — full em box, not cap height */
-const HEADER_ICON_SIZE = "1em" as const;
+const DESKTOP_NAV_BTN =
+  "header-nav-btn relative z-10 inline-grid h-[35px] place-items-center px-4 rounded-full text-[16px] leading-none whitespace-nowrap";
+const MOBILE_NAV_BTN =
+  "header-nav-btn relative z-10 inline-grid w-full h-[40px] items-center justify-items-start px-4 rounded-full text-[16px] leading-none text-left";
 
 function HeaderSearchIcon() {
   return (
@@ -25,7 +27,6 @@ function HeaderSearchIcon() {
       name="search"
       font="sans"
       weight={HEADER_ICON_WEIGHT}
-      size={HEADER_ICON_SIZE}
       aria-hidden
     />
   );
@@ -37,7 +38,6 @@ function HeaderCloseIcon() {
       name="cross"
       font="sans"
       weight={HEADER_ICON_WEIGHT}
-      size={HEADER_ICON_SIZE}
       aria-hidden
     />
   );
@@ -50,7 +50,7 @@ function ThemeToggleIcon() {
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <span className="flex size-4" aria-hidden />;
+    return <span className="size-[1cap]" aria-hidden />;
   }
 
   const isDark = resolvedTheme === "dark";
@@ -64,9 +64,14 @@ function ThemeToggleIcon() {
           animate={{ rotate: 0, scale: 1, opacity: 1 }}
           exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="flex text-[16px] leading-none"
+          className="grid size-[1cap] place-items-center text-[16px] leading-none"
         >
-          <Icon name="sun" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
+          <Icon
+            name="sun"
+            font="sans"
+            weight={HEADER_ICON_WEIGHT}
+            aria-hidden
+          />
         </motion.span>
       ) : (
         <motion.span
@@ -75,9 +80,14 @@ function ThemeToggleIcon() {
           animate={{ rotate: 0, scale: 1, opacity: 1 }}
           exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="flex text-[16px] leading-none"
+          className="grid size-[1cap] place-items-center text-[16px] leading-none"
         >
-          <Icon name="moon" font="sans" weight={HEADER_ICON_WEIGHT} size={HEADER_ICON_SIZE} aria-hidden />
+          <Icon
+            name="moon"
+            font="sans"
+            weight={HEADER_ICON_WEIGHT}
+            aria-hidden
+          />
         </motion.span>
       )}
     </AnimatePresence>
@@ -156,7 +166,7 @@ function SearchResults({
             <motion.button key={result.id} layout
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={{ ...SPRING, delay: i * 0.03 }}
-              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-left ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""}`}
+              className={`flex items-center gap-3 px-3 py-3 rounded-surface-sm text-left ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""}`}
               onClick={() => onSelect?.(result)}>
               <span className="flex-1 min-w-0">
                 <span
@@ -177,7 +187,7 @@ function SearchResults({
           <button
             type="button"
             onClick={onViewMore}
-            className={`mt-1 w-full px-3 py-3 rounded-2xl text-left text-[14px] ${hc.searchMutedMid} ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""} ${sansMedium}`}
+            className={`mt-1 w-full px-3 py-3 rounded-surface-sm text-left text-[14px] ${hc.searchMutedMid} ${hc.searchHoverRow} transition-colors${minTouch ? " min-h-[40px]" : ""} ${sansMedium}`}
           >
             View more results ({total})
           </button>
@@ -273,7 +283,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
   const closeSearch = () => { setSearchOpen(false); setSearchQuery(""); setShowResults(false); };
 
   const navText = (id: string) => hc.navText(pillAt === id);
-  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10 text-[16px] leading-none";
+  const ICON_BTN = "absolute inset-0 grid place-items-center rounded-full z-10 text-[16px] leading-none";
 
   return (
     <LayoutGroup id="desktop-header">
@@ -286,7 +296,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
         <div
           ref={barRef}
           data-header-top-bar
-          className={`relative flex items-center gap-1 p-2 rounded-full ${hc.glass}`}
+          className={`relative flex items-center gap-1 py-2 pl-2 pr-0 rounded-full ${hc.glass}`}
           style={hc.glassStyle}
         >
           <SlidingPill left={pill.left} width={pill.width} visible={pill.visible} />
@@ -320,11 +330,11 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                   )}
                 </AnimatePresence>
                 <button
-                  className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] leading-none whitespace-nowrap ${navText(item.id)} ${sansBold}`}
+                  className={`${DESKTOP_NAV_BTN} ${navText(item.id)} ${sansBold}`}
                   onClick={() => handleSelect(item)}
                   tabIndex={searchOpen ? -1 : 0}
                 >
-                  {item.label}
+                  <span className="header-nav-label">{item.label}</span>
                 </button>
               </div>
             ))}
@@ -355,11 +365,11 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
                 )}
               </AnimatePresence>
               <button
-                className={`relative z-10 h-[35px] px-4 flex items-center rounded-full text-[16px] leading-none whitespace-nowrap ${navText(item.id)} ${sansBold}`}
+                className={`${DESKTOP_NAV_BTN} ${navText(item.id)} ${sansBold}`}
                 onClick={() => handleSelect(item)}
                 tabIndex={searchOpen ? -1 : 0}
               >
-                {item.label}
+                <span className="header-nav-label">{item.label}</span>
               </button>
             </motion.div>
           ))}
@@ -430,7 +440,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
 
           {/* ── Search / close slot — z-20 floats above the search overlay ── */}
           <div
-            className="relative shrink-0 w-[35px] h-[35px] z-20"
+            className="relative shrink-0 w-[43px] h-[35px] z-20 header-cap-right overflow-hidden"
             onMouseEnter={() => setHovered("__search__")}
             onMouseLeave={() => setHovered(null)}
           >
@@ -438,7 +448,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
             <AnimatePresence>
               {(searchOpen || hovered === "__search__") && (
                 <motion.div
-                  className={`absolute inset-0 rounded-full ${
+                  className={`absolute inset-0 ${
                     searchOpen
                       ? `${hc.searchCloseRing} ${hovered === "__search__" ? hc.searchCloseHover : hc.searchCloseRest}`
                       : `${hc.ring} ${hovered === "__search__" ? hc.hoverBgStrong : hc.onDark ? "bg-white/10" : "bg-black/8"}`
@@ -482,7 +492,7 @@ function DesktopHeader({ navItems }: { navItems: NavItem[] }) {
           {showResults && (
             <motion.div key="results"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={SPRING} className="rounded-[28px] overflow-hidden" style={hc.searchPanelStyle}>
+              transition={SPRING} className="header-shell overflow-hidden" style={hc.searchPanelStyle}>
               <SearchResults
                 query={searchQuery}
                 onSelect={(result) => {
@@ -522,16 +532,16 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
 
   const handleSelect = (item: NavItem) => { navigate(item.href); setMenuOpen(false); };
 
-  const ICON_BTN = "absolute inset-0 flex items-center justify-center rounded-full z-10 text-[16px] leading-none";
+  const ICON_BTN = "absolute inset-0 grid place-items-center rounded-full z-10 text-[16px] leading-none";
   const TOUCH = "min-h-[40px] min-w-[40px]";
 
   return (
     <LayoutGroup id="mobile-header">
       <div className="flex flex-col gap-2">
-        <div className={`w-full rounded-[28px] overflow-hidden ${hc.mobileGlass}`} style={hc.mobileGlassStyle}>
+        <div className={`w-full header-shell overflow-hidden ${hc.mobileGlass}`} style={hc.mobileGlassStyle}>
 
           {/* Top bar */}
-          <div data-header-top-bar className="relative flex items-center gap-2 p-2 min-h-[56px]">
+          <div data-header-top-bar className="relative flex items-center gap-2 py-2 pl-2 pr-0 min-h-[56px]">
 
             {/* Hamburger — collapses when search opens */}
             <motion.div
@@ -541,13 +551,12 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               <button onClick={toggleMenu}
-                className={`flex items-center justify-center w-[40px] h-[40px] ${TOUCH} rounded-full text-[16px] leading-none ${hc.icon} ${hc.searchBtnRest} transition-colors`}
+                className={`grid place-items-center w-[48px] h-[40px] ${TOUCH} header-cap-left text-[16px] leading-none ${hc.icon} ${hc.searchBtnRest} transition-colors`}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}>
                 <AnimatedMenuIcon
                   isOpen={menuOpen}
                   font="sans"
                   weight={HEADER_ICON_WEIGHT}
-                  size={HEADER_ICON_SIZE}
                 />
               </button>
             </motion.div>
@@ -564,9 +573,11 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <div className="absolute inset-0 bg-white rounded-full" />
+                  <div className="absolute inset-0 bg-white header-control-surface" />
                   <div className="absolute inset-0 z-10 flex items-center gap-2 pl-3 pr-[48px]">
-                    <span className={`shrink-0 text-[16px] leading-none ${hc.searchIcon}`}><HeaderSearchIcon /></span>
+                    <span className={`shrink-0 text-[16px] ${hc.searchIcon}`}>
+                      <HeaderSearchIcon />
+                    </span>
                     <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search"
                       className={`flex-1 bg-transparent outline-none text-[16px] leading-none min-w-0 ${hc.input} ${sansBold}`}
@@ -602,7 +613,7 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
             </AnimatePresence>
 
             {/* Search / close — z-20 floats above search overlay */}
-            <div className={`relative shrink-0 w-[40px] h-[40px] ${TOUCH} z-20 rounded-full transition-colors ${
+            <div className={`relative shrink-0 w-[48px] h-[40px] ${TOUCH} z-20 header-cap-right overflow-hidden transition-colors ${
               searchOpen
                 ? `${hc.searchCloseRing} ${hc.searchCloseRest}`
                 : `shadow-transparent ${hc.searchBtnRest}`
@@ -641,8 +652,8 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
                         <motion.div layoutId="mobile-pill" className="absolute inset-0 bg-white rounded-full" transition={SPRING} />
                       )}
                       <button onClick={() => handleSelect(item)}
-                        className={`relative z-10 w-full h-[40px] ${TOUCH} px-4 flex items-center text-[16px] text-left rounded-full transition-colors ${active === item.id ? "text-black" : `${hc.navText(false)} ${hc.searchBtnRest}`} ${sansBold}`}>
-                        {item.label}
+                        className={`${MOBILE_NAV_BTN} ${TOUCH} transition-colors ${active === item.id ? "text-black" : `${hc.navText(false)} ${hc.searchBtnRest}`} ${sansBold}`}>
+                        <span className="header-nav-label">{item.label}</span>
                       </button>
                     </motion.div>
                   ))}
@@ -657,7 +668,7 @@ function MobileHeader({ navItems }: { navItems: NavItem[] }) {
           {searchOpen && (
             <motion.div key="mobile-results"
               initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={SPRING} className="rounded-[28px] overflow-hidden" style={hc.searchPanelStyle}>
+              transition={SPRING} className="header-shell overflow-hidden" style={hc.searchPanelStyle}>
               <SearchResults
                 minTouch
                 query={searchQuery}

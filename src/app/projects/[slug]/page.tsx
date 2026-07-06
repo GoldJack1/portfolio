@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import CmsHeading from "@/components/cms/cms-heading";
 import CmsBackLink from "@/components/cms/cms-back-link";
 import TransitionLink from "@/components/transition-link";
 import VideoThumbnail from "@/components/video-thumbnail";
@@ -31,19 +32,23 @@ export default async function ProjectDetailPage({ params }: Props) {
     <article className="px-6 sm:px-12 pt-10 sm:pt-14 pb-16 w-full">
       <CmsBackLink label="Back to projects" href="/projects" />
 
-      <header className="mb-10 max-w-3xl">
+      <header className="mb-10">
         <p className={`text-xs uppercase tracking-widest text-muted mb-3 ${sansLight}`}>
           {project.tag} · {project.year}
         </p>
-        <h1 className={`text-5xl sm:text-7xl ${decoMedium} text-foreground mb-6`}>
+        <CmsHeading
+          as="h1"
+          typography={{ font: "deco", weight: "medium", size: "7xl" }}
+          className="mb-6"
+        >
           {project.title}
-        </h1>
-        <p className={`text-lg text-muted leading-relaxed ${sansLight}`}>
+        </CmsHeading>
+        <p className={`text-lg text-muted leading-relaxed max-w-3xl ${sansLight}`}>
           {project.desc}
         </p>
       </header>
 
-      <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border mb-12 bg-background">
+      <div className="relative w-full aspect-video rounded-surface overflow-hidden border border-border mb-12 bg-background">
         {isVideo ? (
           <VideoThumbnail
             src={project.video ?? project.thumbnail}
@@ -113,7 +118,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <iframe
             src={project.pdf}
             title={`${project.title} PDF`}
-            className="hidden md:block w-full min-h-[600px] border border-border rounded-2xl bg-white"
+            className="hidden md:block w-full h-[85vh] min-h-[800px] max-h-[1200px] border border-border rounded-surface bg-white"
           />
         </div>
       )}
@@ -127,7 +132,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               </p>
               <div
                 data-header-tone="dark"
-                className={`relative w-full rounded-2xl overflow-hidden border border-border bg-black ${
+                className={`relative w-full rounded-surface overflow-hidden border border-border bg-black ${
                   embed.src.includes("youtube") ? "aspect-video" : "min-h-[520px] sm:min-h-[600px]"
                 }`}
               >
@@ -155,7 +160,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             {project.gallery.map((src) => (
               <div
                 key={src}
-                className="relative aspect-[4/3] rounded-xl overflow-hidden border border-border bg-background"
+                className="relative aspect-[4/3] rounded-surface overflow-hidden border border-border bg-background"
               >
                 <Image
                   src={src}

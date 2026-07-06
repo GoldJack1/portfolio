@@ -10,9 +10,11 @@ import {
   TWO_COLUMN_RATIO_CLASSES,
   typographyClassName,
 } from "@/lib/cms/typography";
+import { galleryBleedClass, galleryGapClass, pickImageDisplay } from "@/lib/cms/image-display";
 import { blockSectionStyle, sectionClassName } from "@/lib/cms/section-styles";
 import { sansBold, sansLight, sansMedium } from "@/lib/typography";
-import CmsImage from "./cms-image";
+import CmsHeading from "./cms-heading";
+import CmsImageFrame from "./cms-image-frame";
 import CmsBackLink from "./cms-back-link";
 import CmsContactForm from "./cms-contact-form";
 import CmsButton from "./cms-button";
@@ -30,12 +32,12 @@ function galleryImageSrc(image: string | { image?: string }): string | undefined
 }
 
 function widthClass(pageWidth: BlockRendererProps["pageWidth"]) {
-  return PAGE_WIDTH_CLASSES[pageWidth ?? "default"];
+  return PAGE_WIDTH_CLASSES[pageWidth ?? "full"];
 }
 
 export default function CmsBlockRenderer({
   blocks,
-  pageWidth = "default",
+  pageWidth = "full",
   pageTitle,
 }: BlockRendererProps) {
   const container = widthClass(pageWidth);
@@ -65,9 +67,14 @@ export default function CmsBlockRenderer({
                           {block.eyebrow}
                         </p>
                       ) : null}
-                      <h1 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "6xl", weight: "medium" })} text-foreground leading-none mb-6`}>
+                      <CmsHeading
+                        as="h1"
+                        typography={block.headingTypography}
+                        defaults={{ font: "deco", size: "7xl", weight: "medium" }}
+                        className="mb-6"
+                      >
                         {block.heading}
-                      </h1>
+                      </CmsHeading>
                       {block.body ? (
                         <p className={`text-muted leading-relaxed max-w-2xl mb-8 ${typographyClassName(block.bodyTypography, { size: "lg" })}`}>
                           {block.body}
@@ -76,21 +83,29 @@ export default function CmsBlockRenderer({
                       <CmsButtonRow buttons={block.buttons} />
                     </div>
                     {block.image ? (
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-border bg-surface w-full">
-                        <CmsImage src={block.image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" />
-                      </div>
+                      <CmsImageFrame
+                        src={block.image}
+                        alt=""
+                        display={{ layout: "full", aspect: "standard", radius: "lg", ...block.imageDisplay }}
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                      />
                     ) : null}
                   </div>
                 ) : (
-                  <div className={`w-full ${block.layout === "centered" ? "text-center max-w-3xl mx-auto" : "max-w-3xl"}`}>
+                  <div className={`w-full ${block.layout === "centered" ? "text-center" : ""}`}>
                     {block.eyebrow ? (
-                      <p className={`text-sm uppercase tracking-widest text-muted mb-6 ${typographyClassName(block.bodyTypography, { size: "sm", weight: "light" })}`}>
+                      <p className={`text-sm uppercase tracking-widest text-muted mb-6 ${typographyClassName(block.bodyTypography, { size: "sm", weight: "light" })} ${block.layout === "centered" ? "mx-auto max-w-3xl" : "max-w-3xl"}`}>
                         {block.eyebrow}
                       </p>
                     ) : null}
-                    <h1 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "6xl", weight: "medium" })} text-foreground leading-none mb-6 ${block.heading.length < 20 ? "whitespace-nowrap" : ""}`}>
+                    <CmsHeading
+                      as="h1"
+                      typography={block.headingTypography}
+                      defaults={{ font: "deco", size: "7xl", weight: "medium" }}
+                      className="mb-6"
+                    >
                       {block.heading}
-                    </h1>
+                    </CmsHeading>
                     {block.body ? (
                       <p className={`text-muted leading-relaxed mb-8 ${typographyClassName(block.bodyTypography, { size: "lg" })} ${block.layout === "centered" ? "mx-auto max-w-2xl" : "max-w-2xl"}`}>
                         {block.body}
@@ -98,9 +113,14 @@ export default function CmsBlockRenderer({
                     ) : null}
                     <CmsButtonRow buttons={block.buttons} className={block.layout === "centered" ? "justify-center" : ""} />
                     {block.image ? (
-                      <div className="relative mt-10 aspect-video rounded-2xl overflow-hidden border border-border bg-surface w-full">
-                        <CmsImage src={block.image} alt="" fill sizes="100vw" priority />
-                      </div>
+                      <CmsImageFrame
+                        src={block.image}
+                        alt=""
+                        display={{ layout: "full", aspect: "video", radius: "lg", ...block.imageDisplay }}
+                        sizes="100vw"
+                        priority
+                        className="mt-10"
+                      />
                     ) : null}
                   </div>
                 )}
@@ -110,9 +130,13 @@ export default function CmsBlockRenderer({
           case "heading":
             return (
               <section key={key} className={sectionClass}>
-                <h2 className={`${typographyClassName(block.typography, { font: "deco", size: "3xl", weight: "medium" })} text-foreground ${block.align === "center" ? "text-center" : ""}`}>
+                <CmsHeading
+                  typography={block.typography}
+                  defaults={{ font: "deco", size: "3xl", weight: "medium" }}
+                  className={block.align === "center" ? "text-center" : ""}
+                >
                   {block.text}
-                </h2>
+                </CmsHeading>
               </section>
             );
 
@@ -143,20 +167,17 @@ export default function CmsBlockRenderer({
 
           case "image": {
             if (!block.src) return null;
-            const layout = block.layout ?? "inset";
-            const rounded = block.rounded !== false;
-            const imageShell =
-              layout === "small"
-                ? "relative mx-auto max-w-xl aspect-[4/3]"
-                : "relative w-full aspect-video";
+            const captionAlign = block.captionAlign ?? "left";
 
             return (
               <figure key={key} className={sectionClass}>
-                <div className={`${imageShell} overflow-hidden border border-border bg-surface ${rounded ? "rounded-2xl" : ""}`}>
-                  <CmsImage src={block.src} alt={block.alt ?? ""} fill sizes="100vw" />
-                </div>
+                <CmsImageFrame src={block.src} alt={block.alt ?? ""} display={pickImageDisplay(block)} sizes="100vw" />
                 {block.caption ? (
-                  <figcaption className={`mt-3 text-sm text-muted ${sansLight}`}>{block.caption}</figcaption>
+                  <figcaption
+                    className={`mt-3 text-sm text-muted ${sansLight} ${captionAlign === "center" ? "text-center" : ""}`}
+                  >
+                    {block.caption}
+                  </figcaption>
                 ) : null}
               </figure>
             );
@@ -165,15 +186,48 @@ export default function CmsBlockRenderer({
           case "gallery": {
             const images = block.images.map(galleryImageSrc).filter((src): src is string => Boolean(src));
             if (!images.length) return null;
-            const rounded = block.rounded !== false;
+
+            const arrangement = block.arrangement ?? "grid";
+            const gapClass = galleryGapClass(arrangement, block.gap);
+            const bleedClass = galleryBleedClass(block.bleed);
+            const seamless =
+              arrangement === "vertical" || arrangement === "horizontal" || block.gap === "none";
+
+            const imageDisplay = pickImageDisplay(block, {
+              layout: block.bleed ? "bleed" : "full",
+              aspect: block.aspect ?? "standard",
+              fit: block.fit ?? "cover",
+              radius: seamless || block.bleed ? "none" : block.radius,
+              border: seamless || block.bleed ? false : block.border,
+            });
+
+            const gridClass =
+              arrangement === "vertical"
+                ? `flex flex-col ${gapClass}`
+                : arrangement === "horizontal"
+                  ? `grid ${gapClass}`
+                  : `grid ${gapClass} ${GALLERY_COLUMN_CLASSES[block.columns ?? "2"]}`;
+
+            const gridStyle =
+              arrangement === "horizontal"
+                ? { gridTemplateColumns: `repeat(${images.length}, minmax(0, 1fr))` }
+                : undefined;
 
             return (
-              <section key={key} className={sectionClass}>
-                <div className={`grid gap-4 ${GALLERY_COLUMN_CLASSES[block.columns ?? "2"]}`}>
-                  {images.map((src) => (
-                    <div key={src} className={`relative aspect-[4/3] overflow-hidden border border-border bg-surface ${rounded ? "rounded-xl" : ""}`}>
-                      <CmsImage src={src} alt="" fill sizes="(max-width: 640px) 100vw, 50vw" />
-                    </div>
+              <section key={key} className={`${sectionClass} ${bleedClass}`.trim()}>
+                <div className={gridClass} style={gridStyle}>
+                  {images.map((src, imageIndex) => (
+                    <CmsImageFrame
+                      key={`${src}-${imageIndex}`}
+                      src={src}
+                      alt=""
+                      display={{ ...imageDisplay, layout: "full" }}
+                      sizes={
+                        arrangement === "horizontal"
+                          ? `(max-width: 640px) 100vw, ${Math.round(100 / images.length)}vw`
+                          : "(max-width: 640px) 100vw, 50vw"
+                      }
+                    />
                   ))}
                 </div>
               </section>
@@ -197,14 +251,18 @@ export default function CmsBlockRenderer({
                   className={
                     block.style === "plain"
                       ? "flex flex-col gap-6"
-                      : "rounded-2xl bg-surface border border-border p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center gap-8"
+                      : "rounded-surface bg-surface border border-border p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center gap-8"
                   }
                 >
                   <div className="flex-1">
                     {block.heading ? (
-                      <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "3xl", weight: "medium" })} text-foreground mb-4`}>
+                      <CmsHeading
+                        typography={block.headingTypography}
+                        defaults={{ font: "deco", size: "3xl", weight: "medium" }}
+                        className="mb-4"
+                      >
                         {block.heading}
-                      </h2>
+                      </CmsHeading>
                     ) : null}
                     {block.body ? (
                       <p className={`text-lg text-muted leading-relaxed max-w-lg ${typographyClassName(block.bodyTypography)}`}>
@@ -224,7 +282,7 @@ export default function CmsBlockRenderer({
                 {block.title ? <p className={`text-sm text-muted mb-3 ${sansLight}`}>{block.title}</p> : null}
                 <div
                   data-header-tone="dark"
-                  className={`relative w-full rounded-2xl overflow-hidden border border-border bg-black ${
+                  className={`relative w-full rounded-surface overflow-hidden border border-border bg-black ${
                     block.aspect === "tall" ? "min-h-[520px] sm:min-h-[600px]" : "aspect-video"
                   }`}
                 >
@@ -256,9 +314,13 @@ export default function CmsBlockRenderer({
               <section key={key} className={sectionClass}>
                 <div className="flex items-end justify-between mb-8">
                   {block.heading ? (
-                    <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "3xl", weight: "medium" })} text-foreground`}>
+                    <CmsHeading
+                      typography={block.headingTypography}
+                      defaults={{ font: "deco", size: "3xl", weight: "medium" }}
+                      containerClassName="flex-1"
+                    >
                       {block.heading}
-                    </h2>
+                    </CmsHeading>
                   ) : (
                     <span />
                   )}
@@ -289,9 +351,14 @@ export default function CmsBlockRenderer({
             return (
               <section key={key} className={sectionClass}>
                 {block.heading ? (
-                  <h1 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "6xl", weight: "medium" })} text-foreground mb-4`}>
+                  <CmsHeading
+                    as="h1"
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "7xl", weight: "medium" }}
+                    className="mb-4"
+                  >
                     {block.heading}
-                  </h1>
+                  </CmsHeading>
                 ) : null}
                 {block.intro ? (
                   <p className={`text-muted mb-16 max-w-xl ${typographyClassName(block.introTypography, { size: "lg", weight: "light" })}`}>
@@ -311,9 +378,13 @@ export default function CmsBlockRenderer({
             return (
               <section key={key} className={sectionClass}>
                 {block.heading ? (
-                  <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "2xl", weight: "medium" })} text-foreground mb-8`}>
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-8"
+                  >
                     {block.heading}
-                  </h2>
+                  </CmsHeading>
                 ) : null}
                 <div className="flex flex-col gap-8">
                   {block.items.map((item) => (
@@ -341,9 +412,13 @@ export default function CmsBlockRenderer({
             return (
               <section key={key} className={sectionClass}>
                 {block.heading ? (
-                  <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "2xl", weight: "medium" })} text-foreground mb-8`}>
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-8"
+                  >
                     {block.heading}
-                  </h2>
+                  </CmsHeading>
                 ) : null}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                   {block.groups.map((group) => (
@@ -366,9 +441,13 @@ export default function CmsBlockRenderer({
             return (
               <section key={key} className={sectionClass}>
                 {block.heading ? (
-                  <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "2xl", weight: "medium" })} text-foreground mb-6`}>
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "2xl", weight: "medium" }}
+                    className="mb-6"
+                  >
                     {block.heading}
-                  </h2>
+                  </CmsHeading>
                 ) : null}
                 <ul className={`space-y-3 leading-relaxed list-disc pl-5 ${typographyClassName(block.typography, { weight: "light" })} text-muted`}>
                   {block.items.map((item) => (
@@ -382,9 +461,13 @@ export default function CmsBlockRenderer({
             return (
               <section key={key} className={`${sectionClass} pt-12 border-t border-border`}>
                 {block.heading ? (
-                  <h2 className={`${typographyClassName(block.headingTypography, { font: "deco", size: "xl", weight: "medium" })} text-foreground mb-6`}>
+                  <CmsHeading
+                    typography={block.headingTypography}
+                    defaults={{ font: "deco", size: "xl", weight: "medium" }}
+                    className="mb-6"
+                  >
                     {block.heading}
-                  </h2>
+                  </CmsHeading>
                 ) : null}
                 <div className="flex flex-col gap-4">
                   {block.links.map((link) => (

@@ -22,7 +22,7 @@ export default function CmsBackLink({
       className={`icon-text-row gap-1.5 text-sm leading-none text-muted hover:text-foreground transition-colors mb-8 ${sansLight} ${className}`}
     >
       <Icon name="chevron-left" font="sans" weight={iconWeightFromClass(sansLight)} />
-      <span>{label}</span>
+      <span className="leading-none">{label}</span>
     </TransitionLink>
   );
 }

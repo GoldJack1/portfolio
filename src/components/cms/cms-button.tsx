@@ -34,7 +34,7 @@ export default function CmsButton({ button, className = "" }: CmsButtonProps) {
       {iconName && iconPosition === "left" ? (
         <Icon name={iconName} font="sans" weight={iconWeightFromClass(sansBold)} />
       ) : null}
-      <span>{button.label}</span>
+      <span className="leading-none">{button.label}</span>
       {iconName && iconPosition === "right" ? (
         <Icon name={iconName} font="sans" weight={iconWeightFromClass(sansBold)} />
       ) : null}

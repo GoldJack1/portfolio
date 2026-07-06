@@ -19,8 +19,8 @@ export default function CmsImage({
   if (!src) return null;
 
   const classes = fill
-    ? `absolute inset-0 h-full w-full object-cover ${className}`
-    : `h-full w-full object-cover ${className}`;
+    ? `absolute inset-0 h-full w-full ${className}`.trim()
+    : className || "w-full h-auto object-cover";
 
   return (
     // Native img: CMS URLs are user-controlled and not known at build time.

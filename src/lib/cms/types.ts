@@ -1,4 +1,5 @@
 import type { CmsIconName } from "./icon-names";
+import type { CmsGalleryArrangement, CmsGalleryGap, CmsImageDisplay } from "./image-display";
 
 export type CmsFont = "sans" | "deco";
 export type CmsWeight =
@@ -70,6 +71,7 @@ export type CmsHeroBlock = CmsSectionStyle & {
   headingTypography?: CmsTypography;
   bodyTypography?: CmsTypography;
   image?: string;
+  imageDisplay?: CmsImageDisplay;
   layout?: "centered" | "left" | "split-right" | "split-left";
   minHeight?: "auto" | "medium" | "tall";
   buttons?: CmsButton[];
@@ -89,21 +91,24 @@ export type CmsTextBlock = CmsSectionStyle & {
   align?: "left" | "center";
 };
 
-export type CmsImageBlock = CmsSectionStyle & {
-  type: "image";
-  src: string;
-  alt?: string;
-  caption?: string;
-  layout?: "full" | "inset" | "small";
-  rounded?: boolean;
-};
+export type CmsImageBlock = CmsSectionStyle &
+  CmsImageDisplay & {
+    type: "image";
+    src: string;
+    alt?: string;
+    caption?: string;
+    captionAlign?: "left" | "center";
+  };
 
-export type CmsGalleryBlock = CmsSectionStyle & {
-  type: "gallery";
-  images: Array<string | { image?: string }>;
-  columns?: "1" | "2" | "3";
-  rounded?: boolean;
-};
+export type CmsGalleryBlock = CmsSectionStyle &
+  CmsImageDisplay & {
+    type: "gallery";
+    images: Array<string | { image?: string }>;
+    columns?: "1" | "2" | "3";
+    arrangement?: CmsGalleryArrangement;
+    gap?: CmsGalleryGap;
+    bleed?: boolean;
+  };
 
 export type CmsTwoColumnBlock = CmsSectionStyle & {
   type: "twoColumn";
