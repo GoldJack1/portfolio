@@ -1,15 +1,22 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 type VideoThumbnailProps = {
   src: string;
+  poster?: string;
   className?: string;
   ariaLabel?: string;
 };
 
-export default function VideoThumbnail({ src, className = "", ariaLabel }: VideoThumbnailProps) {
+export default function VideoThumbnail({
+  src,
+  poster,
+  className = "",
+  ariaLabel,
+}: VideoThumbnailProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -18,12 +25,13 @@ export default function VideoThumbnail({ src, className = "", ariaLabel }: Video
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setShouldLoad(true);
           video.play().catch(() => {});
         } else {
           video.pause();
         }
       },
-      { threshold: 0.35 }
+      { rootMargin: "100px", threshold: 0.1 },
     );
 
     observer.observe(video);
@@ -33,12 +41,13 @@ export default function VideoThumbnail({ src, className = "", ariaLabel }: Video
   return (
     <video
       ref={videoRef}
-      src={src}
+      src={shouldLoad ? src : undefined}
+      poster={poster}
       className={className}
       muted
       loop
       playsInline
-      preload="auto"
+      preload="none"
       aria-hidden={ariaLabel ? undefined : true}
       aria-label={ariaLabel}
     />

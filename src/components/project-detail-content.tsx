@@ -3,7 +3,7 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import type { Project } from "@/lib/project-types";
-import { isVideoThumbnail } from "@/lib/projects";
+import { isVideoSource, getVideoPreviewSrc } from "@/lib/projects";
 import CmsBackLink from "@/components/cms/cms-back-link";
 import CmsHeading from "@/components/cms/cms-heading";
 import CmsImageFrame from "@/components/cms/cms-image-frame";
@@ -11,7 +11,7 @@ import VideoThumbnail from "@/components/video-thumbnail";
 import { decoMedium, sansBold, sansLight, sansMedium } from "@/lib/typography";
 
 export default function ProjectDetailContent({ project }: { project: Project }) {
-  const isVideo = isVideoThumbnail(project.thumbnail);
+  const heroVideo = project.video && isVideoSource(project.video) ? project.video : null;
 
   return (
     <article className="px-6 sm:px-12 pt-10 sm:pt-14 pb-16 w-full">
@@ -28,9 +28,10 @@ export default function ProjectDetailContent({ project }: { project: Project }) 
       </header>
 
       <div className="relative w-full aspect-video rounded-surface overflow-hidden border border-border mb-12 bg-background">
-        {isVideo ? (
+        {heroVideo ? (
           <VideoThumbnail
-            src={project.video ?? project.thumbnail}
+            src={getVideoPreviewSrc(heroVideo)}
+            poster={project.thumbnail}
             className="w-full h-full object-cover"
             ariaLabel={project.title}
           />

@@ -50,3 +50,8 @@ export function isVideoThumbnail(thumbnail: string): boolean {
 export function isVideoSource(src: string): boolean {
   return /\.(mp4|webm|mov)$/i.test(src) || src.includes("youtube.com") || src.includes("youtu.be") || src.includes("vimeo.com");
 }
+
+/** Compressed loop used for in-page previews; falls back to the source when no preview exists. */
+export function getVideoPreviewSrc(src: string): string {
+  return src.replace(/\.(mp4|webm|mov)$/i, "-preview.$1");
+}

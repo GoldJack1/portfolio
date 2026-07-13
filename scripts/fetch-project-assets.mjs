@@ -145,7 +145,7 @@ async function main() {
     gallery: [],
   };
   manifest.webtext = {
-    thumbnail: "/projects/webtext/thumbnail.mp4",
+    thumbnail: "/projects/webtext/thumbnail.jpg",
     gallery: [],
     video: "/projects/webtext/thumbnail.mp4",
   };
